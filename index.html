@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -171,7 +171,7 @@
       }
 
       .hero-inner {
-        max-width: 900px;
+        max-width: 1200px;
         margin: 0 auto;
       }
 
@@ -614,90 +614,6 @@
         cursor: not-allowed;
       }
 
-      /* Architecture & Deployment Guide Box */
-      .guide-panel {
-        background: linear-gradient(180deg, rgba(20, 28, 48, 0.9) 0%, rgba(13, 19, 36, 0.9) 100%);
-        border: 1px solid rgba(59, 130, 246, 0.25);
-        border-radius: var(--radius-lg);
-        padding: 32px;
-        margin-top: 54px;
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
-      }
-
-      .guide-header {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        margin-bottom: 20px;
-      }
-
-      .guide-icon {
-        width: 44px;
-        height: 44px;
-        border-radius: 12px;
-        background: rgba(59, 130, 246, 0.15);
-        display: grid;
-        place-items: center;
-        color: #60a5fa;
-        font-size: 1.4rem;
-        border: 1px solid rgba(59, 130, 246, 0.3);
-      }
-
-      .guide-title {
-        font-size: 1.3rem;
-        font-weight: 700;
-        color: var(--text-primary);
-      }
-
-      .guide-subtitle {
-        font-size: 0.85rem;
-        color: var(--text-secondary);
-      }
-
-      .guide-steps-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-        gap: 20px;
-        margin-top: 24px;
-      }
-
-      .guide-step-card {
-        background: rgba(10, 15, 28, 0.7);
-        border: 1px solid var(--border-subtle);
-        border-radius: var(--radius-md);
-        padding: 20px;
-      }
-
-      .guide-step-number {
-        font-family: var(--font-mono);
-        font-size: 0.8rem;
-        color: #60a5fa;
-        font-weight: 700;
-        margin-bottom: 8px;
-      }
-
-      .guide-step-card h4 {
-        font-size: 1rem;
-        color: var(--text-primary);
-        margin-bottom: 8px;
-      }
-
-      .guide-step-card p {
-        font-size: 0.84rem;
-        color: var(--text-secondary);
-        line-height: 1.55;
-      }
-
-      .guide-step-card code {
-        display: inline-block;
-        font-family: var(--font-mono);
-        font-size: 0.78rem;
-        background: rgba(255, 255, 255, 0.08);
-        padding: 2px 6px;
-        border-radius: 4px;
-        color: #93c5fd;
-        margin-top: 4px;
-      }
 
       /* Footer */
       footer {
@@ -742,6 +658,58 @@
         .nav-actions { width: 100%; justify-content: space-between; }
         .stats-grid { grid-template-columns: 1fr 1fr; }
       }
+
+      /* Warm editorial refresh: quieter surfaces, practical hierarchy, no glass or glow. */
+      :root { --bg-page: #f5f1e8; --bg-surface: #fffdf8; --bg-surface-elevated: #ffffff; --bg-card: #fffdf8; --bg-card-hover: #ffffff; --border-subtle: #dfd8ca; --border-active: #355c53; --text-primary: #28312e; --text-secondary: #65706a; --text-muted: #879089; --accent-blue: #355c53; --accent-cyan: #6f8c83; --accent-indigo: #786c5b; --accent-emerald: #587b59; --accent-amber: #b8813d; --accent-rose: #a65f54; --radius-sm: 5px; --radius-md: 8px; --radius-lg: 10px; --font-main: 'DM Sans', system-ui, sans-serif; }
+      body { background: var(--bg-page); background-image: none; color: var(--text-primary); }
+      .navbar { background: rgba(245, 241, 232, .96); backdrop-filter: none; -webkit-backdrop-filter: none; padding: 15px 24px; }
+      .react-logo { animation: none; width: 30px; height: 30px; }
+      .brand-title { background: none; -webkit-text-fill-color: currentColor; color: var(--text-primary); font-size: 1rem; }
+      .brand-badge, .hero-pill { background: #ece7db; color: #57645e; border-color: #d8d0c1; border-radius: 4px; letter-spacing: .04em; }
+      .pulse-dot { box-shadow: none; animation: none; width: 7px; height: 7px; }
+      .nav-btn { border-radius: 5px; }
+      .nav-btn-ghost { color: #53615a; border-color: transparent; }
+      .nav-btn-ghost:hover { color: var(--text-primary); background: #ece7db; border-color: transparent; }
+      .nav-btn-primary, .btn-module.ready { background: #355c53; border-color: #355c53; box-shadow: none; }
+      .nav-btn-primary:hover, .btn-module.ready:hover { background: #294a42; box-shadow: none; transform: none; }
+      .hero { padding: 72px 24px 44px; text-align: left; }
+      .hero-inner { max-width: 1000px; margin: 0 auto; }
+      .hero h1 { font-family: 'Source Serif 4', Georgia, serif; font-size: clamp(2.5rem, 5vw, 4.15rem); font-weight: 600; letter-spacing: -.04em; background: none; -webkit-text-fill-color: currentColor; color: var(--text-primary); margin-bottom: 16px; }
+      .hero h1 span.gradient-text { background: none; -webkit-text-fill-color: #355c53; color: #355c53; }
+      .hero-desc { margin: 0 0 32px; max-width: 650px; color: #5e6962; font-size: 1.08rem; }
+      .stats-grid { max-width: 1120px; gap: 0; border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 0; overflow: hidden; background: var(--bg-surface); }
+      .stat-card { background: transparent; border: 0; border-right: 1px solid var(--border-subtle); border-radius: 0; padding: 19px; }
+      .stat-card:last-child { border-right: 0; }
+      .stat-card:hover { transform: none; border-color: var(--border-subtle); background: #faf7f0; }
+      .stat-icon { width: 38px; height: 38px; border-radius: 50%; font-size: 1rem; }
+      .icon-blue, .icon-emerald, .icon-purple, .icon-amber { background: #ece7db; border: 0; color: #5a7066; }
+      .controls-bar { top: 61px; background: rgba(245, 241, 232, .97); backdrop-filter: none; -webkit-backdrop-filter: none; padding: 13px 24px; margin-bottom: 42px; }
+      .search-input { background: #fffdf8; border-color: #d7d0c2; border-radius: 5px; color: var(--text-primary); }
+      .search-input:focus { background: #fff; border-color: #355c53; box-shadow: 0 0 0 3px rgba(53, 92, 83, .12); }
+      .tab-btn { background: transparent; border-color: transparent; border-radius: 4px; color: #5e6962; padding: 7px 11px; }
+      .tab-btn:hover { background: #e9e4d8; color: var(--text-primary); }
+      .tab-btn.active { background: #355c53; border-color: #355c53; box-shadow: none; }
+      .section-title, .guide-title { font-family: 'Source Serif 4', Georgia, serif; letter-spacing: -.025em; }
+      .modules-grid { gap: 18px; }
+      .module-card { background: var(--bg-surface); backdrop-filter: none; -webkit-backdrop-filter: none; border-radius: var(--radius-md); padding: 24px; box-shadow: none; transition: border-color .18s ease, background .18s ease; }
+      .module-card::before { display: none; }
+      .module-card.active-module { border-color: #9caf9f; background: #fbfaf4; box-shadow: none; }
+      .module-card:hover, .module-card.active-module:hover { transform: none; border-color: #aab7ae; box-shadow: none; }
+      .step-badge { border-radius: 3px; }
+      .step-badge.ready { background: #e5eee4; color: #416b45; border-color: #cbdac8; }
+      .step-badge.upcoming { background: #f0ede5; color: #717970; border-color: #e0dbd0; }
+      .tag-pill { background: #f0ede5; color: #5d6860; border-color: #e2ddd2; border-radius: 3px; }
+      .progress-container { background: #f4f1e9; border-color: #e5dfd4; border-radius: 5px; }
+      .progress-bar-bg { background: #dedbd1; border-radius: 3px; }
+      .progress-bar-fill { background: #587b59; border-radius: 3px; }
+      .btn-module.locked { background: #f3f0e9; border-color: #e0dbd1; }
+      .guide-panel { background: #e9ede6; border-color: #cbd5ca; border-radius: var(--radius-md); box-shadow: none; padding: 30px; }
+      .guide-icon { background: #d8e3d8; border: 0; border-radius: 50%; color: #355c53; }
+      .guide-step-card { background: rgba(255, 253, 248, .75); border-color: #d4ddd2; border-radius: 6px; }
+      .guide-step-number { color: #547568; }
+      .guide-step-card code { background: #f0ede4; color: #465c51; border-radius: 3px; }
+      footer { background: #eee9df; padding: 32px 24px; }
+      @media (max-width: 768px) { .hero { padding: 46px 16px 30px; } .stats-grid { margin-left: 16px; margin-right: 16px; width: auto; } .stat-card:nth-child(2) { border-right: 0; } .stat-card { border-bottom: 1px solid var(--border-subtle); } .stat-card:nth-last-child(-n+2) { border-bottom: 0; } }
     </style>
   </head>
   <body>
@@ -766,7 +734,6 @@
 
         <div class="nav-actions">
           <a href="#curriculum" class="nav-btn nav-btn-ghost">Roadmap Overview</a>
-          <a href="#deployment-guide" class="nav-btn nav-btn-ghost">Deploy Guide</a>
           <a href="modules/react-learning-step-01-fundamentals.html" class="nav-btn nav-btn-primary">
             <span>Start Step 01</span>
             <span>→</span>
@@ -779,7 +746,6 @@
     <section class="hero">
       <div class="hero-inner">
         <div class="hero-pill">
-          <span class="pulse-dot"></span>
           <span>PRODUCTION-READY INTERN LEARNING SYSTEM</span>
         </div>
         <h1>
@@ -794,7 +760,12 @@
       <!-- Quick Metrics Banner -->
       <div class="stats-grid">
         <div class="stat-card">
-          <div class="stat-icon icon-blue">📚</div>
+          <div class="stat-icon icon-blue">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+            </svg>
+          </div>
           <div>
             <div class="stat-value" id="stat-total-steps">27</div>
             <div class="stat-label">Total Steps Curriculum</div>
@@ -802,7 +773,11 @@
         </div>
 
         <div class="stat-card">
-          <div class="stat-icon icon-emerald">⚡</div>
+          <div class="stat-icon icon-emerald">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+          </div>
           <div>
             <div class="stat-value" id="stat-active-steps">3 Available</div>
             <div class="stat-label">Ready for Study Now</div>
@@ -810,7 +785,13 @@
         </div>
 
         <div class="stat-card">
-          <div class="stat-icon icon-purple">🧠</div>
+          <div class="stat-icon icon-purple">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+          </div>
           <div>
             <div class="stat-value" id="stat-concepts">58+</div>
             <div class="stat-label">Concepts in Steps 1–3</div>
@@ -818,10 +799,15 @@
         </div>
 
         <div class="stat-card">
-          <div class="stat-icon icon-amber">🚀</div>
+          <div class="stat-icon icon-amber">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+          </div>
           <div>
-            <div class="stat-value">Netlify Ready</div>
-            <div class="stat-label">Auto-deploy on Git Push</div>
+            <div class="stat-value">100% Practical</div>
+            <div class="stat-label">Interactive Challenges</div>
           </div>
         </div>
       </div>
@@ -873,56 +859,6 @@
         <!-- Rendered dynamically by JavaScript -->
       </div>
 
-      <!-- Netlify & GitHub Integration Guide -->
-      <section class="guide-panel" id="deployment-guide">
-        <div class="guide-header">
-          <div class="guide-icon">🌐</div>
-          <div>
-            <div class="guide-title">How To Access All Modules, Deploy on Netlify & Sync with GitHub</div>
-            <div class="guide-subtitle">A simple, zero-friction architecture for your expanding curriculum</div>
-          </div>
-        </div>
-
-        <div class="guide-steps-grid">
-          <div class="guide-step-card">
-            <div class="guide-step-number">STEP 01</div>
-            <h4>Adding New Module Files</h4>
-            <p>
-              When you write step 2, simply save the file inside <code>modules/</code> as:
-              <code>react-learning-step-02-state-and-logic.html</code>.
-              The portal dashboard automatically links to it and unlocks its card.
-            </p>
-          </div>
-
-          <div class="guide-step-card">
-            <div class="guide-step-number">STEP 02</div>
-            <h4>Git Version Control</h4>
-            <p>
-              Commit your work to GitHub using:
-              <br /><code>git add .</code>
-              <br /><code>git commit -m "Add Step 02 module"</code>
-              <br /><code>git push origin main</code>
-            </p>
-          </div>
-
-          <div class="guide-step-card">
-            <div class="guide-step-number">STEP 03</div>
-            <h4>Automatic Netlify Deployment</h4>
-            <p>
-              Connect your GitHub repository to Netlify. Set <strong>Publish directory</strong> to <code>.</code> (root).
-              Every git push triggers an instant live deployment with permanent accessible URLs for everyone.
-            </p>
-          </div>
-
-          <div class="guide-step-card">
-            <div class="guide-step-number">STEP 04</div>
-            <h4>Universal Access</h4>
-            <p>
-              Anyone with your Netlify link (e.g. <code>yourapp.netlify.app</code>) lands directly on this dashboard, with one-click access to all active modules and persistent local progress tracking.
-            </p>
-          </div>
-        </div>
-      </section>
     </main>
 
     <!-- Footer -->
@@ -933,11 +869,10 @@
         </div>
         <div class="footer-links">
           <a href="modules/react-learning-step-01-fundamentals.html">Step 01: Fundamentals</a>
-          <a href="#curriculum">Roadmap</a>
-          <a href="#deployment-guide">Deployment Guide</a>
+          <a href="#curriculum">Roadmap Overview</a>
         </div>
         <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 8px;">
-          Deployable on Netlify with zero build step • Static HTML/CSS/JS Architecture
+          Zero Build Step Required • Pure Static Architecture
         </div>
       </div>
     </footer>
@@ -1196,8 +1131,8 @@
           status: "upcoming",
           concepts: 12,
           time: "2 Days",
-          summary: "GitHub Actions workflows: automated linting (ESLint, Prettier), running automated test suites on pull requests, and automated deployment previews.",
-          tags: ["GitHub Actions", "CI/CD", "ESLint", "Prettier", "PR Previews"]
+          summary: "GitHub Actions workflows: automated linting (ESLint, Prettier), running automated test suites on pull requests, and automated build checks.",
+          tags: ["GitHub Actions", "CI/CD", "ESLint", "Prettier", "PR Checks"]
         },
         {
           step: 24,
@@ -1223,14 +1158,14 @@
         },
         {
           step: 26,
-          title: "Production Deployment, CDN & Monitoring",
-          filename: "react-learning-step-26-deployment-monitoring.html",
+          title: "Production Infrastructure, CDN & Monitoring",
+          filename: "react-learning-step-26-infrastructure-monitoring.html",
           phase: 5,
           status: "upcoming",
           concepts: 14,
           time: "2 Days",
-          summary: "Netlify and edge caching, setting security headers, custom domain DNS, error tracking with Sentry, and Core Web Vitals telemetry.",
-          tags: ["Netlify Edge", "Sentry", "Core Web Vitals", "Custom Domains", "CDN"]
+          summary: "Edge caching strategies, setting HTTP security headers, custom domain DNS, client-side error tracking with Sentry, and Core Web Vitals telemetry.",
+          tags: ["Edge Caching", "Sentry", "Core Web Vitals", "Custom Domains", "CDN"]
         },
         {
           step: 27,
@@ -1319,7 +1254,12 @@
         if (filtered.length === 0) {
           container.innerHTML = `
             <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-subtle);">
-              <div style="font-size: 2.4rem; margin-bottom: 12px;">🔍</div>
+              <div style="margin-bottom: 14px; display: flex; justify-content: center;">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+              </div>
               <h3 style="font-size: 1.2rem; color: var(--text-primary); margin-bottom: 6px;">No matching modules found</h3>
               <p style="color: var(--text-secondary); font-size: 0.9rem;">Try adjusting your search terms or filter selection.</p>
             </div>
@@ -1372,7 +1312,10 @@
 
                 <div class="module-footer">
                   <div class="time-estimate">
-                    <span>⏱️</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:-2px; margin-right:4px;">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
                     <span>${mod.time} • ${mod.concepts} Concepts</span>
                   </div>
 
