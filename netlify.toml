@@ -1,0 +1,30 @@
+# Netlify Configuration for React Intern Learning Guide
+# No build command needed as this is a high-performance static HTML/CSS/JS application
+
+[build]
+  publish = "."
+
+# Clean URL shortcuts for easy access to modules
+[[redirects]]
+  from = "/step-01"
+  to = "/modules/react-learning-step-01-fundamentals.html"
+  status = 200
+
+[[redirects]]
+  from = "/step-02"
+  to = "/modules/react-learning-step-02-state-and-logic.html"
+  status = 200
+
+[[redirects]]
+  from = "/step-03"
+  to = "/modules/react-learning-step-03-hooks-and-effects.html"
+  status = 200
+
+# Security and caching headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

@@ -1,0 +1,2113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>React Intern Learning — Step 01: Fundamentals</title>
+    <style>
+      :root {
+        --bg: #f6f7fb;
+        --panel: #fff;
+        --text: #172033;
+        --muted: #64748b;
+        --line: #e2e8f0;
+        --accent: #2563eb;
+        --accent2: #eff6ff;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family:
+          Inter,
+          system-ui,
+          -apple-system,
+          Segoe UI,
+          sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.65;
+      }
+      header {
+        background: linear-gradient(135deg, #111827, #1e3a8a);
+        color: #fff;
+        padding: 46px 20px;
+      }
+      .wrap {
+        max-width: 1050px;
+        margin: auto;
+      }
+      h1 {
+        font-size: clamp(30px, 5vw, 48px);
+        line-height: 1.1;
+        margin: 8px 0 14px;
+      }
+      .lead {
+        max-width: 850px;
+        color: #dbeafe;
+        font-size: 17px;
+      }
+      .pill {
+        display: inline-block;
+        border: 1px solid #ffffff44;
+        background: #ffffff14;
+        padding: 6px 11px;
+        border-radius: 999px;
+        font-size: 13px;
+        margin: 3px;
+      }
+      .toolbar {
+        position: sticky;
+        top: 0;
+        z-index: 5;
+        background: #fffffff2;
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--line);
+        padding: 12px 20px;
+      }
+      .toolbar-inner {
+        max-width: 1050px;
+        margin: auto;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      input[type="search"] {
+        flex: 1;
+        min-width: 240px;
+        padding: 11px 14px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        font-size: 14px;
+      }
+      .progress {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      main {
+        padding: 28px 20px 70px;
+      }
+      .intro,
+      .card {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        max-width: 1050px;
+        margin: 0 auto 18px;
+        padding: 24px;
+        box-shadow: 0 5px 20px #0f172a08;
+      }
+      .card-head {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 18px;
+      }
+      .num {
+        display: grid;
+        place-items: center;
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: var(--accent2);
+        color: var(--accent);
+        font-weight: 800;
+      }
+      .done {
+        margin-left: auto;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      h2 {
+        margin: 0;
+        font-size: 23px;
+      }
+      h3 {
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: #334155;
+        margin: 22px 0 7px;
+      }
+      .tag {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      section p {
+        margin: 6px 0;
+        color: #334155;
+      }
+      .layman {
+        background: #f8fafc;
+        border-left: 4px solid var(--accent);
+        padding: 2px 15px;
+        border-radius: 0 10px 10px 0;
+      }
+      pre {
+        background: #0f172a;
+        color: #e2e8f0;
+        padding: 17px;
+        border-radius: 10px;
+        overflow: auto;
+        font-size: 13px;
+        line-height: 1.55;
+      }
+      .copy {
+        border: 0;
+        background: #e2e8f0;
+        padding: 7px 10px;
+        border-radius: 7px;
+        cursor: pointer;
+        margin-top: 7px;
+      }
+      .question {
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 12px 14px;
+        margin: 9px 0;
+      }
+      .q {
+        font-weight: 600;
+      }
+      details {
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      summary {
+        cursor: pointer;
+        color: var(--accent);
+      }
+      .task {
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        padding: 4px 15px;
+        border-radius: 10px;
+      }
+      .hidden {
+        display: none !important;
+      }
+      footer {
+        text-align: center;
+        color: var(--muted);
+        padding: 35px 20px;
+      }
+      @media (max-width: 650px) {
+        .card,
+        .intro {
+          padding: 18px;
+        }
+        .done {
+          font-size: 12px;
+        }
+      }
+      .top-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 22px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+      }
+      .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #dbeafe;
+        text-decoration: none;
+        font-size: 13.5px;
+        font-weight: 600;
+        background: rgba(255, 255, 255, 0.12);
+        padding: 7px 14px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.2s ease;
+      }
+      .back-btn:hover {
+        background: rgba(255, 255, 255, 0.22);
+        color: #ffffff;
+        transform: translateX(-2px);
+      }
+      .nav-meta {
+        font-size: 13px;
+        color: #93c5fd;
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="wrap">
+        <nav class="top-nav">
+          <a href="../index.html" class="back-btn">← All Modules Portal</a>
+          <span class="nav-meta">React Intern Canvas • Step 1 of 27</span>
+        </nav>
+        <span class="pill">INTERN LEARNING CANVAS • STEP 01 / 27</span>
+        <h1>React Fundamentals</h1>
+        <p class="lead">
+          This page expands the React Fundamentals checklist into a practical
+          worksheet. For every concept, interns should understand what it means,
+          why it exists, when to use it, a real-world analogy, a small example,
+          and how to reason through questions rather than memorise definitions.
+        </p>
+        <span class="pill">24 concepts</span
+        ><span class="pill">2 questions / concept</span
+        ><span class="pill">Use case + layman example + code</span>
+      </div>
+    </header>
+    <div class="toolbar">
+      <div class="toolbar-inner">
+        <input
+          id="search"
+          type="search"
+          placeholder="Search concepts, e.g. props, keys, JSX..."
+        /><span id="progress" class="progress"></span>
+      </div>
+    </div>
+    <main>
+      <div class="intro">
+        <h2>How interns should use this</h2>
+        <p>
+          <b>1.</b> Read the explanation. <b>2.</b> Explain the layman example
+          in your own words. <b>3.</b> Change something in the code.
+          <b>4.</b> Answer both questions without opening the expected-direction
+          box. <b>5.</b> Open it and self-check. <b>6.</b> Mark the topic
+          learned only when you can explain and modify the example.
+        </p>
+      </div>
+      <article
+        class="card"
+        data-search="what is react? react is a javascript library for building user interfaces from reusable components. you describe the ui for the current data/state and react handles the necessary ui updates. use it when an application has many interactive screens and repeated ui patterns such as dashboards or e-commerce pages."
+      >
+        <div class="card-head">
+          <span class="num">01</span>
+          <div>
+            <h2>What is React?</h2>
+            <span class="tag">React Fundamentals</span>
+          </div>
+          <label class="done"
+            ><input type="checkbox" data-done="1" /> Learned</label
+          >
+        </div>
+        <section>
+          <h3>What is it?</h3>
+          <p>
+            React is a JavaScript library for building user interfaces from
+            reusable components. You describe the UI for the current data/state
+            and React handles the necessary UI updates.
+          </p>
+        </section>
+        <section class="layman">
+          <h3>🧠 Layman example</h3>
+          <p>
+            Think of a menu made from reusable cards: one card design can be
+            used for every dish.
+          </p>
+        </section>
+        <section>
+          <h3>Proper use case</h3>
+          <p>
+            Use it when an application has many interactive screens and repeated
+            UI patterns such as dashboards or e-commerce pages.
+          </p>
+        </section>
+        <section>
+          <h3>Practical example</h3>
+          <pre><code>function Welcome({ name }) { return &lt;h1&gt;Hello, {name}&lt;/h1&gt;; }</code></pre>
+          <button class="copy" onclick="copyCode(this)">Copy code</button>
+        </section>
+        <section>
+          <h3>Intern questions</h3>
+          <div class="question">
+            <div class="q">
+              1. What problem is React trying to solve compared with manually
+              changing DOM elements?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>
+                Mention UI complexity, reusable components, declarative
+                rendering and easier updates.
+              </p>
+            </details>
+          </div>
+          <div class="question">
+            <div class="q">
+              2. If a dashboard has 50 similar cards, what advantage does a
+              component-based approach give you?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>
+                Explain reuse: one component can represent a repeated pattern
+                while different data is supplied through props/state.
+              </p>
+            </details>
+          </div>
+        </section>
+        <section class="task">
+          <h3>💡 Mini task</h3>
+          <p>
+            Explain the concept without reading the definition. Then change one
+            part of the example, predict the result, and run it to verify your
+            reasoning.
+          </p>
+        </section>
+      </article>
+      <article
+        class="card"
+        data-search="why react? react encourages component-based development, reusability and declarative ui. instead of writing a sequence of dom commands, you describe the desired ui. useful for applications with many interactive screens and repeated patterns where maintainability matters."
+      >
+        <div class="card-head">
+          <span class="num">02</span>
+          <div>
+            <h2>Why React?</h2>
+            <span class="tag">React Fundamentals</span>
+          </div>
+          <label class="done"
+            ><input type="checkbox" data-done="2" /> Learned</label
+          >
+        </div>
+        <section>
+          <h3>What is it?</h3>
+          <p>
+            React encourages component-based development, reusability and
+            declarative UI. Instead of writing a sequence of DOM commands, you
+            describe the desired UI.
+          </p>
+        </section>
+        <section class="layman">
+          <h3>🧠 Layman example</h3>
+          <p>
+            You tell a waiter what result you want rather than explaining every
+            physical action needed to arrange the table.
+          </p>
+        </section>
+        <section>
+          <h3>Proper use case</h3>
+          <p>
+            Useful for applications with many interactive screens and repeated
+            patterns where maintainability matters.
+          </p>
+        </section>
+        <section>
+          <h3>Practical example</h3>
+          <pre><code>function ProductCard({ product }) { return &lt;article&gt;&lt;h2&gt;{product.name}&lt;/h2&gt;&lt;p&gt;₹{product.price}&lt;/p&gt;&lt;/article&gt;; }</code></pre>
+          <button class="copy" onclick="copyCode(this)">Copy code</button>
+        </section>
+        <section>
+          <h3>Intern questions</h3>
+          <div class="question">
+            <div class="q">
+              1. What does declarative UI mean in practical terms?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>
+                Contrast describing the desired result with manually commanding
+                DOM operations.
+              </p>
+            </details>
+          </div>
+          <div class="question">
+            <div class="q">
+              2. Why is reusability important in a large application?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>
+                Connect reuse with consistency, maintainability and less
+                duplicated code.
+              </p>
+            </details>
+          </div>
+        </section>
+        <section class="task">
+          <h3>💡 Mini task</h3>
+          <p>
+            Explain the concept without reading the definition. Then change one
+            part of the example, predict the result, and run it to verify your
+            reasoning.
+          </p>
+        </section>
+      </article>
+      <article
+        class="card"
+        data-search="spa vs traditional web applications a traditional multi-page application commonly requests a new document during navigation. a spa changes the visible application ui on the client without a full document reload for every navigation. admin dashboards and rich web applications often benefit from client-side navigation because the application shell can remain in place."
+      >
+        <div class="card-head">
+          <span class="num">03</span>
+          <div>
+            <h2>SPA vs traditional web applications</h2>
+            <span class="tag">React Fundamentals</span>
+          </div>
+          <label class="done"
+            ><input type="checkbox" data-done="3" /> Learned</label
+          >
+        </div>
+        <section>
+          <h3>What is it?</h3>
+          <p>
+            A traditional multi-page application commonly requests a new
+            document during navigation. A SPA changes the visible application UI
+            on the client without a full document reload for every navigation.
+          </p>
+        </section>
+        <section class="layman">
+          <h3>🧠 Layman example</h3>
+          <p>
+            A traditional site is like leaving one shop and entering another; a
+            SPA is like staying in one mall while moving between departments.
+          </p>
+        </section>
+        <section>
+          <h3>Proper use case</h3>
+          <p>
+            Admin dashboards and rich web applications often benefit from
+            client-side navigation because the application shell can remain in
+            place.
+          </p>
+        </section>
+        <section>
+          <h3>Practical example</h3>
+          <pre><code>function App(){const [page,setPage]=React.useState(&#x27;home&#x27;);return &lt;&gt;{page===&#x27;home&#x27;?&lt;Home/&gt;:&lt;Orders/&gt;}&lt;/&gt;}</code></pre>
+          <button class="copy" onclick="copyCode(this)">Copy code</button>
+        </section>
+        <section>
+          <h3>Intern questions</h3>
+          <div class="question">
+            <div class="q">
+              1. What is the main difference in what happens during navigation
+              in a typical SPA?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>
+                Discuss client-side UI changes versus requesting a new document.
+              </p>
+            </details>
+          </div>
+          <div class="question">
+            <div class="q">
+              2. Give one application where SPA-style navigation is useful and
+              explain why.
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>
+                Choose a frequently navigated application and explain why
+                preserving the application shell is useful.
+              </p>
+            </details>
+          </div>
+        </section>
+        <section class="task">
+          <h3>💡 Mini task</h3>
+          <p>
+            Explain the concept without reading the definition. Then change one
+            part of the example, predict the result, and run it to verify your
+            reasoning.
+          </p>
+        </section>
+      </article>
+      <article
+        class="card"
+        data-search="react architecture react uis are organised as component trees. components communicate through defined boundaries such as props, state and context, while rendering ultimately updates the host environment. in production, separate ui components, feature logic, data access and shared infrastructure rather than creating one giant component."
+      >
+        <div class="card-head">
+          <span class="num">04</span>
+          <div>
+            <h2>React architecture</h2>
+            <span class="tag">React Fundamentals</span>
+          </div>
+          <label class="done"
+            ><input type="checkbox" data-done="4" /> Learned</label
+          >
+        </div>
+        <section>
+          <h3>What is it?</h3>
+          <p>
+            React UIs are organised as component trees. Components communicate
+            through defined boundaries such as props, state and context, while
+            rendering ultimately updates the host environment.
+          </p>
+        </section>
+        <section class="layman">
+          <h3>🧠 Layman example</h3>
+          <p>
+            Think of a company: different departments have focused
+            responsibilities and communicate through defined channels.
+          </p>
+        </section>
+        <section>
+          <h3>Proper use case</h3>
+          <p>
+            In production, separate UI components, feature logic, data access
+            and shared infrastructure rather than creating one giant component.
+          </p>
+        </section>
+        <section>
+          <h3>Practical example</h3>
+          <pre><code>function App(){return &lt;Layout&gt;&lt;Header/&gt;&lt;Sidebar/&gt;&lt;MainContent/&gt;&lt;/Layout&gt;}</code></pre>
+          <button class="copy" onclick="copyCode(this)">Copy code</button>
+        </section>
+        <section>
+          <h3>Intern questions</h3>
+          <div class="question">
+            <div class="q">
+              1. If one component contains routing, API calls, validation and
+              hundreds of lines of JSX, what architectural problem might exist?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>
+                Look for separation of concerns, sensible component boundaries
+                and maintainability.
+              </p>
+            </details>
+          </div>
+          <div class="question">
+            <div class="q">
+              2. How would you divide a large dashboard into smaller
+              responsibilities?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>
+                Propose meaningful components/features with clear
+                responsibilities, not arbitrary file splitting.
+              </p>
+            </details>
+          </div>
+        </section>
+        <section class="task">
+          <h3>💡 Mini task</h3>
+          <p>
+            Explain the concept without reading the definition. Then change one
+            part of the example, predict the result, and run it to verify your
+            reasoning.
+          </p>
+        </section>
+      </article>
+      <article
+        class="card"
+        data-search="components a component is a reusable piece of ui and behaviour. it can receive props and may maintain its own state. create components for repeated ui, clear responsibilities or isolated behaviour such as button, card, modal or productcard."
+      >
+        <div class="card-head">
+          <span class="num">05</span>
+          <div>
+            <h2>Components</h2>
+            <span class="tag">React Fundamentals</span>
+          </div>
+          <label class="done"
+            ><input type="checkbox" data-done="5" /> Learned</label
+          >
+        </div>
+        <section>
+          <h3>What is it?</h3>
+          <p>
+            A component is a reusable piece of UI and behaviour. It can receive
+            props and may maintain its own state.
+          </p>
+        </section>
+        <section class="layman">
+          <h3>🧠 Layman example</h3>
+          <p>
+            A component is like a reusable LEGO block that can be used in many
+            structures.
+          </p>
+        </section>
+        <section>
+          <h3>Proper use case</h3>
+          <p>
+            Create components for repeated UI, clear responsibilities or
+            isolated behaviour such as Button, Card, Modal or ProductCard.
+          </p>
+        </section>
+        <section>
+          <h3>Practical example</h3>
+          <pre><code>function Button({children,onClick}){return &lt;button onClick={onClick}&gt;{children}&lt;/button&gt;}</code></pre>
+          <button class="copy" onclick="copyCode(this)">Copy code</button>
+        </section>
+        <section>
+          <h3>Intern questions</h3>
+          <div class="question">
+            <div class="q">
+              1. What makes something a useful component instead of simply
+              adding more JSX to the parent?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>
+                Look for responsibility, reuse and a sensible component API.
+              </p>
+            </details>
+          </div>
+          <div class="question">
+            <div class="q">
+              2. Can two instances of the same component display different data?
+              How?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>
+                Props are the usual mechanism for supplying different inputs to
+                the same component.
+              </p>
+            </details>
+          </div>
+        </section>
+        <section class="task">
+          <h3>💡 Mini task</h3>
+          <p>
+            Explain the concept without reading the definition. Then change one
+            part of the example, predict the result, and run it to verify your
+            reasoning.
+          </p>
+        </section>
+      </article>
+      <article
+        class="card"
+        data-search="functional components modern react commonly uses functions as components. a function receives props and returns react ui. use functional components for normal react ui and combine them with hooks for stateful or side-effectful behaviour."
+      >
+        <div class="card-head">
+          <span class="num">06</span>
+          <div>
+            <h2>Functional components</h2>
+            <span class="tag">React Fundamentals</span>
+          </div>
+          <label class="done"
+            ><input type="checkbox" data-done="6" /> Learned</label
+          >
+        </div>
+        <section>
+          <h3>What is it?</h3>
+          <p>
+            Modern React commonly uses functions as components. A function
+            receives props and returns React UI.
+          </p>
+        </section>
+        <section class="layman">
+          <h3>🧠 Layman example</h3>
+          <p>
+            A function is like a vending machine: inputs go in and an output
+            comes out. A component&#x27;s output is UI.
+          </p>
+        </section>
+        <section>
+          <h3>Proper use case</h3>
+          <p>
+            Use functional components for normal React UI and combine them with
+            hooks for stateful or side-effectful behaviour.
+          </p>
+        </section>
+        <section>
+          <h3>Practical example</h3>
+          <pre><code>function UserGreeting({user}){return &lt;p&gt;Welcome, {user.name}&lt;/p&gt;}</code></pre>
+          <button class="copy" onclick="copyCode(this)">Copy code</button>
+        </section>
+        <section>
+          <h3>Intern questions</h3>
+          <div class="question">
+            <div class="q">1. What does a functional component return?</div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>The function describes UI and returns React elements/JSX.</p>
+            </details>
+          </div>
+          <div class="question">
+            <div class="q">
+              2. Why are hooks important with functional components?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>
+                Connect hooks with state, effects and other React capabilities
+                available to function components.
+              </p>
+            </details>
+          </div>
+        </section>
+        <section class="task">
+          <h3>💡 Mini task</h3>
+          <p>
+            Explain the concept without reading the definition. Then change one
+            part of the example, predict the result, and run it to verify your
+            reasoning.
+          </p>
+        </section>
+      </article>
+      <article
+        class="card"
+        data-search="jsx jsx is syntax that lets you describe ui using html-like markup inside javascript. tooling transforms it into javascript understood by react. use jsx to keep ui structure close to the component logic that controls it."
+      >
+        <div class="card-head">
+          <span class="num">07</span>
+          <div>
+            <h2>JSX</h2>
+            <span class="tag">React Fundamentals</span>
+          </div>
+          <label class="done"
+            ><input type="checkbox" data-done="7" /> Learned</label
+          >
+        </div>
+        <section>
+          <h3>What is it?</h3>
+          <p>
+            JSX is syntax that lets you describe UI using HTML-like markup
+            inside JavaScript. Tooling transforms it into JavaScript understood
+            by React.
+          </p>
+        </section>
+        <section class="layman">
+          <h3>🧠 Layman example</h3>
+          <p>
+            It is like writing instructions in a human-friendly format and using
+            a translator to convert them into an executable form.
+          </p>
+        </section>
+        <section>
+          <h3>Proper use case</h3>
+          <p>
+            Use JSX to keep UI structure close to the component logic that
+            controls it.
+          </p>
+        </section>
+        <section>
+          <h3>Practical example</h3>
+          <pre><code>const element=(&lt;section&gt;&lt;h1&gt;Products&lt;/h1&gt;&lt;p&gt;Choose a product.&lt;/p&gt;&lt;/section&gt;);</code></pre>
+          <button class="copy" onclick="copyCode(this)">Copy code</button>
+        </section>
+        <section>
+          <h3>Intern questions</h3>
+          <div class="question">
+            <div class="q">
+              1. Is JSX literally HTML? What does it represent?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>
+                Distinguish JSX from HTML and mention its transformation into
+                JavaScript/React elements.
+              </p>
+            </details>
+          </div>
+          <div class="question">
+            <div class="q">
+              2. Why can JSX make component code easier to understand?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>Connect the readable UI structure with component logic.</p>
+            </details>
+          </div>
+        </section>
+        <section class="task">
+          <h3>💡 Mini task</h3>
+          <p>
+            Explain the concept without reading the definition. Then change one
+            part of the example, predict the result, and run it to verify your
+            reasoning.
+          </p>
+        </section>
+      </article>
+      <article
+        class="card"
+        data-search="jsx expressions javascript expressions can be embedded in jsx with curly braces so values and calculations affect rendered ui. use expressions for dynamic values, calculations and values produced by functions."
+      >
+        <div class="card-head">
+          <span class="num">08</span>
+          <div>
+            <h2>JSX expressions</h2>
+            <span class="tag">React Fundamentals</span>
+          </div>
+          <label class="done"
+            ><input type="checkbox" data-done="8" /> Learned</label
+          >
+        </div>
+        <section>
+          <h3>What is it?</h3>
+          <p>
+            JavaScript expressions can be embedded in JSX with curly braces so
+            values and calculations affect rendered UI.
+          </p>
+        </section>
+        <section class="layman">
+          <h3>🧠 Layman example</h3>
+          <p>
+            A bill might say Total: ₹{price * quantity}; the value is calculated
+            and inserted into the displayed text.
+          </p>
+        </section>
+        <section>
+          <h3>Proper use case</h3>
+          <p>
+            Use expressions for dynamic values, calculations and values produced
+            by functions.
+          </p>
+        </section>
+        <section>
+          <h3>Practical example</h3>
+          <pre><code>function CartItem({price,quantity}){const total=price*quantity;return &lt;p&gt;Total: ₹{total}&lt;/p&gt;}</code></pre>
+          <button class="copy" onclick="copyCode(this)">Copy code</button>
+        </section>
+        <section>
+          <h3>Intern questions</h3>
+          <div class="question">
+            <div class="q">
+              1. What kinds of JavaScript values can you place inside JSX
+              braces?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>
+                Explain that expressions evaluate to values that can be embedded
+                in JSX.
+              </p>
+            </details>
+          </div>
+          <div class="question">
+            <div class="q">
+              2. Why might you calculate a value before return instead of
+              putting a very complicated expression directly in JSX?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>
+                Look for readability, testability and keeping complicated
+                calculations out of markup.
+              </p>
+            </details>
+          </div>
+        </section>
+        <section class="task">
+          <h3>💡 Mini task</h3>
+          <p>
+            Explain the concept without reading the definition. Then change one
+            part of the example, predict the result, and run it to verify your
+            reasoning.
+          </p>
+        </section>
+      </article>
+      <article
+        class="card"
+        data-search="jsx attributes jsx attributes provide values/configuration to elements and components. custom component attributes become props. use attributes/props to configure reusable components instead of hardcoding every variation."
+      >
+        <div class="card-head">
+          <span class="num">09</span>
+          <div>
+            <h2>JSX attributes</h2>
+            <span class="tag">React Fundamentals</span>
+          </div>
+          <label class="done"
+            ><input type="checkbox" data-done="9" /> Learned</label
+          >
+        </div>
+        <section>
+          <h3>What is it?</h3>
+          <p>
+            JSX attributes provide values/configuration to elements and
+            components. Custom component attributes become props.
+          </p>
+        </section>
+        <section class="layman">
+          <h3>🧠 Layman example</h3>
+          <p>
+            Attributes are like settings on an object: an image has a source, a
+            button can be disabled, a component can receive a title.
+          </p>
+        </section>
+        <section>
+          <h3>Proper use case</h3>
+          <p>
+            Use attributes/props to configure reusable components instead of
+            hardcoding every variation.
+          </p>
+        </section>
+        <section>
+          <h3>Practical example</h3>
+          <pre><code>function Avatar({src,alt}){return &lt;img src={src} alt={alt}/&gt;}; &lt;Avatar src=&#x27;/user.png&#x27; alt=&#x27;Profile&#x27;/&gt;</code></pre>
+          <button class="copy" onclick="copyCode(this)">Copy code</button>
+        </section>
+        <section>
+          <h3>Intern questions</h3>
+          <div class="question">
+            <div class="q">
+              1. What is the relationship between an attribute on a custom
+              component and a prop?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>
+                Explain that custom-component attributes are received as props.
+              </p>
+            </details>
+          </div>
+          <div class="question">
+            <div class="q">
+              2. Why should reusable components avoid hardcoding
+              likely-to-change values?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>
+                Connect configuration through props with reuse and flexibility.
+              </p>
+            </details>
+          </div>
+        </section>
+        <section class="task">
+          <h3>💡 Mini task</h3>
+          <p>
+            Explain the concept without reading the definition. Then change one
+            part of the example, predict the result, and run it to verify your
+            reasoning.
+          </p>
+        </section>
+      </article>
+      <article
+        class="card"
+        data-search="fragments fragments let a component return multiple sibling elements without adding an extra dom wrapper. use a fragment when an extra div could affect layout, semantics, styling or dom structure."
+      >
+        <div class="card-head">
+          <span class="num">10</span>
+          <div>
+            <h2>Fragments</h2>
+            <span class="tag">React Fundamentals</span>
+          </div>
+          <label class="done"
+            ><input type="checkbox" data-done="10" /> Learned</label
+          >
+        </div>
+        <section>
+          <h3>What is it?</h3>
+          <p>
+            Fragments let a component return multiple sibling elements without
+            adding an extra DOM wrapper.
+          </p>
+        </section>
+        <section class="layman">
+          <h3>🧠 Layman example</h3>
+          <p>
+            If you need to carry two books, you can carry them without putting
+            them in a new box that serves no purpose.
+          </p>
+        </section>
+        <section>
+          <h3>Proper use case</h3>
+          <p>
+            Use a Fragment when an extra div could affect layout, semantics,
+            styling or DOM structure.
+          </p>
+        </section>
+        <section>
+          <h3>Practical example</h3>
+          <pre><code>function UserInfo(){return &lt;&gt;&lt;h2&gt;Milan&lt;/h2&gt;&lt;p&gt;Frontend Developer&lt;/p&gt;&lt;/&gt;}</code></pre>
+          <button class="copy" onclick="copyCode(this)">Copy code</button>
+        </section>
+        <section>
+          <h3>Intern questions</h3>
+          <div class="question">
+            <div class="q">1. Why might an unnecessary div be undesirable?</div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>
+                Mention DOM cleanliness and possible layout/semantic
+                consequences.
+              </p>
+            </details>
+          </div>
+          <div class="question">
+            <div class="q">
+              2. When is a Fragment preferable to a wrapper element?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>Identify cases where no actual HTML element is needed.</p>
+            </details>
+          </div>
+        </section>
+        <section class="task">
+          <h3>💡 Mini task</h3>
+          <p>
+            Explain the concept without reading the definition. Then change one
+            part of the example, predict the result, and run it to verify your
+            reasoning.
+          </p>
+        </section>
+      </article>
+      <article
+        class="card"
+        data-search="rendering elements rendering is react calculating what the ui should look like from the current component inputs/state and applying required changes to the host environment. rendering happens when react needs to calculate ui from current props, state or other reactive inputs."
+      >
+        <div class="card-head">
+          <span class="num">11</span>
+          <div>
+            <h2>Rendering elements</h2>
+            <span class="tag">React Fundamentals</span>
+          </div>
+          <label class="done"
+            ><input type="checkbox" data-done="11" /> Learned</label
+          >
+        </div>
+        <section>
+          <h3>What is it?</h3>
+          <p>
+            Rendering is React calculating what the UI should look like from the
+            current component inputs/state and applying required changes to the
+            host environment.
+          </p>
+        </section>
+        <section class="layman">
+          <h3>🧠 Layman example</h3>
+          <p>
+            Imagine comparing a current shopping list with a new list and asking
+            for only the changes needed rather than rebuilding the entire store.
+          </p>
+        </section>
+        <section>
+          <h3>Proper use case</h3>
+          <p>
+            Rendering happens when React needs to calculate UI from current
+            props, state or other reactive inputs.
+          </p>
+        </section>
+        <section>
+          <h3>Practical example</h3>
+          <pre><code>const root=ReactDOM.createRoot(document.getElementById(&#x27;root&#x27;)); root.render(&lt;App/&gt;);</code></pre>
+          <button class="copy" onclick="copyCode(this)">Copy code</button>
+        </section>
+        <section>
+          <h3>Intern questions</h3>
+          <div class="question">
+            <div class="q">1. What does rendering mean at a high level?</div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>
+                Distinguish calculating UI from applying necessary host/DOM
+                changes.
+              </p>
+            </details>
+          </div>
+          <div class="question">
+            <div class="q">
+              2. Does a render automatically mean every DOM node is physically
+              recreated? Explain.
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>
+                Explain that React can determine only the necessary changes
+                rather than recreating everything.
+              </p>
+            </details>
+          </div>
+        </section>
+        <section class="task">
+          <h3>💡 Mini task</h3>
+          <p>
+            Explain the concept without reading the definition. Then change one
+            part of the example, predict the result, and run it to verify your
+            reasoning.
+          </p>
+        </section>
+      </article>
+      <article
+        class="card"
+        data-search="createroot createroot creates a react root connected to a dom element and provides the entry point for rendering a client react application. use it when bootstrapping a client-side react application."
+      >
+        <div class="card-head">
+          <span class="num">12</span>
+          <div>
+            <h2>createRoot</h2>
+            <span class="tag">React Fundamentals</span>
+          </div>
+          <label class="done"
+            ><input type="checkbox" data-done="12" /> Learned</label
+          >
+        </div>
+        <section>
+          <h3>What is it?</h3>
+          <p>
+            createRoot creates a React root connected to a DOM element and
+            provides the entry point for rendering a client React application.
+          </p>
+        </section>
+        <section class="layman">
+          <h3>🧠 Layman example</h3>
+          <p>
+            It is like telling React which building belongs to your application.
+          </p>
+        </section>
+        <section>
+          <h3>Proper use case</h3>
+          <p>Use it when bootstrapping a client-side React application.</p>
+        </section>
+        <section>
+          <h3>Practical example</h3>
+          <pre><code>import {createRoot} from &#x27;react-dom/client&#x27;; const root=createRoot(document.getElementById(&#x27;root&#x27;)); root.render(&lt;App/&gt;);</code></pre>
+          <button class="copy" onclick="copyCode(this)">Copy code</button>
+        </section>
+        <section>
+          <h3>Intern questions</h3>
+          <div class="question">
+            <div class="q">1. What DOM element is createRoot connected to?</div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>Identify the DOM container/mount point.</p>
+            </details>
+          </div>
+          <div class="question">
+            <div class="q">2. What is the purpose of root.render()?</div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>
+                Explain that render supplies the component tree to be rendered
+                into that root.
+              </p>
+            </details>
+          </div>
+        </section>
+        <section class="task">
+          <h3>💡 Mini task</h3>
+          <p>
+            Explain the concept without reading the definition. Then change one
+            part of the example, predict the result, and run it to verify your
+            reasoning.
+          </p>
+        </section>
+      </article>
+      <article
+        class="card"
+        data-search="component composition composition means building larger components by combining smaller components rather than making one monolithic component. use composition for layouts, pages, cards, modals and feature areas with distinct responsibilities."
+      >
+        <div class="card-head">
+          <span class="num">13</span>
+          <div>
+            <h2>Component composition</h2>
+            <span class="tag">React Fundamentals</span>
+          </div>
+          <label class="done"
+            ><input type="checkbox" data-done="13" /> Learned</label
+          >
+        </div>
+        <section>
+          <h3>What is it?</h3>
+          <p>
+            Composition means building larger components by combining smaller
+            components rather than making one monolithic component.
+          </p>
+        </section>
+        <section class="layman">
+          <h3>🧠 Layman example</h3>
+          <p>
+            A house is made from rooms; rooms contain smaller pieces. You do not
+            make the whole house one inseparable object.
+          </p>
+        </section>
+        <section>
+          <h3>Proper use case</h3>
+          <p>
+            Use composition for layouts, pages, cards, modals and feature areas
+            with distinct responsibilities.
+          </p>
+        </section>
+        <section>
+          <h3>Practical example</h3>
+          <pre><code>function Dashboard(){return &lt;DashboardLayout&gt;&lt;Stats/&gt;&lt;RecentOrders/&gt;&lt;Activity/&gt;&lt;/DashboardLayout&gt;}</code></pre>
+          <button class="copy" onclick="copyCode(this)">Copy code</button>
+        </section>
+        <section>
+          <h3>Intern questions</h3>
+          <div class="question">
+            <div class="q">
+              1. What is the difference between composition and simply having
+              many files?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>
+                Look for meaningful parent-child relationships and clear
+                responsibilities.
+              </p>
+            </details>
+          </div>
+          <div class="question">
+            <div class="q">
+              2. How can composition make a large page easier to maintain?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>
+                Connect composition with isolation, reuse and easier
+                reasoning/testing.
+              </p>
+            </details>
+          </div>
+        </section>
+        <section class="task">
+          <h3>💡 Mini task</h3>
+          <p>
+            Explain the concept without reading the definition. Then change one
+            part of the example, predict the result, and run it to verify your
+            reasoning.
+          </p>
+        </section>
+      </article>
+      <article
+        class="card"
+        data-search="reusable components a reusable component has a clear api and can work in multiple situations without being tightly coupled to one page. use reusable components for patterns such as button, modal, input, table, card and emptystate."
+      >
+        <div class="card-head">
+          <span class="num">14</span>
+          <div>
+            <h2>Reusable components</h2>
+            <span class="tag">React Fundamentals</span>
+          </div>
+          <label class="done"
+            ><input type="checkbox" data-done="14" /> Learned</label
+          >
+        </div>
+        <section>
+          <h3>What is it?</h3>
+          <p>
+            A reusable component has a clear API and can work in multiple
+            situations without being tightly coupled to one page.
+          </p>
+        </section>
+        <section class="layman">
+          <h3>🧠 Layman example</h3>
+          <p>
+            A USB charger is useful because it has a predictable interface and
+            can work with different compatible devices.
+          </p>
+        </section>
+        <section>
+          <h3>Proper use case</h3>
+          <p>
+            Use reusable components for patterns such as Button, Modal, Input,
+            Table, Card and EmptyState.
+          </p>
+        </section>
+        <section>
+          <h3>Practical example</h3>
+          <pre><code>function Badge({label,tone=&#x27;neutral&#x27;}){return &lt;span className={&#x27;badge &#x27;+tone}&gt;{label}&lt;/span&gt;}</code></pre>
+          <button class="copy" onclick="copyCode(this)">Copy code</button>
+        </section>
+        <section>
+          <h3>Intern questions</h3>
+          <div class="question">
+            <div class="q">
+              1. What makes a component reusable rather than merely shared?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>
+                Look for a predictable API, low coupling and configuration
+                through props/composition.
+              </p>
+            </details>
+          </div>
+          <div class="question">
+            <div class="q">
+              2. What could happen if a reusable Button contains Orders-page
+              business logic?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>Identify feature-specific coupling as a reuse problem.</p>
+            </details>
+          </div>
+        </section>
+        <section class="task">
+          <h3>💡 Mini task</h3>
+          <p>
+            Explain the concept without reading the definition. Then change one
+            part of the example, predict the result, and run it to verify your
+            reasoning.
+          </p>
+        </section>
+      </article>
+      <article
+        class="card"
+        data-search="props props are inputs passed from a parent to a child. they configure the child with data and behaviour. use props for parent-to-child data flow, configuration and callback functions."
+      >
+        <div class="card-head">
+          <span class="num">15</span>
+          <div>
+            <h2>Props</h2>
+            <span class="tag">React Fundamentals</span>
+          </div>
+          <label class="done"
+            ><input type="checkbox" data-done="15" /> Learned</label
+          >
+        </div>
+        <section>
+          <h3>What is it?</h3>
+          <p>
+            Props are inputs passed from a parent to a child. They configure the
+            child with data and behaviour.
+          </p>
+        </section>
+        <section class="layman">
+          <h3>🧠 Layman example</h3>
+          <p>
+            Props are like an order slip given to a worker: the worker performs
+            the task using the supplied information.
+          </p>
+        </section>
+        <section>
+          <h3>Proper use case</h3>
+          <p>
+            Use props for parent-to-child data flow, configuration and callback
+            functions.
+          </p>
+        </section>
+        <section>
+          <h3>Practical example</h3>
+          <pre><code>function ProductCard({name,price}){return &lt;div&gt;&lt;h3&gt;{name}&lt;/h3&gt;&lt;p&gt;₹{price}&lt;/p&gt;&lt;/div&gt;}; &lt;ProductCard name=&#x27;Keyboard&#x27; price={2499}/&gt;</code></pre>
+          <button class="copy" onclick="copyCode(this)">Copy code</button>
+        </section>
+        <section>
+          <h3>Intern questions</h3>
+          <div class="question">
+            <div class="q">1. Who owns a prop value: parent or child?</div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>Explain parent ownership and one-way data flow.</p>
+            </details>
+          </div>
+          <div class="question">
+            <div class="q">
+              2. How can a child trigger a parent action without directly
+              changing the parent&#x27;s state?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>
+                Look for callback props: the parent passes a function and the
+                child invokes it.
+              </p>
+            </details>
+          </div>
+        </section>
+        <section class="task">
+          <h3>💡 Mini task</h3>
+          <p>
+            Explain the concept without reading the definition. Then change one
+            part of the example, predict the result, and run it to verify your
+            reasoning.
+          </p>
+        </section>
+      </article>
+      <article
+        class="card"
+        data-search="children prop the children prop contains jsx nested between a component&#x27;s opening and closing tags and enables flexible composition. use children for layout, card, modal, panel and other wrapper-like components."
+      >
+        <div class="card-head">
+          <span class="num">16</span>
+          <div>
+            <h2>children prop</h2>
+            <span class="tag">React Fundamentals</span>
+          </div>
+          <label class="done"
+            ><input type="checkbox" data-done="16" /> Learned</label
+          >
+        </div>
+        <section>
+          <h3>What is it?</h3>
+          <p>
+            The children prop contains JSX nested between a component&#x27;s
+            opening and closing tags and enables flexible composition.
+          </p>
+        </section>
+        <section class="layman">
+          <h3>🧠 Layman example</h3>
+          <p>
+            Think of a reusable box: the box supplies the structure while you
+            decide what goes inside it.
+          </p>
+        </section>
+        <section>
+          <h3>Proper use case</h3>
+          <p>
+            Use children for Layout, Card, Modal, Panel and other wrapper-like
+            components.
+          </p>
+        </section>
+        <section>
+          <h3>Practical example</h3>
+          <pre><code>function Card({children}){return &lt;section className=&#x27;card&#x27;&gt;{children}&lt;/section&gt;}</code></pre>
+          <button class="copy" onclick="copyCode(this)">Copy code</button>
+        </section>
+        <section>
+          <h3>Intern questions</h3>
+          <div class="question">
+            <div class="q">
+              1. Why can children be more flexible than a prop for every
+              possible piece of content?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>Look for composition and flexible nested content.</p>
+            </details>
+          </div>
+          <div class="question">
+            <div class="q">
+              2. Give one component where children make sense and explain who
+              controls the structure versus content.
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>
+                Separate container/layout responsibility from content supplied
+                by the caller.
+              </p>
+            </details>
+          </div>
+        </section>
+        <section class="task">
+          <h3>💡 Mini task</h3>
+          <p>
+            Explain the concept without reading the definition. Then change one
+            part of the example, predict the result, and run it to verify your
+            reasoning.
+          </p>
+        </section>
+      </article>
+      <article
+        class="card"
+        data-search="props destructuring destructuring lets a component extract named props directly from its parameter, often making implementation easier to read. use it when components accept several props and direct names improve clarity."
+      >
+        <div class="card-head">
+          <span class="num">17</span>
+          <div>
+            <h2>Props destructuring</h2>
+            <span class="tag">React Fundamentals</span>
+          </div>
+          <label class="done"
+            ><input type="checkbox" data-done="17" /> Learned</label
+          >
+        </div>
+        <section>
+          <h3>What is it?</h3>
+          <p>
+            Destructuring lets a component extract named props directly from its
+            parameter, often making implementation easier to read.
+          </p>
+        </section>
+        <section class="layman">
+          <h3>🧠 Layman example</h3>
+          <p>
+            Instead of opening a bag every time you need something, take out the
+            things you need at the beginning.
+          </p>
+        </section>
+        <section>
+          <h3>Proper use case</h3>
+          <p>
+            Use it when components accept several props and direct names improve
+            clarity.
+          </p>
+        </section>
+        <section>
+          <h3>Practical example</h3>
+          <pre><code>function UserCard({name,role,avatar}){return &lt;article&gt;&lt;img src={avatar} alt=&#x27;&#x27;/&gt;&lt;h3&gt;{name}&lt;/h3&gt;&lt;p&gt;{role}&lt;/p&gt;&lt;/article&gt;}</code></pre>
+          <button class="copy" onclick="copyCode(this)">Copy code</button>
+        </section>
+        <section>
+          <h3>Intern questions</h3>
+          <div class="question">
+            <div class="q">
+              1. What is the difference between props.name and destructuring
+              {name}?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>Explain that both access the same prop data.</p>
+            </details>
+          </div>
+          <div class="question">
+            <div class="q">
+              2. Does destructuring change where the value comes from?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>
+                Recognise destructuring as syntax/readability rather than a new
+                React mechanism.
+              </p>
+            </details>
+          </div>
+        </section>
+        <section class="task">
+          <h3>💡 Mini task</h3>
+          <p>
+            Explain the concept without reading the definition. Then change one
+            part of the example, predict the result, and run it to verify your
+            reasoning.
+          </p>
+        </section>
+      </article>
+      <article
+        class="card"
+        data-search="default props / default parameters default parameters provide fallback values when an optional prop is not supplied. use defaults for optional configuration such as size, tone, placeholder text or layout mode."
+      >
+        <div class="card-head">
+          <span class="num">18</span>
+          <div>
+            <h2>Default props / default parameters</h2>
+            <span class="tag">React Fundamentals</span>
+          </div>
+          <label class="done"
+            ><input type="checkbox" data-done="18" /> Learned</label
+          >
+        </div>
+        <section>
+          <h3>What is it?</h3>
+          <p>
+            Default parameters provide fallback values when an optional prop is
+            not supplied.
+          </p>
+        </section>
+        <section class="layman">
+          <h3>🧠 Layman example</h3>
+          <p>
+            If a customer gives no delivery instruction, the system can use a
+            standard instruction.
+          </p>
+        </section>
+        <section>
+          <h3>Proper use case</h3>
+          <p>
+            Use defaults for optional configuration such as size, tone,
+            placeholder text or layout mode.
+          </p>
+        </section>
+        <section>
+          <h3>Practical example</h3>
+          <pre><code>function Button({label,size=&#x27;medium&#x27;}){return &lt;button className={&#x27;btn-&#x27;+size}&gt;{label}&lt;/button&gt;}</code></pre>
+          <button class="copy" onclick="copyCode(this)">Copy code</button>
+        </section>
+        <section>
+          <h3>Intern questions</h3>
+          <div class="question">
+            <div class="q">1. What happens when size is omitted?</div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>
+                Identify the fallback value used when the prop is undefined.
+              </p>
+            </details>
+          </div>
+          <div class="question">
+            <div class="q">
+              2. Why is a sensible default useful for a reusable component?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>Look for simpler APIs and predictable behaviour.</p>
+            </details>
+          </div>
+        </section>
+        <section class="task">
+          <h3>💡 Mini task</h3>
+          <p>
+            Explain the concept without reading the definition. Then change one
+            part of the example, predict the result, and run it to verify your
+            reasoning.
+          </p>
+        </section>
+      </article>
+      <article
+        class="card"
+        data-search="conditional rendering conditional rendering means choosing which ui to render based on a condition. use it for authentication, loading/error/success states, permissions, empty states and feature variations."
+      >
+        <div class="card-head">
+          <span class="num">19</span>
+          <div>
+            <h2>Conditional rendering</h2>
+            <span class="tag">React Fundamentals</span>
+          </div>
+          <label class="done"
+            ><input type="checkbox" data-done="19" /> Learned</label
+          >
+        </div>
+        <section>
+          <h3>What is it?</h3>
+          <p>
+            Conditional rendering means choosing which UI to render based on a
+            condition.
+          </p>
+        </section>
+        <section class="layman">
+          <h3>🧠 Layman example</h3>
+          <p>
+            A traffic signal shows different lights depending on its current
+            state.
+          </p>
+        </section>
+        <section>
+          <h3>Proper use case</h3>
+          <p>
+            Use it for authentication, loading/error/success states,
+            permissions, empty states and feature variations.
+          </p>
+        </section>
+        <section>
+          <h3>Practical example</h3>
+          <pre><code>function Profile({user}){if(!user)return &lt;p&gt;Please log in.&lt;/p&gt;;return &lt;h2&gt;Welcome, {user.name}&lt;/h2&gt;}</code></pre>
+          <button class="copy" onclick="copyCode(this)">Copy code</button>
+        </section>
+        <section>
+          <h3>Intern questions</h3>
+          <div class="question">
+            <div class="q">1. What UI should show when user is null?</div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>Identify the different UI states and their conditions.</p>
+            </details>
+          </div>
+          <div class="question">
+            <div class="q">
+              2. How would you structure loading, error, empty and success
+              states clearly?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>
+                Prefer clear branches over deeply nested conditional expressions
+                that become hard to reason about.
+              </p>
+            </details>
+          </div>
+        </section>
+        <section class="task">
+          <h3>💡 Mini task</h3>
+          <p>
+            Explain the concept without reading the definition. Then change one
+            part of the example, predict the result, and run it to verify your
+            reasoning.
+          </p>
+        </section>
+      </article>
+      <article
+        class="card"
+        data-search="lists and rendering react can transform an array into repeated ui using javascript methods such as map(). use it for products, users, orders, notifications and other collections."
+      >
+        <div class="card-head">
+          <span class="num">20</span>
+          <div>
+            <h2>Lists and rendering</h2>
+            <span class="tag">React Fundamentals</span>
+          </div>
+          <label class="done"
+            ><input type="checkbox" data-done="20" /> Learned</label
+          >
+        </div>
+        <section>
+          <h3>What is it?</h3>
+          <p>
+            React can transform an array into repeated UI using JavaScript
+            methods such as map().
+          </p>
+        </section>
+        <section class="layman">
+          <h3>🧠 Layman example</h3>
+          <p>
+            For 100 students, you do not manually write 100 cards; you reuse one
+            card design for each student.
+          </p>
+        </section>
+        <section>
+          <h3>Proper use case</h3>
+          <p>
+            Use it for products, users, orders, notifications and other
+            collections.
+          </p>
+        </section>
+        <section>
+          <h3>Practical example</h3>
+          <pre><code>const users=[{id:1,name:&#x27;Anand&#x27;},{id:2,name:&#x27;Riya&#x27;}]; function UserList(){return &lt;ul&gt;{users.map(u=&gt;&lt;li key={u.id}&gt;{u.name}&lt;/li&gt;)}&lt;/ul&gt;}</code></pre>
+          <button class="copy" onclick="copyCode(this)">Copy code</button>
+        </section>
+        <section>
+          <h3>Intern questions</h3>
+          <div class="question">
+            <div class="q">
+              1. Why is map() commonly used for rendering arrays?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>
+                Connect map() with transforming each item into a UI element.
+              </p>
+            </details>
+          </div>
+          <div class="question">
+            <div class="q">
+              2. What should you think about when the array is empty?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>
+                Mention an intentional empty state when the UI should
+                communicate that there is no data.
+              </p>
+            </details>
+          </div>
+        </section>
+        <section class="task">
+          <h3>💡 Mini task</h3>
+          <p>
+            Explain the concept without reading the definition. Then change one
+            part of the example, predict the result, and run it to verify your
+            reasoning.
+          </p>
+        </section>
+      </article>
+      <article
+        class="card"
+        data-search="keys keys give list items a stable identity so react can track items correctly between renders. use stable unique identifiers, especially when list items can be inserted, removed or reordered."
+      >
+        <div class="card-head">
+          <span class="num">21</span>
+          <div>
+            <h2>Keys</h2>
+            <span class="tag">React Fundamentals</span>
+          </div>
+          <label class="done"
+            ><input type="checkbox" data-done="21" /> Learned</label
+          >
+        </div>
+        <section>
+          <h3>What is it?</h3>
+          <p>
+            Keys give list items a stable identity so React can track items
+            correctly between renders.
+          </p>
+        </section>
+        <section class="layman">
+          <h3>🧠 Layman example</h3>
+          <p>
+            Students have roll numbers; if seats change, the roll number still
+            identifies each student.
+          </p>
+        </section>
+        <section>
+          <h3>Proper use case</h3>
+          <p>
+            Use stable unique identifiers, especially when list items can be
+            inserted, removed or reordered.
+          </p>
+        </section>
+        <section>
+          <h3>Practical example</h3>
+          <pre><code>items.map(item=&gt;&lt;TodoItem key={item.id} todo={item}/&gt;)</code></pre>
+          <button class="copy" onclick="copyCode(this)">Copy code</button>
+        </section>
+        <section>
+          <h3>Intern questions</h3>
+          <div class="question">
+            <div class="q">
+              1. Why can an array index be problematic as a key when items
+              reorder?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>
+                Explain unstable positional identity and incorrect association
+                of component state.
+              </p>
+            </details>
+          </div>
+          <div class="question">
+            <div class="q">
+              2. What key would you prefer for database-backed items and why?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>
+                Prefer a stable identifier representing the item itself, such as
+                a database ID.
+              </p>
+            </details>
+          </div>
+        </section>
+        <section class="task">
+          <h3>💡 Mini task</h3>
+          <p>
+            Explain the concept without reading the definition. Then change one
+            part of the example, predict the result, and run it to verify your
+            reasoning.
+          </p>
+        </section>
+      </article>
+      <article
+        class="card"
+        data-search="event handling react handles interactions with event handlers such as onclick, onchange and onsubmit. use handlers for clicks, typing, submissions, selections and keyboard interactions."
+      >
+        <div class="card-head">
+          <span class="num">22</span>
+          <div>
+            <h2>Event handling</h2>
+            <span class="tag">React Fundamentals</span>
+          </div>
+          <label class="done"
+            ><input type="checkbox" data-done="22" /> Learned</label
+          >
+        </div>
+        <section>
+          <h3>What is it?</h3>
+          <p>
+            React handles interactions with event handlers such as onClick,
+            onChange and onSubmit.
+          </p>
+        </section>
+        <section class="layman">
+          <h3>🧠 Layman example</h3>
+          <p>
+            A receptionist reacts when a bell rings; the event is the bell and
+            the handler is the action taken.
+          </p>
+        </section>
+        <section>
+          <h3>Proper use case</h3>
+          <p>
+            Use handlers for clicks, typing, submissions, selections and
+            keyboard interactions.
+          </p>
+        </section>
+        <section>
+          <h3>Practical example</h3>
+          <pre><code>function SaveButton(){function handleSave(){console.log(&#x27;Saving...&#x27;)} return &lt;button onClick={handleSave}&gt;Save&lt;/button&gt;}</code></pre>
+          <button class="copy" onclick="copyCode(this)">Copy code</button>
+        </section>
+        <section>
+          <h3>Intern questions</h3>
+          <div class="question">
+            <div class="q">
+              1. What is the difference between onClick={handleSave} and
+              onClick={handleSave()}?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>Explain passing a function versus calling it during render.</p>
+            </details>
+          </div>
+          <div class="question">
+            <div class="q">
+              2. Where should a user-triggered action normally begin: an effect
+              or an event handler?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>Distinguish user events from synchronization effects.</p>
+            </details>
+          </div>
+        </section>
+        <section class="task">
+          <h3>💡 Mini task</h3>
+          <p>
+            Explain the concept without reading the definition. Then change one
+            part of the example, predict the result, and run it to verify your
+            reasoning.
+          </p>
+        </section>
+      </article>
+      <article
+        class="card"
+        data-search="synthetic events react provides a consistent event interface around browser events so handlers follow react&#x27;s event system. use the event object for target/value, keyboard details and other interaction data."
+      >
+        <div class="card-head">
+          <span class="num">23</span>
+          <div>
+            <h2>Synthetic events</h2>
+            <span class="tag">React Fundamentals</span>
+          </div>
+          <label class="done"
+            ><input type="checkbox" data-done="23" /> Learned</label
+          >
+        </div>
+        <section>
+          <h3>What is it?</h3>
+          <p>
+            React provides a consistent event interface around browser events so
+            handlers follow React&#x27;s event system.
+          </p>
+        </section>
+        <section class="layman">
+          <h3>🧠 Layman example</h3>
+          <p>
+            It is like a common adapter that gives different devices a
+            consistent control interface.
+          </p>
+        </section>
+        <section>
+          <h3>Proper use case</h3>
+          <p>
+            Use the event object for target/value, keyboard details and other
+            interaction data.
+          </p>
+        </section>
+        <section>
+          <h3>Practical example</h3>
+          <pre><code>function SearchBox(){function handleChange(event){console.log(event.target.value)} return &lt;input onChange={handleChange}/&gt;}</code></pre>
+          <button class="copy" onclick="copyCode(this)">Copy code</button>
+        </section>
+        <section>
+          <h3>Intern questions</h3>
+          <div class="question">
+            <div class="q">
+              1. How would you obtain the current input value?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>Identify event.target/value for form interaction.</p>
+            </details>
+          </div>
+          <div class="question">
+            <div class="q">2. Why is a consistent event interface useful?</div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>Look for consistency and a React-friendly event API.</p>
+            </details>
+          </div>
+        </section>
+        <section class="task">
+          <h3>💡 Mini task</h3>
+          <p>
+            Explain the concept without reading the definition. Then change one
+            part of the example, predict the result, and run it to verify your
+            reasoning.
+          </p>
+        </section>
+      </article>
+      <article
+        class="card"
+        data-search="event propagation events can propagate through nested elements. understanding bubbling, capturing and stopping propagation helps prevent unexpected parent handlers. important for nested clickable ui such as cards containing buttons, menus and dialogs."
+      >
+        <div class="card-head">
+          <span class="num">24</span>
+          <div>
+            <h2>Event propagation</h2>
+            <span class="tag">React Fundamentals</span>
+          </div>
+          <label class="done"
+            ><input type="checkbox" data-done="24" /> Learned</label
+          >
+        </div>
+        <section>
+          <h3>What is it?</h3>
+          <p>
+            Events can propagate through nested elements. Understanding
+            bubbling, capturing and stopping propagation helps prevent
+            unexpected parent handlers.
+          </p>
+        </section>
+        <section class="layman">
+          <h3>🧠 Layman example</h3>
+          <p>
+            A bell inside a room inside a building can be noticed by the small
+            area and then by larger containing areas unless propagation is
+            stopped.
+          </p>
+        </section>
+        <section>
+          <h3>Proper use case</h3>
+          <p>
+            Important for nested clickable UI such as cards containing buttons,
+            menus and dialogs.
+          </p>
+        </section>
+        <section>
+          <h3>Practical example</h3>
+          <pre><code>function Card(){return &lt;div onClick={()=&gt;console.log(&#x27;card&#x27;)}&gt;&lt;button onClick={e=&gt;{e.stopPropagation();console.log(&#x27;delete&#x27;)}}&gt;Delete&lt;/button&gt;&lt;/div&gt;}</code></pre>
+          <button class="copy" onclick="copyCode(this)">Copy code</button>
+        </section>
+        <section>
+          <h3>Intern questions</h3>
+          <div class="question">
+            <div class="q">
+              1. Why might the Card handler also run when Delete is clicked?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>Explain bubbling from the target toward ancestors.</p>
+            </details>
+          </div>
+          <div class="question">
+            <div class="q">
+              2. When is stopping propagation useful, and when might it hide a
+              deeper event-design problem?
+            </div>
+            <details>
+              <summary>Expected direction / how to evaluate</summary>
+              <p>
+                Mention intentional nested interactions while avoiding
+                stopPropagation everywhere as a substitute for clear event
+                design.
+              </p>
+            </details>
+          </div>
+        </section>
+        <section class="task">
+          <h3>💡 Mini task</h3>
+          <p>
+            Explain the concept without reading the definition. Then change one
+            part of the example, predict the result, and run it to verify your
+            reasoning.
+          </p>
+        </section>
+      </article>
+    </main>
+    <footer>
+      <div style="max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; align-items: center;">
+        <div style="font-weight: 600; color: #1e293b;">Step 01 Complete → Next: Step 02 (State & Component Logic)</div>
+        <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+          <a href="../index.html" style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; background: #2563eb; color: #fff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 14px; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);">
+            <span>← Back to Modules Portal</span>
+          </a>
+        </div>
+        <div style="font-size: 13px; color: var(--muted);">Your concept progress is automatically saved in this browser.</div>
+      </div>
+    </footer>
+    <script>
+      const checks = [...document.querySelectorAll("[data-done]")],
+        progress = document.getElementById("progress");
+      function update() {
+        let n = checks.filter((x) => x.checked).length;
+        progress.textContent = `${n} / ${checks.length} learned`;
+        localStorage.setItem(
+          "react-step01-progress",
+          JSON.stringify(checks.map((x) => x.checked)),
+        );
+      }
+      let saved = JSON.parse(
+        localStorage.getItem("react-step01-progress") || "[]",
+      );
+      checks.forEach((x, i) => (x.checked = !!saved[i]));
+      update();
+      checks.forEach((x) => x.addEventListener("change", update));
+      document.getElementById("search").addEventListener("input", (e) => {
+        let q = e.target.value.toLowerCase().trim();
+        document
+          .querySelectorAll(".card")
+          .forEach((c) =>
+            c.classList.toggle("hidden", q && !c.dataset.search.includes(q)),
+          );
+      });
+      async function copyCode(btn) {
+        await navigator.clipboard.writeText(
+          btn.previousElementSibling.innerText,
+        );
+        let old = btn.textContent;
+        btn.textContent = "Copied!";
+        setTimeout(() => (btn.textContent = old), 900);
+      }
+    </script>
+  </body>
+</html>

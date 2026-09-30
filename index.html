@@ -1,0 +1,1412 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>React Engineering Learning Guide — Intern Roadmap & Modules</title>
+    <meta
+      name="description"
+      content="A comprehensive, multi-step React learning canvas and module portal for software engineering interns. Master concepts from fundamentals to production-grade architecture."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg-page: #090d16;
+        --bg-surface: #0f172a;
+        --bg-surface-elevated: #162038;
+        --bg-card: rgba(18, 26, 47, 0.75);
+        --bg-card-hover: rgba(26, 38, 68, 0.85);
+        --border-subtle: rgba(255, 255, 255, 0.08);
+        --border-active: rgba(59, 130, 246, 0.4);
+        --text-primary: #f8fafc;
+        --text-secondary: #94a3b8;
+        --text-muted: #64748b;
+        --accent-blue: #3b82f6;
+        --accent-cyan: #06b6d4;
+        --accent-indigo: #6366f1;
+        --accent-emerald: #10b981;
+        --accent-amber: #f59e0b;
+        --accent-rose: #f43f5e;
+        --radius-sm: 8px;
+        --radius-md: 14px;
+        --radius-lg: 20px;
+        --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+        --font-mono: 'JetBrains Mono', monospace;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: var(--font-main);
+        background-color: var(--bg-page);
+        color: var(--text-primary);
+        line-height: 1.6;
+        min-height: 100vh;
+        overflow-x: hidden;
+        background-image: 
+          radial-gradient(circle at 15% 10%, rgba(59, 130, 246, 0.15) 0%, transparent 40%),
+          radial-gradient(circle at 85% 15%, rgba(99, 102, 241, 0.15) 0%, transparent 45%),
+          radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.06) 0%, transparent 60%);
+        background-attachment: fixed;
+      }
+
+      /* Top Navbar */
+      .navbar {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: rgba(9, 13, 22, 0.82);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--border-subtle);
+        padding: 14px 24px;
+      }
+
+      .nav-container {
+        max-width: 1240px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+        color: var(--text-primary);
+      }
+
+      .react-logo {
+        width: 34px;
+        height: 34px;
+        animation: spin 20s linear infinite;
+      }
+
+      @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+
+      .brand-title {
+        font-weight: 800;
+        font-size: 1.1rem;
+        letter-spacing: -0.02em;
+        background: linear-gradient(135deg, #ffffff 40%, #93c5fd 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .brand-badge {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 3px 8px;
+        border-radius: 999px;
+        background: rgba(59, 130, 246, 0.18);
+        color: #93c5fd;
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        font-weight: 700;
+      }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .nav-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        border-radius: var(--radius-sm);
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s ease;
+      }
+
+      .nav-btn-ghost {
+        color: var(--text-secondary);
+        background: transparent;
+        border: 1px solid var(--border-subtle);
+      }
+
+      .nav-btn-ghost:hover {
+        color: var(--text-primary);
+        border-color: rgba(255, 255, 255, 0.25);
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .nav-btn-primary {
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+      }
+
+      .nav-btn-primary:hover {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
+      }
+
+      /* Hero Section */
+      .hero {
+        padding: 64px 24px 40px;
+        text-align: center;
+        position: relative;
+      }
+
+      .hero-inner {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      .hero-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(30, 41, 59, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        padding: 6px 16px;
+        border-radius: 999px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: #cbd5e1;
+        margin-bottom: 24px;
+        backdrop-filter: blur(8px);
+      }
+
+      .pulse-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: var(--accent-emerald);
+        box-shadow: 0 0 10px var(--accent-emerald);
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.5; transform: scale(0.85); }
+      }
+
+      .hero h1 {
+        font-size: clamp(2.3rem, 5vw, 3.8rem);
+        font-weight: 800;
+        line-height: 1.15;
+        letter-spacing: -0.03em;
+        margin-bottom: 20px;
+        background: linear-gradient(180deg, #ffffff 20%, #94a3b8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .hero h1 span.gradient-text {
+        background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 50%, #38bdf8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .hero-desc {
+        font-size: clamp(1rem, 2vw, 1.2rem);
+        color: var(--text-secondary);
+        max-width: 720px;
+        margin: 0 auto 36px;
+        line-height: 1.7;
+      }
+
+      /* Stats Banner */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        max-width: 1040px;
+        margin: 0 auto 48px;
+        padding: 0 24px;
+      }
+
+      .stat-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-md);
+        padding: 20px 18px;
+        text-align: left;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        transition: transform 0.2s ease, border-color 0.2s ease;
+      }
+
+      .stat-card:hover {
+        transform: translateY(-2px);
+        border-color: rgba(255, 255, 255, 0.16);
+      }
+
+      .stat-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        display: grid;
+        place-items: center;
+        font-size: 1.3rem;
+        flex-shrink: 0;
+      }
+
+      .icon-blue { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+      .icon-emerald { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+      .icon-purple { background: rgba(139, 92, 246, 0.15); color: #a78bfa; border: 1px solid rgba(139, 92, 246, 0.3); }
+      .icon-amber { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+
+      .stat-value {
+        font-size: 1.4rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        color: var(--text-primary);
+        line-height: 1.2;
+      }
+
+      .stat-label {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+        font-weight: 500;
+      }
+
+      /* Sticky Controls & Filter Bar */
+      .controls-bar {
+        position: sticky;
+        top: 67px;
+        z-index: 90;
+        background: rgba(9, 13, 22, 0.88);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border-top: 1px solid var(--border-subtle);
+        border-bottom: 1px solid var(--border-subtle);
+        padding: 14px 24px;
+        margin-bottom: 36px;
+      }
+
+      .controls-inner {
+        max-width: 1240px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .search-and-status {
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      .search-wrapper {
+        position: relative;
+        flex: 1;
+        min-width: 280px;
+      }
+
+      .search-icon {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted);
+        pointer-events: none;
+      }
+
+      .search-input {
+        width: 100%;
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-sm);
+        padding: 11px 16px 11px 40px;
+        color: var(--text-primary);
+        font-size: 0.92rem;
+        font-family: inherit;
+        outline: none;
+        transition: all 0.2s ease;
+      }
+
+      .search-input:focus {
+        border-color: var(--accent-blue);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        background: rgba(15, 23, 42, 1);
+      }
+
+      .filter-tabs {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        scrollbar-width: none;
+      }
+
+      .filter-tabs::-webkit-scrollbar {
+        display: none;
+      }
+
+      .tab-btn {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--border-subtle);
+        color: var(--text-secondary);
+        padding: 7px 14px;
+        border-radius: 999px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: all 0.2s ease;
+      }
+
+      .tab-btn:hover {
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--text-primary);
+      }
+
+      .tab-btn.active {
+        background: var(--accent-blue);
+        color: #fff;
+        border-color: var(--accent-blue);
+        box-shadow: 0 2px 10px rgba(59, 130, 246, 0.35);
+      }
+
+      /* Main Content Container */
+      .main-container {
+        max-width: 1240px;
+        margin: 0 auto;
+        padding: 0 24px 80px;
+      }
+
+      .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 24px;
+      }
+
+      .section-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        color: var(--text-primary);
+      }
+
+      .section-subtitle {
+        font-size: 0.88rem;
+        color: var(--text-secondary);
+        margin-top: 4px;
+      }
+
+      .modules-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+        gap: 24px;
+      }
+
+      /* Module Card */
+      .module-card {
+        background: var(--bg-card);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-lg);
+        padding: 26px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .module-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: transparent;
+        transition: background 0.3s ease;
+      }
+
+      .module-card.active-module {
+        border-color: rgba(59, 130, 246, 0.35);
+        background: linear-gradient(180deg, rgba(20, 31, 58, 0.85) 0%, rgba(15, 23, 42, 0.8) 100%);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(59, 130, 246, 0.1);
+      }
+
+      .module-card.active-module::before {
+        background: linear-gradient(90deg, #3b82f6, #06b6d4);
+      }
+
+      .module-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
+      }
+
+      .module-card.active-module:hover {
+        border-color: rgba(59, 130, 246, 0.6);
+        box-shadow: 0 16px 40px rgba(37, 99, 235, 0.2);
+      }
+
+      .module-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+      }
+
+      .step-badge {
+        font-family: var(--font-mono);
+        font-size: 0.78rem;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 6px;
+        letter-spacing: 0.05em;
+      }
+
+      .step-badge.ready {
+        background: rgba(16, 185, 129, 0.15);
+        color: #34d399;
+        border: 1px solid rgba(16, 185, 129, 0.3);
+      }
+
+      .step-badge.upcoming {
+        background: rgba(148, 163, 184, 0.1);
+        color: #94a3b8;
+        border: 1px solid rgba(148, 163, 184, 0.2);
+      }
+
+      .phase-tag {
+        font-size: 0.74rem;
+        color: var(--text-muted);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .module-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        line-height: 1.35;
+        margin-bottom: 10px;
+      }
+
+      .module-desc {
+        font-size: 0.88rem;
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin-bottom: 18px;
+        flex-grow: 1;
+      }
+
+      .tags-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 22px;
+      }
+
+      .tag-pill {
+        font-size: 0.72rem;
+        font-family: var(--font-mono);
+        padding: 3px 8px;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.05);
+        color: #cbd5e1;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
+
+      .progress-container {
+        margin-bottom: 18px;
+        padding: 10px 12px;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: var(--radius-sm);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+      }
+
+      .progress-label-wrap {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.78rem;
+        margin-bottom: 6px;
+        color: var(--text-secondary);
+      }
+
+      .progress-bar-bg {
+        width: 100%;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 999px;
+        overflow: hidden;
+      }
+
+      .progress-bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #10b981, #06b6d4);
+        border-radius: 999px;
+        transition: width 0.4s ease;
+      }
+
+      .module-footer {
+        border-top: 1px solid var(--border-subtle);
+        padding-top: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .time-estimate {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .btn-module {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 18px;
+        border-radius: var(--radius-sm);
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        border: 1px solid transparent;
+      }
+
+      .btn-module.ready {
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      }
+
+      .btn-module.ready:hover {
+        background: linear-gradient(135deg, #3b82f6, #2563eb);
+        box-shadow: 0 6px 16px rgba(37, 99, 235, 0.45);
+        transform: translateY(-1px);
+      }
+
+      .btn-module.locked {
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--text-muted);
+        border-color: var(--border-subtle);
+        cursor: not-allowed;
+      }
+
+      /* Architecture & Deployment Guide Box */
+      .guide-panel {
+        background: linear-gradient(180deg, rgba(20, 28, 48, 0.9) 0%, rgba(13, 19, 36, 0.9) 100%);
+        border: 1px solid rgba(59, 130, 246, 0.25);
+        border-radius: var(--radius-lg);
+        padding: 32px;
+        margin-top: 54px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+      }
+
+      .guide-header {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 20px;
+      }
+
+      .guide-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: rgba(59, 130, 246, 0.15);
+        display: grid;
+        place-items: center;
+        color: #60a5fa;
+        font-size: 1.4rem;
+        border: 1px solid rgba(59, 130, 246, 0.3);
+      }
+
+      .guide-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+
+      .guide-subtitle {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+      }
+
+      .guide-steps-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 20px;
+        margin-top: 24px;
+      }
+
+      .guide-step-card {
+        background: rgba(10, 15, 28, 0.7);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-md);
+        padding: 20px;
+      }
+
+      .guide-step-number {
+        font-family: var(--font-mono);
+        font-size: 0.8rem;
+        color: #60a5fa;
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+
+      .guide-step-card h4 {
+        font-size: 1rem;
+        color: var(--text-primary);
+        margin-bottom: 8px;
+      }
+
+      .guide-step-card p {
+        font-size: 0.84rem;
+        color: var(--text-secondary);
+        line-height: 1.55;
+      }
+
+      .guide-step-card code {
+        display: inline-block;
+        font-family: var(--font-mono);
+        font-size: 0.78rem;
+        background: rgba(255, 255, 255, 0.08);
+        padding: 2px 6px;
+        border-radius: 4px;
+        color: #93c5fd;
+        margin-top: 4px;
+      }
+
+      /* Footer */
+      footer {
+        border-top: 1px solid var(--border-subtle);
+        background: rgba(9, 13, 22, 0.95);
+        padding: 36px 24px;
+        text-align: center;
+        font-size: 0.85rem;
+        color: var(--text-muted);
+      }
+
+      .footer-inner {
+        max-width: 1240px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .footer-links {
+        display: flex;
+        gap: 20px;
+        margin-top: 4px;
+      }
+
+      .footer-links a {
+        color: var(--text-secondary);
+        text-decoration: none;
+        transition: color 0.2s ease;
+      }
+
+      .footer-links a:hover {
+        color: var(--text-primary);
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .hero { padding: 40px 16px 24px; }
+        .modules-grid { grid-template-columns: 1fr; }
+        .nav-container { flex-direction: column; align-items: flex-start; }
+        .nav-actions { width: 100%; justify-content: space-between; }
+        .stats-grid { grid-template-columns: 1fr 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Navigation Bar -->
+    <header class="navbar">
+      <div class="nav-container">
+        <a href="index.html" class="brand">
+          <svg class="react-logo" viewBox="-11.5 -10.23174 23 20.46348">
+            <circle cx="0" cy="0" r="2.05" fill="#61dafb" />
+            <g stroke="#61dafb" stroke-width="1" fill="none">
+              <ellipse rx="11" ry="4.2" />
+              <ellipse rx="11" ry="4.2" transform="rotate(60)" />
+              <ellipse rx="11" ry="4.2" transform="rotate(120)" />
+            </g>
+          </svg>
+          <div>
+            <div class="brand-title">React Intern Learning Canvas</div>
+            <div style="font-size: 0.72rem; color: var(--text-muted)">Engineering Training & Roadmap</div>
+          </div>
+          <span class="brand-badge">27 Steps</span>
+        </a>
+
+        <div class="nav-actions">
+          <a href="#curriculum" class="nav-btn nav-btn-ghost">Roadmap Overview</a>
+          <a href="#deployment-guide" class="nav-btn nav-btn-ghost">Deploy Guide</a>
+          <a href="modules/react-learning-step-01-fundamentals.html" class="nav-btn nav-btn-primary">
+            <span>Start Step 01</span>
+            <span>→</span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="hero-pill">
+          <span class="pulse-dot"></span>
+          <span>PRODUCTION-READY INTERN LEARNING SYSTEM</span>
+        </div>
+        <h1>
+          Master React from Scratch to <span class="gradient-text">Senior Architecture</span>
+        </h1>
+        <p class="hero-desc">
+          A structured 27-step practical curriculum designed for engineering interns.
+          Each step provides deep conceptual intuition, real-world analogies, live code worksheets, and self-assessment challenges.
+        </p>
+      </div>
+
+      <!-- Quick Metrics Banner -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon icon-blue">📚</div>
+          <div>
+            <div class="stat-value" id="stat-total-steps">27</div>
+            <div class="stat-label">Total Steps Curriculum</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon icon-emerald">⚡</div>
+          <div>
+            <div class="stat-value" id="stat-active-steps">1 Available</div>
+            <div class="stat-label">Ready for Study Now</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon icon-purple">🧠</div>
+          <div>
+            <div class="stat-value" id="stat-concepts">24+</div>
+            <div class="stat-label">Concepts in Step 01</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon icon-amber">🚀</div>
+          <div>
+            <div class="stat-value">Netlify Ready</div>
+            <div class="stat-label">Auto-deploy on Git Push</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sticky Filter & Search Bar -->
+    <div class="controls-bar" id="curriculum">
+      <div class="controls-inner">
+        <div class="search-and-status">
+          <div class="search-wrapper">
+            <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input
+              type="text"
+              id="module-search"
+              class="search-input"
+              placeholder="Search modules by name, keywords, or topics (e.g. JSX, Hooks, State, Routing)..."
+            />
+          </div>
+        </div>
+
+        <div class="filter-tabs">
+          <button class="tab-btn active" data-phase="all">All Modules (27)</button>
+          <button class="tab-btn" data-phase="available">Available Now</button>
+          <button class="tab-btn" data-phase="1">Phase 1: Fundamentals (1–5)</button>
+          <button class="tab-btn" data-phase="2">Phase 2: Hooks & State (6–10)</button>
+          <button class="tab-btn" data-phase="3">Phase 3: Architecture & Routing (11–16)</button>
+          <button class="tab-btn" data-phase="4">Phase 4: Advanced & Performance (17–22)</button>
+          <button class="tab-btn" data-phase="5">Phase 5: Capstones & Production (23–27)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Modules Grid -->
+    <main class="main-container">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title">Curriculum Modules</h2>
+          <p class="section-subtitle">Select a module to launch its interactive study canvas</p>
+        </div>
+        <div id="filter-result-count" style="font-size: 0.84rem; color: var(--text-muted);">
+          Showing 27 of 27 modules
+        </div>
+      </div>
+
+      <div class="modules-grid" id="modules-container">
+        <!-- Rendered dynamically by JavaScript -->
+      </div>
+
+      <!-- Netlify & GitHub Integration Guide -->
+      <section class="guide-panel" id="deployment-guide">
+        <div class="guide-header">
+          <div class="guide-icon">🌐</div>
+          <div>
+            <div class="guide-title">How To Access All Modules, Deploy on Netlify & Sync with GitHub</div>
+            <div class="guide-subtitle">A simple, zero-friction architecture for your expanding curriculum</div>
+          </div>
+        </div>
+
+        <div class="guide-steps-grid">
+          <div class="guide-step-card">
+            <div class="guide-step-number">STEP 01</div>
+            <h4>Adding New Module Files</h4>
+            <p>
+              When you write step 2, simply save the file inside <code>modules/</code> as:
+              <code>react-learning-step-02-state-and-logic.html</code>.
+              The portal dashboard automatically links to it and unlocks its card.
+            </p>
+          </div>
+
+          <div class="guide-step-card">
+            <div class="guide-step-number">STEP 02</div>
+            <h4>Git Version Control</h4>
+            <p>
+              Commit your work to GitHub using:
+              <br /><code>git add .</code>
+              <br /><code>git commit -m "Add Step 02 module"</code>
+              <br /><code>git push origin main</code>
+            </p>
+          </div>
+
+          <div class="guide-step-card">
+            <div class="guide-step-number">STEP 03</div>
+            <h4>Automatic Netlify Deployment</h4>
+            <p>
+              Connect your GitHub repository to Netlify. Set <strong>Publish directory</strong> to <code>.</code> (root).
+              Every git push triggers an instant live deployment with permanent accessible URLs for everyone.
+            </p>
+          </div>
+
+          <div class="guide-step-card">
+            <div class="guide-step-number">STEP 04</div>
+            <h4>Universal Access</h4>
+            <p>
+              Anyone with your Netlify link (e.g. <code>yourapp.netlify.app</code>) lands directly on this dashboard, with one-click access to all active modules and persistent local progress tracking.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-inner">
+        <div>
+          <strong>React Engineering Learning Canvas</strong> • Built for Intern Mentorship & Engineering Excellence
+        </div>
+        <div class="footer-links">
+          <a href="modules/react-learning-step-01-fundamentals.html">Step 01: Fundamentals</a>
+          <a href="#curriculum">Roadmap</a>
+          <a href="#deployment-guide">Deployment Guide</a>
+        </div>
+        <div style="font-size: 0.76rem; color: var(--text-muted); margin-top: 8px;">
+          Deployable on Netlify with zero build step • Static HTML/CSS/JS Architecture
+        </div>
+      </div>
+    </footer>
+
+    <!-- Application Script -->
+    <script>
+      // 27-Step Curriculum Registry
+      const MODULES = [
+        {
+          step: 1,
+          title: "React Fundamentals",
+          filename: "react-learning-step-01-fundamentals.html",
+          phase: 1,
+          status: "available",
+          concepts: 24,
+          time: "2-3 Days",
+          summary: "Core building blocks: What is React, JSX compilation, Virtual DOM, Components, Props, Keys, Reconciliation, and Immutability.",
+          tags: ["JSX", "Virtual DOM", "Props", "Keys", "Reconciliation", "Immutability"]
+        },
+        {
+          step: 2,
+          title: "State & Component Logic",
+          filename: "react-learning-step-02-state-and-logic.html",
+          phase: 1,
+          status: "upcoming",
+          concepts: 20,
+          time: "2 Days",
+          summary: "useState in depth, asynchronous state batching, derived state vs state synchronization, lifting state up, and reducer mental model.",
+          tags: ["useState", "State Batching", "Derived State", "Lifting State", "Immutability"]
+        },
+        {
+          step: 3,
+          title: "Hooks & Side Effects (useEffect & useRef)",
+          filename: "react-learning-step-03-hooks-and-effects.html",
+          phase: 1,
+          status: "upcoming",
+          concepts: 18,
+          time: "3 Days",
+          summary: "Synchronization over lifecycle, dependency array pitfalls, cleanup functions, race conditions, and DOM manipulation with useRef.",
+          tags: ["useEffect", "useRef", "Dependencies", "Cleanups", "Race Conditions"]
+        },
+        {
+          step: 4,
+          title: "Advanced Hooks & Performance Caching",
+          filename: "react-learning-step-04-advanced-hooks.html",
+          phase: 1,
+          status: "upcoming",
+          concepts: 16,
+          time: "2 Days",
+          summary: "useMemo for expensive computation, useCallback for referential stability, useId for accessibility, and crafting custom hooks.",
+          tags: ["useMemo", "useCallback", "Custom Hooks", "Referential Equality", "useId"]
+        },
+        {
+          step: 5,
+          title: "Forms, Validation & User Input",
+          filename: "react-learning-step-05-forms-and-validation.html",
+          phase: 1,
+          status: "upcoming",
+          concepts: 15,
+          time: "2 Days",
+          summary: "Controlled vs uncontrolled components, FormData API, schema validation with Zod/Yup, form state libraries, and accessible error handling.",
+          tags: ["Controlled Forms", "Uncontrolled", "Validation", "Zod", "Accessibility"]
+        },
+        {
+          step: 6,
+          title: "Context API & Prop Drilling Solutions",
+          filename: "react-learning-step-06-context-api.html",
+          phase: 2,
+          status: "upcoming",
+          concepts: 14,
+          time: "2 Days",
+          summary: "When to use Context vs composition, splitting context to prevent unnecessary re-renders, and building compound provider architectures.",
+          tags: ["createContext", "useContext", "Provider Pattern", "Re-render Optimization"]
+        },
+        {
+          step: 7,
+          title: "Component Composition & Design Patterns",
+          filename: "react-learning-step-07-component-patterns.html",
+          phase: 2,
+          status: "upcoming",
+          concepts: 16,
+          time: "3 Days",
+          summary: "Compound components, container/presentational split, render props, higher-order components, slot pattern, and headless UI design.",
+          tags: ["Compound Components", "Slot Pattern", "Render Props", "Headless UI"]
+        },
+        {
+          step: 8,
+          title: "Async Data Fetching & Network Resilience",
+          filename: "react-learning-step-08-data-fetching.html",
+          phase: 2,
+          status: "upcoming",
+          concepts: 18,
+          time: "3 Days",
+          summary: "Native fetch patterns, AbortController cancellation, handling loading/error states gracefully, retry backoff, and pagination basics.",
+          tags: ["Fetch API", "AbortController", "Loading States", "Error Handling", "Pagination"]
+        },
+        {
+          step: 9,
+          title: "Modern Client Routing (React Router)",
+          filename: "react-learning-step-09-routing.html",
+          phase: 2,
+          status: "upcoming",
+          concepts: 16,
+          time: "2-3 Days",
+          summary: "Declarative routing, nested routes, layout routes, URL search params as state, dynamic segment matching, and protected route guards.",
+          tags: ["React Router", "Nested Routes", "SearchParams", "Loaders", "Route Guards"]
+        },
+        {
+          step: 10,
+          title: "Error Boundaries & Resilience",
+          filename: "react-learning-step-10-error-boundaries.html",
+          phase: 2,
+          status: "upcoming",
+          concepts: 12,
+          time: "1-2 Days",
+          summary: "Class-based Error Boundaries, fallback UI, error reporting services integration, catching async vs render errors, and graceful degradation.",
+          tags: ["ErrorBoundary", "componentDidCatch", "Fallback UI", "Telemetry"]
+        },
+        {
+          step: 11,
+          title: "Global State Management (Zustand & Redux)",
+          filename: "react-learning-step-11-global-state.html",
+          phase: 3,
+          status: "upcoming",
+          concepts: 18,
+          time: "3 Days",
+          summary: "State taxonomy: Local vs Global vs Server state. Deep dive into Zustand simplicity and modern Redux Toolkit immutable updates.",
+          tags: ["Zustand", "Redux Toolkit", "Store Architecture", "Selectors", "Immer"]
+        },
+        {
+          step: 12,
+          title: "Server State & Caching (TanStack Query)",
+          filename: "react-learning-step-12-server-state.html",
+          phase: 3,
+          status: "upcoming",
+          concepts: 18,
+          time: "3 Days",
+          summary: "Why fetch in useEffect is an anti-pattern. Query keys, automated cache invalidation, optimistic UI updates, polling, and prefetching.",
+          tags: ["TanStack Query", "Query Keys", "Cache Invalidation", "Optimistic Updates"]
+        },
+        {
+          step: 13,
+          title: "Styling Strategies & Design Systems",
+          filename: "react-learning-step-13-styling-strategies.html",
+          phase: 3,
+          status: "upcoming",
+          concepts: 15,
+          time: "2 Days",
+          summary: "CSS Modules vs TailwindCSS vs CSS-in-JS. Design tokens, responsive design patterns, CSS variables theming, and dark mode toggles.",
+          tags: ["CSS Modules", "TailwindCSS", "Design Tokens", "Dark Mode", "Theming"]
+        },
+        {
+          step: 14,
+          title: "Performance Optimization & Profiling",
+          filename: "react-learning-step-14-performance-optimization.html",
+          phase: 3,
+          status: "upcoming",
+          concepts: 16,
+          time: "3 Days",
+          summary: "React DevTools Profiler, React.memo trade-offs, virtualized lists for 10,000+ items, bundle size analysis, and dynamic code splitting.",
+          tags: ["Profiler", "React.memo", "Windowing / Virtualization", "Bundle Splitting"]
+        },
+        {
+          step: 15,
+          title: "Accessibility (a11y) & Semantic Web",
+          filename: "react-learning-step-15-accessibility.html",
+          phase: 3,
+          status: "upcoming",
+          concepts: 14,
+          time: "2 Days",
+          summary: "WCAG standards, keyboard navigation trap, ARIA attributes, screen reader testing, color contrast, and focus management on route changes.",
+          tags: ["WCAG", "ARIA", "Focus Trap", "Keyboard Navigation", "Screen Readers"]
+        },
+        {
+          step: 16,
+          title: "Testing React: Vitest & Testing Library",
+          filename: "react-learning-step-16-testing.html",
+          phase: 3,
+          status: "upcoming",
+          concepts: 18,
+          time: "3-4 Days",
+          summary: "Testing user behavior over implementation details. Query priority (getByRole), user-event simulation, mocking network calls with MSW.",
+          tags: ["Vitest", "React Testing Library", "getByRole", "MSW", "Unit & Integration"]
+        },
+        {
+          step: 17,
+          title: "TypeScript with React",
+          filename: "react-learning-step-17-typescript-react.html",
+          phase: 4,
+          status: "upcoming",
+          concepts: 18,
+          time: "3 Days",
+          summary: "Typing Props, polymorphic components, typing event handlers, Hook type inference, generic components, and strict compiler settings.",
+          tags: ["TypeScript", "FC vs PropsWithChildren", "Polymorphism", "Generics", "Events"]
+        },
+        {
+          step: 18,
+          title: "Animations & Micro-Interactions",
+          filename: "react-learning-step-18-animations.html",
+          phase: 4,
+          status: "upcoming",
+          concepts: 14,
+          time: "2 Days",
+          summary: "Declarative UI transitions with Framer Motion: layout animations, gesture controls, stagger effects, and performance 60fps rules.",
+          tags: ["Framer Motion", "Layout Animations", "Gestures", "AnimatePresence", "Transitions"]
+        },
+        {
+          step: 19,
+          title: "Security in React Applications",
+          filename: "react-learning-step-19-security.html",
+          phase: 4,
+          status: "upcoming",
+          concepts: 12,
+          time: "2 Days",
+          summary: "Preventing Cross-Site Scripting (XSS), dangerouslySetInnerHTML hazards, safe handling of JWT tokens, CORS, CSP headers, and auth tokens in HTTP-only cookies.",
+          tags: ["XSS Protection", "JWT vs HttpOnly", "CSP Headers", "Sanitization"]
+        },
+        {
+          step: 20,
+          title: "Next.js & React Server Components (RSC)",
+          filename: "react-learning-step-20-nextjs-and-rsc.html",
+          phase: 4,
+          status: "upcoming",
+          concepts: 20,
+          time: "4 Days",
+          summary: "Client vs Server Components boundary, streaming SSR with Suspense, App Router architecture, Server Actions, and SEO metadata generation.",
+          tags: ["Next.js", "Server Components", "Streaming SSR", "Server Actions", "App Router"]
+        },
+        {
+          step: 21,
+          title: "Full-Stack API Integration & Auth Flow",
+          filename: "react-learning-step-21-fullstack-auth.html",
+          phase: 4,
+          status: "upcoming",
+          concepts: 16,
+          time: "3 Days",
+          summary: "Building complete authentication loops: login, signup, session refresh, role-based access control (RBAC), and persistent user profile context.",
+          tags: ["Authentication", "RBAC", "Token Refresh", "Session Context", "Route Guards"]
+        },
+        {
+          step: 22,
+          title: "Code Architecture & Scalable Project Structure",
+          filename: "react-learning-step-22-architecture.html",
+          phase: 4,
+          status: "upcoming",
+          concepts: 14,
+          time: "2 Days",
+          summary: "Feature-driven folder structure, atomic design vs domain slicing, barrel exports, shared UI libraries, and monorepo tooling basics.",
+          tags: ["Feature-based Design", "Monorepo", "Domain Driven", "Clean Architecture"]
+        },
+        {
+          step: 23,
+          title: "CI/CD & Automated Code Quality",
+          filename: "react-learning-step-23-cicd.html",
+          phase: 5,
+          status: "upcoming",
+          concepts: 12,
+          time: "2 Days",
+          summary: "GitHub Actions workflows: automated linting (ESLint, Prettier), running automated test suites on pull requests, and automated deployment previews.",
+          tags: ["GitHub Actions", "CI/CD", "ESLint", "Prettier", "PR Previews"]
+        },
+        {
+          step: 24,
+          title: "Capstone Project 1: Analytics & Ops Dashboard",
+          filename: "react-learning-step-24-capstone-dashboard.html",
+          phase: 5,
+          status: "upcoming",
+          concepts: 22,
+          time: "5 Days",
+          summary: "Hands-on project integrating real-time charting, filterable multi-column tables, dark/light theme persistence, and modal dialogs.",
+          tags: ["Capstone", "Charts", "Complex Tables", "Theme Switcher", "Production UI"]
+        },
+        {
+          step: 25,
+          title: "Capstone Project 2: E-Commerce Storefront",
+          filename: "react-learning-step-25-capstone-ecommerce.html",
+          phase: 5,
+          status: "upcoming",
+          concepts: 24,
+          time: "5 Days",
+          summary: "Multi-page app with cart state management, checkout validation, product filtering/sorting, debounced search, and mock payment flow.",
+          tags: ["Capstone", "Shopping Cart", "Checkout Flow", "Debouncing", "Search"]
+        },
+        {
+          step: 26,
+          title: "Production Deployment, CDN & Monitoring",
+          filename: "react-learning-step-26-deployment-monitoring.html",
+          phase: 5,
+          status: "upcoming",
+          concepts: 14,
+          time: "2 Days",
+          summary: "Netlify and edge caching, setting security headers, custom domain DNS, error tracking with Sentry, and Core Web Vitals telemetry.",
+          tags: ["Netlify Edge", "Sentry", "Core Web Vitals", "Custom Domains", "CDN"]
+        },
+        {
+          step: 27,
+          title: "Senior Interview Mastery & System Design",
+          filename: "react-learning-step-27-interview-mastery.html",
+          phase: 5,
+          status: "upcoming",
+          concepts: 25,
+          time: "4 Days",
+          summary: "Frontend system design interview blueprints: designing Pinterest feed, Netflix browser, or Slack chat. Deep dive into React internals and trivia.",
+          tags: ["Frontend System Design", "React Internals", "Behavioral", "Technical Interview"]
+        }
+      ];
+
+      // Auto-detect existing module files asynchronously
+      async function autoDetectAvailableModules() {
+        for (const mod of MODULES) {
+          if (mod.status === "available") continue;
+          try {
+            const res = await fetch(`modules/${mod.filename}`, { method: 'HEAD' });
+            if (res.ok) {
+              mod.status = "available";
+            }
+          } catch (e) {
+            // Not found or local filesystem file:// protocol
+          }
+        }
+        renderModules();
+        updateStats();
+      }
+
+      // Read local progress for Step 01
+      function getStepProgress(stepNum) {
+        if (stepNum === 1) {
+          try {
+            const saved = JSON.parse(localStorage.getItem("react-step01-progress") || "[]");
+            const done = saved.filter(Boolean).length;
+            return { done, total: 24 };
+          } catch (e) {
+            return { done: 0, total: 24 };
+          }
+        }
+        return { done: 0, total: 0 };
+      }
+
+      // DOM Elements
+      const container = document.getElementById("modules-container");
+      const searchInput = document.getElementById("module-search");
+      const filterTabs = document.querySelectorAll(".tab-btn");
+      const countEl = document.getElementById("filter-result-count");
+      const statActiveSteps = document.getElementById("stat-active-steps");
+
+      let activePhase = "all";
+      let searchQuery = "";
+
+      function updateStats() {
+        const availableCount = MODULES.filter(m => m.status === "available").length;
+        statActiveSteps.textContent = `${availableCount} Available`;
+      }
+
+      function renderModules() {
+        const filtered = MODULES.filter(mod => {
+          // Phase / status filter
+          if (activePhase === "available" && mod.status !== "available") return false;
+          if (activePhase !== "all" && activePhase !== "available" && mod.phase.toString() !== activePhase) return false;
+
+          // Search query
+          if (searchQuery) {
+            const q = searchQuery.toLowerCase();
+            const inTitle = mod.title.toLowerCase().includes(q);
+            const inSummary = mod.summary.toLowerCase().includes(q);
+            const inTags = mod.tags.some(t => t.toLowerCase().includes(q));
+            const inStep = `step ${mod.step}`.includes(q) || `step 0${mod.step}`.includes(q);
+            return inTitle || inSummary || inTags || inStep;
+          }
+          return true;
+        });
+
+        countEl.textContent = `Showing ${filtered.length} of ${MODULES.length} modules`;
+
+        if (filtered.length === 0) {
+          container.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-subtle);">
+              <div style="font-size: 2.4rem; margin-bottom: 12px;">🔍</div>
+              <h3 style="font-size: 1.2rem; color: var(--text-primary); margin-bottom: 6px;">No matching modules found</h3>
+              <p style="color: var(--text-secondary); font-size: 0.9rem;">Try adjusting your search terms or filter selection.</p>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = filtered.map(mod => {
+          const isReady = mod.status === "available";
+          const progress = getStepProgress(mod.step);
+          const percent = progress.total > 0 ? Math.round((progress.done / progress.total) * 100) : 0;
+          const stepFormatted = mod.step < 10 ? `STEP 0${mod.step}` : `STEP ${mod.step}`;
+
+          return `
+            <article class="module-card ${isReady ? 'active-module' : ''}">
+              <div>
+                <div class="module-top">
+                  <span class="step-badge ${isReady ? 'ready' : 'upcoming'}">
+                    ${isReady ? '● READY TO STUDY' : '○ ROADMAP'} • ${stepFormatted}
+                  </span>
+                  <span class="phase-tag">Phase ${mod.phase}</span>
+                </div>
+
+                <h3 class="module-title">${mod.title}</h3>
+                <p class="module-desc">${mod.summary}</p>
+
+                <div class="tags-container">
+                  ${mod.tags.map(t => `<span class="tag-pill">${t}</span>`).join('')}
+                </div>
+              </div>
+
+              <div>
+                ${isReady ? `
+                  <div class="progress-container">
+                    <div class="progress-label-wrap">
+                      <span>Your Progress</span>
+                      <strong style="color: ${percent > 0 ? '#34d399' : 'inherit'};">${progress.done} / ${progress.total} learned (${percent}%)</strong>
+                    </div>
+                    <div class="progress-bar-bg">
+                      <div class="progress-bar-fill" style="width: ${percent}%;"></div>
+                    </div>
+                  </div>
+                ` : `
+                  <div class="progress-container" style="background: transparent; border-style: dashed;">
+                    <div style="font-size: 0.76rem; color: var(--text-muted); text-align: center;">
+                      Upcoming: Add <code>modules/${mod.filename}</code> to activate
+                    </div>
+                  </div>
+                `}
+
+                <div class="module-footer">
+                  <div class="time-estimate">
+                    <span>⏱️</span>
+                    <span>${mod.time} • ${mod.concepts} Concepts</span>
+                  </div>
+
+                  ${isReady ? `
+                    <a href="modules/${mod.filename}" class="btn-module ready" id="btn-step-${mod.step}">
+                      <span>Open Canvas</span>
+                      <span>→</span>
+                    </a>
+                  ` : `
+                    <span class="btn-module locked" title="Module file being drafted">
+                      <span>In Development</span>
+                    </span>
+                  `}
+                </div>
+              </div>
+            </article>
+          `;
+        }).join('');
+      }
+
+      // Event Listeners
+      searchInput.addEventListener("input", (e) => {
+        searchQuery = e.target.value.trim();
+        renderModules();
+      });
+
+      filterTabs.forEach(tab => {
+        tab.addEventListener("click", () => {
+          filterTabs.forEach(t => t.classList.remove("active"));
+          tab.classList.add("active");
+          activePhase = tab.dataset.phase;
+          renderModules();
+        });
+      });
+
+      // Initial render & auto detection
+      renderModules();
+      updateStats();
+      autoDetectAvailableModules();
+    </script>
+  </body>
+</html>
