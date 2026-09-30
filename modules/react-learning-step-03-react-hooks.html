@@ -1,0 +1,463 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>React Intern Learning — Step 03: React Hooks</title>
+<style>
+:root{--bg:#f6f7fb;--panel:#fff;--text:#172033;--muted:#64748b;--line:#e2e8f0;--accent:#2563eb;--accent2:#eff6ff}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
+header{background:linear-gradient(135deg,#111827,#1e3a8a);color:#fff;padding:48px 20px}.wrap,main,.toolbar-inner{max-width:1050px;margin:auto}h1{font-size:clamp(30px,5vw,48px);line-height:1.1;margin:10px 0}h2{margin:0;font-size:23px}h3{font-size:15px;text-transform:uppercase;letter-spacing:.06em;margin:22px 0 8px;color:#334155}
+.lead{max-width:850px;color:#dbeafe;font-size:17px}.pill{border:1px solid #ffffff44;background:#ffffff14;padding:6px 11px;border-radius:999px;font-size:13px;display:inline-block;margin:3px}
+.toolbar{position:sticky;top:0;z-index:5;background:#fffffff2;backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:12px 20px}.toolbar-inner{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+input[type=search]{flex:1;min-width:240px;padding:11px 14px;border:1px solid var(--line);border-radius:10px;font-size:14px}.progress{font-size:13px;color:var(--muted)}main{padding:28px 20px 70px}
+.section-intro,.card{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 5px 20px #0f172a08}.section-intro{padding:20px;margin-bottom:18px}.card{padding:25px;margin:18px auto}
+.card-head{display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--line);padding-bottom:18px}.num{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:var(--accent2);color:var(--accent);font-weight:800}.tag{font-size:12px;color:var(--muted)}.done{margin-left:auto;font-size:13px;color:var(--muted);white-space:nowrap}
+section p{margin:6px 0;color:#334155}.layman{background:#f8fafc;border-left:4px solid var(--accent);padding:2px 15px;border-radius:0 10px 10px 0}
+pre{background:#0f172a;color:#e2e8f0;padding:17px;border-radius:10px;overflow:auto;font-size:13px;line-height:1.55}button{border:0;background:#e2e8f0;padding:7px 10px;border-radius:7px;cursor:pointer}
+.question{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:9px 0}.q{font-weight:600}details{margin-top:8px;color:var(--muted);font-size:14px}summary{cursor:pointer;color:var(--accent)}
+.task{background:#f0fdf4;border:1px solid #bbf7d0;padding:4px 15px;border-radius:10px}footer{text-align:center;color:var(--muted);padding:35px 20px}.hidden{display:none!important}
+@media(max-width:650px){.card{padding:18px}.done{font-size:12px}}
+.top-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.15);flex-wrap:wrap;gap:10px}
+.nav-link{display:inline-flex;align-items:center;gap:6px;color:#dbeafe;text-decoration:none;font-size:13.5px;font-weight:600;background:rgba(255,255,255,.12);padding:7px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.2);transition:all .2s ease}
+.nav-link:hover{background:rgba(255,255,255,.22);color:#fff;transform:translateY(-1px)}
+.nav-meta{font-size:13px;color:#93c5fd;font-weight:500}
+</style></head><body>
+<header><div class="wrap">
+<nav class="top-nav">
+  <a href="../index.html" class="nav-link">← All Modules Portal</a>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <a href="react-learning-step-02-state-component-logic.html" class="nav-link">← Step 02</a>
+    <span class="nav-meta">Step 3 of 27</span>
+  </div>
+</nav>
+<span class="pill">INTERN LEARNING CANVAS • STEP 03 / 27</span><h1>React Hooks</h1>
+<p class="lead">This module expands the third section of the React intern research guide. The source guide lists 18 hook concepts and asks interns to understand what each hook does, why it exists, when to use it, trade-offs or mistakes, and a practical example.</p>
+<div><span class="pill">18 concepts</span><span class="pill">2 questions / concept</span><span class="pill">Use case + layman explanation + code</span></div></div></header>
+<div class="toolbar"><div class="toolbar-inner"><input id="search" type="search" placeholder="Search hooks, e.g. useEffect, refs, transitions..."><span id="progress" class="progress"></span><button onclick="window.scrollTo({top:0,behavior:'smooth'})">Top</button></div></div>
+<main><div class="section-intro"><h2>How interns should use this page</h2>
+<p><b>1.</b> Understand the problem before memorising the API. <b>2.</b> Read the layman example. <b>3.</b> Study and modify the code. <b>4.</b> Answer both questions without opening the expected-direction box. <b>5.</b> Open it and self-check. <b>6.</b> Mark “Learned” only when you can explain when the hook should—and should not—be used.</p>
+</div>
+<article class="card" data-search="usestate manage local state. use it when a component owns changing ui data such as a counter, selected tab, input value, modal visibility, or toggle.">
+<div class="card-head"><span class="num">01</span><div><h2>useState</h2><span class="tag">React Hooks</span></div><label class="done"><input type="checkbox" data-done="01"> Learned</label></div>
+<section><h3>What is it?</h3><p>Manage local state.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>A counter app needs to remember its current number. useState gives the component a value to remember and a setter to request a new value.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use it when a component owns changing UI data such as a counter, selected tab, input value, modal visibility, or toggle.</p></section>
+<section><h3>Practical example</h3><pre><code>import { useState } from &quot;react&quot;;
+
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  return (
+    &lt;button onClick={() =&gt; setCount(count + 1)}&gt;
+      Count: {count}
+    &lt;/button&gt;
+  );
+}</code></pre><button class="copy" onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. What problem does useState solve that a normal local JavaScript variable does not solve in a React component?</div>
+        <details><summary>How to approach / expected direction</summary><p>Look for the connection between persistent component data, rendering, and React&#x27;s state update mechanism.</p></details></div><div class="question"><div class="q">2. If a button should increase a counter twice from the current value, what state-update pattern should you investigate and why?</div>
+        <details><summary>How to approach / expected direction</summary><p>The intern should recognize that updates depending on previous state may need the previous-state/function form rather than repeatedly using a captured value.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Explain the hook without reading the definition. Modify the example, predict the behavior before running it, then explain the result. For optimization or advanced hooks, also explain why you would NOT use the hook unnecessarily.</p></section>
+</article><article class="card" data-search="useeffect synchronize a component with an external system. use it for synchronization such as subscriptions, timers, browser apis, network connections, or other external systems—not simply because some code needs to run.">
+<div class="card-head"><span class="num">02</span><div><h2>useEffect</h2><span class="tag">React Hooks</span></div><label class="done"><input type="checkbox" data-done="02"> Learned</label></div>
+<section><h3>What is it?</h3><p>Synchronize a component with an external system.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Think of a room&#x27;s light being synchronized with a real electrical switch outside the room. The React render describes UI; an effect is used when the component must coordinate with something outside that rendering process.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use it for synchronization such as subscriptions, timers, browser APIs, network connections, or other external systems—not simply because some code needs to run.</p></section>
+<section><h3>Practical example</h3><pre><code>import { useEffect } from &quot;react&quot;;
+
+function OnlineStatus() {
+  useEffect(() =&gt; {
+    function handleOnline() {
+      console.log(&quot;Online&quot;);
+    }
+
+    window.addEventListener(&quot;online&quot;, handleOnline);
+
+    return () =&gt; {
+      window.removeEventListener(&quot;online&quot;, handleOnline);
+    };
+  }, []);
+
+  return &lt;p&gt;Listening for connection changes&lt;/p&gt;;
+}</code></pre><button class="copy" onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. A developer puts every API call inside useEffect. What question should they ask before deciding an effect is appropriate?</div>
+        <details><summary>How to approach / expected direction</summary><p>The guide frames effects as synchronization with external systems. Look for that distinction instead of treating useEffect as a general lifecycle replacement.</p></details></div><div class="question"><div class="q">2. Why does the event-listener example return a cleanup function? What resource is being managed?</div>
+        <details><summary>How to approach / expected direction</summary><p>The cleanup removes the subscription so the component does not leave an obsolete listener behind.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Explain the hook without reading the definition. Modify the example, predict the behavior before running it, then explain the result. For optimization or advanced hooks, also explain why you would NOT use the hook unnecessarily.</p></section>
+</article><article class="card" data-search="usecontext read values supplied by react context. use it when a value needs to be available to many components in a subtree, such as theme or authentication information, without manually passing it through every level.">
+<div class="card-head"><span class="num">03</span><div><h2>useContext</h2><span class="tag">React Hooks</span></div><label class="done"><input type="checkbox" data-done="03"> Learned</label></div>
+<section><h3>What is it?</h3><p>Read values supplied by React Context.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Imagine a company-wide notice board. Instead of passing the same notice through every manager to every employee, people can read it from the shared board.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use it when a value needs to be available to many components in a subtree, such as theme or authentication information, without manually passing it through every level.</p></section>
+<section><h3>Practical example</h3><pre><code>import { createContext, useContext } from &quot;react&quot;;
+
+const ThemeContext = createContext(&quot;light&quot;);
+
+function Button() {
+  const theme = useContext(ThemeContext);
+
+  return &lt;button data-theme={theme}&gt;Save&lt;/button&gt;;
+}</code></pre><button class="copy" onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. What problem can useContext reduce compared with repeatedly passing the same prop through many component levels?</div>
+        <details><summary>How to approach / expected direction</summary><p>The expected reasoning should mention avoiding manual prop passing through intermediate components.</p></details></div><div class="question"><div class="q">2. If the context value changes, what should you investigate about the components consuming that context?</div>
+        <details><summary>How to approach / expected direction</summary><p>Look for awareness that context consumers can react to context-value changes and that context is not automatically a universal state-management solution.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Explain the hook without reading the definition. Modify the example, predict the behavior before running it, then explain the result. For optimization or advanced hooks, also explain why you would NOT use the hook unnecessarily.</p></section>
+</article><article class="card" data-search="useref store mutable values or reference dom elements without causing renders. use it for dom references, timers/ids, previous values, or mutable information that must survive renders but should not itself trigger a render.">
+<div class="card-head"><span class="num">04</span><div><h2>useRef</h2><span class="tag">React Hooks</span></div><label class="done"><input type="checkbox" data-done="04"> Learned</label></div>
+<section><h3>What is it?</h3><p>Store mutable values or reference DOM elements without causing renders.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Think of a drawer where you keep a small note. You can change the note without asking the whole room to be redrawn.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use it for DOM references, timers/IDs, previous values, or mutable information that must survive renders but should not itself trigger a render.</p></section>
+<section><h3>Practical example</h3><pre><code>import { useRef } from &quot;react&quot;;
+
+function SearchBox() {
+  const inputRef = useRef(null);
+
+  function focusInput() {
+    inputRef.current?.focus();
+  }
+
+  return (
+    &lt;&gt;
+      &lt;input ref={inputRef} /&gt;
+      &lt;button onClick={focusInput}&gt;Focus&lt;/button&gt;
+    &lt;/&gt;
+  );
+}</code></pre><button class="copy" onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. Why would a ref be preferable to state when you need to remember a timer ID but do not need the timer ID displayed?</div>
+        <details><summary>How to approach / expected direction</summary><p>The key distinction is persistence across renders without causing a render when the value changes.</p></details></div><div class="question"><div class="q">2. Why is inputRef.current useful in the example, and why would putting the DOM node in state be an awkward design?</div>
+        <details><summary>How to approach / expected direction</summary><p>The ref provides access to the DOM node. State is intended for data whose changes participate in rendering.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Explain the hook without reading the definition. Modify the example, predict the behavior before running it, then explain the result. For optimization or advanced hooks, also explain why you would NOT use the hook unnecessarily.</p></section>
+</article><article class="card" data-search="usereducer manage more structured state transitions. use it when local state has several related values or many state transitions that are easier to describe as actions and a reducer.">
+<div class="card-head"><span class="num">05</span><div><h2>useReducer</h2><span class="tag">React Hooks</span></div><label class="done"><input type="checkbox" data-done="05"> Learned</label></div>
+<section><h3>What is it?</h3><p>Manage more structured state transitions.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Imagine a bank counter. Instead of randomly changing the account balance, you give the system an action such as deposit or withdraw, and a reducer determines the next state.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use it when local state has several related values or many state transitions that are easier to describe as actions and a reducer.</p></section>
+<section><h3>Practical example</h3><pre><code>import { useReducer } from &quot;react&quot;;
+
+function reducer(state, action) {
+  switch (action.type) {
+    case &quot;increment&quot;:
+      return { count: state.count + 1 };
+    case &quot;reset&quot;:
+      return { count: 0 };
+    default:
+      return state;
+  }
+}
+
+function Counter() {
+  const [state, dispatch] = useReducer(reducer, { count: 0 });
+
+  return (
+    &lt;button onClick={() =&gt; dispatch({ type: &quot;increment&quot; })}&gt;
+      {state.count}
+    &lt;/button&gt;
+  );
+}</code></pre><button class="copy" onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. What is the responsibility of the reducer compared with dispatch?</div>
+        <details><summary>How to approach / expected direction</summary><p>Look for reducer = calculates next state; dispatch = sends an action describing what happened.</p></details></div><div class="question"><div class="q">2. What characteristics of a component&#x27;s state would make you consider useReducer instead of several independent useState calls?</div>
+        <details><summary>How to approach / expected direction</summary><p>The intern should discuss structured transitions, related state and many action types rather than simply saying useReducer is &#x27;better&#x27;.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Explain the hook without reading the definition. Modify the example, predict the behavior before running it, then explain the result. For optimization or advanced hooks, also explain why you would NOT use the hook unnecessarily.</p></section>
+</article><article class="card" data-search="usememo memoize expensive calculated values when appropriate. use it when a calculation is meaningfully expensive and its dependencies often remain unchanged; optimization should be justified by the actual rendering situation.">
+<div class="card-head"><span class="num">06</span><div><h2>useMemo</h2><span class="tag">React Hooks</span></div><label class="done"><input type="checkbox" data-done="06"> Learned</label></div>
+<section><h3>What is it?</h3><p>Memoize expensive calculated values when appropriate.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Suppose calculating a large report takes time. If the inputs have not changed, you may want to reuse the previous calculation instead of doing the same work again.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use it when a calculation is meaningfully expensive and its dependencies often remain unchanged; optimization should be justified by the actual rendering situation.</p></section>
+<section><h3>Practical example</h3><pre><code>import { useMemo } from &quot;react&quot;;
+
+function ProductList({ products, query }) {
+  const filtered = useMemo(
+    () =&gt; products.filter(p =&gt;
+      p.name.toLowerCase().includes(query.toLowerCase())
+    ),
+    [products, query]
+  );
+
+  return filtered.map(p =&gt; &lt;p key={p.id}&gt;{p.name}&lt;/p&gt;);
+}</code></pre><button class="copy" onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. Why is useMemo not something you should automatically add to every calculated value?</div>
+        <details><summary>How to approach / expected direction</summary><p>The guide describes useMemo as caching calculations when appropriate; the intern should connect it with actual cost and dependency changes.</p></details></div><div class="question"><div class="q">2. What determines when the filtered calculation above is allowed to reuse its previous result?</div>
+        <details><summary>How to approach / expected direction</summary><p>The dependency values determine when React needs to recalculate the memoized value.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Explain the hook without reading the definition. Modify the example, predict the behavior before running it, then explain the result. For optimization or advanced hooks, also explain why you would NOT use the hook unnecessarily.</p></section>
+</article><article class="card" data-search="usecallback memoize function references when useful for rendering optimization. use it when function identity matters—for example, when passing a callback to a memoized child or when a hook depends on a function reference.">
+<div class="card-head"><span class="num">07</span><div><h2>useCallback</h2><span class="tag">React Hooks</span></div><label class="done"><input type="checkbox" data-done="07"> Learned</label></div>
+<section><h3>What is it?</h3><p>Memoize function references when useful for rendering optimization.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Imagine giving someone the same contact card instead of printing a new card every time you talk to them. The important part is that the identity of the function reference can remain stable when appropriate.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use it when function identity matters—for example, when passing a callback to a memoized child or when a hook depends on a function reference.</p></section>
+<section><h3>Practical example</h3><pre><code>import { useCallback, useState } from &quot;react&quot;;
+
+function Parent() {
+  const [count, setCount] = useState(0);
+
+  const handleSave = useCallback(() =&gt; {
+    console.log(&quot;Saved&quot;);
+  }, []);
+
+  return (
+    &lt;&gt;
+      &lt;button onClick={() =&gt; setCount(c =&gt; c + 1)}&gt;
+        {count}
+      &lt;/button&gt;
+      &lt;Child onSave={handleSave} /&gt;
+    &lt;/&gt;
+  );
+}</code></pre><button class="copy" onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. What is useCallback actually remembering: the result of a function or the function reference?</div>
+        <details><summary>How to approach / expected direction</summary><p>The expected distinction is function identity/reference versus the function&#x27;s returned result.</p></details></div><div class="question"><div class="q">2. Why might useCallback provide no meaningful benefit if the child component is going to render anyway?</div>
+        <details><summary>How to approach / expected direction</summary><p>Look for an understanding that memoization is useful only when stable identity changes rendering behavior or dependency behavior.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Explain the hook without reading the definition. Modify the example, predict the behavior before running it, then explain the result. For optimization or advanced hooks, also explain why you would NOT use the hook unnecessarily.</p></section>
+</article><article class="card" data-search="uselayouteffect run an effect synchronously after dom mutations and before paint. use it for rare dom measurement/layout work where timing before paint matters. prefer useeffect for normal synchronization.">
+<div class="card-head"><span class="num">08</span><div><h2>useLayoutEffect</h2><span class="tag">React Hooks</span></div><label class="done"><input type="checkbox" data-done="08"> Learned</label></div>
+<section><h3>What is it?</h3><p>Run an effect synchronously after DOM mutations and before paint.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Imagine measuring a picture frame and adjusting it before the customer sees it on the wall. The measurement/update needs to happen before the visible paint to avoid a noticeable intermediate state.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use it for rare DOM measurement/layout work where timing before paint matters. Prefer useEffect for normal synchronization.</p></section>
+<section><h3>Practical example</h3><pre><code>import { useLayoutEffect, useRef } from &quot;react&quot;;
+
+function Tooltip() {
+  const ref = useRef(null);
+
+  useLayoutEffect(() =&gt; {
+    const rect = ref.current?.getBoundingClientRect();
+    console.log(rect);
+  }, []);
+
+  return &lt;div ref={ref}&gt;Tooltip&lt;/div&gt;;
+}</code></pre><button class="copy" onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. Why might measuring an element in useLayoutEffect be different from measuring it in useEffect?</div>
+        <details><summary>How to approach / expected direction</summary><p>The intern should focus on timing relative to DOM mutations and browser paint.</p></details></div><div class="question"><div class="q">2. Why should useLayoutEffect not automatically replace useEffect for ordinary side effects?</div>
+        <details><summary>How to approach / expected direction</summary><p>Look for the fact that layout effects are intended for layout-sensitive work, while ordinary external synchronization generally belongs in useEffect.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Explain the hook without reading the definition. Modify the example, predict the behavior before running it, then explain the result. For optimization or advanced hooks, also explain why you would NOT use the hook unnecessarily.</p></section>
+</article><article class="card" data-search="useimperativehandle customize what a parent receives through a ref. use it for carefully designed imperative component apis—for example, a custom input exposing focus or a limited action to its parent.">
+<div class="card-head"><span class="num">09</span><div><h2>useImperativeHandle</h2><span class="tag">React Hooks</span></div><label class="done"><input type="checkbox" data-done="09"> Learned</label></div>
+<section><h3>What is it?</h3><p>Customize what a parent receives through a ref.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Imagine a device that exposes only three safe buttons to the outside instead of exposing its entire internal machinery. The parent receives a controlled interface.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use it for carefully designed imperative component APIs—for example, a custom input exposing focus or a limited action to its parent.</p></section>
+<section><h3>Practical example</h3><pre><code>import {
+  forwardRef,
+  useImperativeHandle,
+  useRef
+} from &quot;react&quot;;
+
+const SearchInput = forwardRef(function SearchInput(props, ref) {
+  const inputRef = useRef(null);
+
+  useImperativeHandle(ref, () =&gt; ({
+    focus() {
+      inputRef.current?.focus();
+    }
+  }));
+
+  return &lt;input ref={inputRef} /&gt;;
+});</code></pre><button class="copy" onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. Why might exposing a small method such as focus() be preferable to exposing the entire internal DOM structure?</div>
+        <details><summary>How to approach / expected direction</summary><p>Look for encapsulation: the parent receives a deliberate imperative API instead of internal implementation details.</p></details></div><div class="question"><div class="q">2. What does useImperativeHandle change about the value available through the parent&#x27;s ref?</div>
+        <details><summary>How to approach / expected direction</summary><p>The hook customizes the ref&#x27;s exposed handle.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Explain the hook without reading the definition. Modify the example, predict the behavior before running it, then explain the result. For optimization or advanced hooks, also explain why you would NOT use the hook unnecessarily.</p></section>
+</article><article class="card" data-search="usedebugvalue provide useful labels for custom hooks in developer tools. use it mainly inside custom hooks when a helpful developer-facing status makes the hook easier to inspect in react devtools.">
+<div class="card-head"><span class="num">10</span><div><h2>useDebugValue</h2><span class="tag">React Hooks</span></div><label class="done"><input type="checkbox" data-done="10"> Learned</label></div>
+<section><h3>What is it?</h3><p>Provide useful labels for custom hooks in developer tools.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Imagine putting a label on a machine&#x27;s control panel saying &#x27;Connected&#x27; or &#x27;Loading&#x27; so someone debugging it can understand the machine quickly.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use it mainly inside custom hooks when a helpful developer-facing status makes the hook easier to inspect in React DevTools.</p></section>
+<section><h3>Practical example</h3><pre><code>import { useDebugValue, useState } from &quot;react&quot;;
+
+function useOnlineStatus() {
+  const [online] = useState(true);
+
+  useDebugValue(online ? &quot;Online&quot; : &quot;Offline&quot;);
+
+  return online;
+}</code></pre><button class="copy" onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. Why is useDebugValue mainly useful to developers rather than application users?</div>
+        <details><summary>How to approach / expected direction</summary><p>The answer should distinguish debugging information from rendered application UI.</p></details></div><div class="question"><div class="q">2. Where would you expect to place useDebugValue: inside every component or primarily inside custom hooks that need useful DevTools labels?</div>
+        <details><summary>How to approach / expected direction</summary><p>The guide specifically describes it as useful labels for custom hooks in developer tools.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Explain the hook without reading the definition. Modify the example, predict the behavior before running it, then explain the result. For optimization or advanced hooks, also explain why you would NOT use the hook unnecessarily.</p></section>
+</article><article class="card" data-search="useid generate stable ids useful for accessibility and server/client consistency. use it when a component needs generated ids that must remain consistent for relationships such as label/input or accessibility attributes, especially where server/client consistency matters.">
+<div class="card-head"><span class="num">11</span><div><h2>useId</h2><span class="tag">React Hooks</span></div><label class="done"><input type="checkbox" data-done="11"> Learned</label></div>
+<section><h3>What is it?</h3><p>Generate stable IDs useful for accessibility and server/client consistency.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Imagine giving a form label and its input a reliable matching ticket number so the system knows exactly which label belongs to which control.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use it when a component needs generated IDs that must remain consistent for relationships such as label/input or accessibility attributes, especially where server/client consistency matters.</p></section>
+<section><h3>Practical example</h3><pre><code>import { useId } from &quot;react&quot;;
+
+function EmailField() {
+  const id = useId();
+
+  return (
+    &lt;&gt;
+      &lt;label htmlFor={id}&gt;Email&lt;/label&gt;
+      &lt;input id={id} type=&quot;email&quot; /&gt;
+    &lt;/&gt;
+  );
+}</code></pre><button class="copy" onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. What relationship does htmlFor={id} create in this example?</div>
+        <details><summary>How to approach / expected direction</summary><p>Look for the accessible association between label and form control.</p></details></div><div class="question"><div class="q">2. Why can a React-generated stable ID be preferable to inventing random IDs during rendering?</div>
+        <details><summary>How to approach / expected direction</summary><p>The intern should reason about stability and consistency rather than generating a new random value during every render.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Explain the hook without reading the definition. Modify the example, predict the behavior before running it, then explain the result. For optimization or advanced hooks, also explain why you would NOT use the hook unnecessarily.</p></section>
+</article><article class="card" data-search="usetransition mark updates as non-urgent transitions. use it when a ui update may be expensive and should not block more urgent interactions such as typing or clicking.">
+<div class="card-head"><span class="num">12</span><div><h2>useTransition</h2><span class="tag">React Hooks</span></div><label class="done"><input type="checkbox" data-done="12"> Learned</label></div>
+<section><h3>What is it?</h3><p>Mark updates as non-urgent transitions.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Imagine a receptionist handling an urgent phone call while also preparing a report. The urgent response should remain responsive while the report can be processed as lower priority work.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use it when a UI update may be expensive and should not block more urgent interactions such as typing or clicking.</p></section>
+<section><h3>Practical example</h3><pre><code>import { useState, useTransition } from &quot;react&quot;;
+
+function Search() {
+  const [query, setQuery] = useState(&quot;&quot;);
+  const [isPending, startTransition] = useTransition();
+
+  function handleChange(e) {
+    const value = e.target.value;
+    setQuery(value);
+
+    startTransition(() =&gt; {
+      // Update expensive results here
+    });
+  }
+
+  return &lt;input value={query} onChange={handleChange} /&gt;;
+}</code></pre><button class="copy" onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. What does startTransition communicate about the update inside it?</div>
+        <details><summary>How to approach / expected direction</summary><p>The intern should explain priority rather than saying the update happens later in a fixed timer sense.</p></details></div><div class="question"><div class="q">2. Why could marking an expensive update as non-urgent improve the experience of a search interface?</div>
+        <details><summary>How to approach / expected direction</summary><p>Look for urgent input responsiveness being separated from less-urgent rendering work.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Explain the hook without reading the definition. Modify the example, predict the behavior before running it, then explain the result. For optimization or advanced hooks, also explain why you would NOT use the hook unnecessarily.</p></section>
+</article><article class="card" data-search="usedeferredvalue defer a value to keep urgent ui responsive. use it when a value is expensive to consume and you want urgent parts of the interface to remain responsive while the slower ui catches up.">
+<div class="card-head"><span class="num">13</span><div><h2>useDeferredValue</h2><span class="tag">React Hooks</span></div><label class="done"><input type="checkbox" data-done="13"> Learned</label></div>
+<section><h3>What is it?</h3><p>Defer a value to keep urgent UI responsive.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Imagine a search box where the letters you type should appear immediately, while a large result list can catch up slightly later.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use it when a value is expensive to consume and you want urgent parts of the interface to remain responsive while the slower UI catches up.</p></section>
+<section><h3>Practical example</h3><pre><code>import { useDeferredValue, useState } from &quot;react&quot;;
+
+function SearchResults({ products }) {
+  const [query, setQuery] = useState(&quot;&quot;);
+  const deferredQuery = useDeferredValue(query);
+
+  const results = products.filter(product =&gt;
+    product.name.includes(deferredQuery)
+  );
+
+  return (
+    &lt;&gt;
+      &lt;input value={query} onChange={e =&gt; setQuery(e.target.value)} /&gt;
+      &lt;Results items={results} /&gt;
+    &lt;/&gt;
+  );
+}</code></pre><button class="copy" onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. What is the difference in responsibility between the immediate query and the deferred query?</div>
+        <details><summary>How to approach / expected direction</summary><p>The intern should identify the immediate value as the urgent input and the deferred value as a lower-priority version consumed by expensive UI.</p></details></div><div class="question"><div class="q">2. What kind of UI problem is useDeferredValue intended to improve?</div>
+        <details><summary>How to approach / expected direction</summary><p>Look for responsiveness under rendering pressure, not network-delay management.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Explain the hook without reading the definition. Modify the example, predict the behavior before running it, then explain the result. For optimization or advanced hooks, also explain why you would NOT use the hook unnecessarily.</p></section>
+</article><article class="card" data-search="usesyncexternalstore subscribe safely to external stores. use it when integrating react with an external store or subscription system that exists outside normal react state.">
+<div class="card-head"><span class="num">14</span><div><h2>useSyncExternalStore</h2><span class="tag">React Hooks</span></div><label class="done"><input type="checkbox" data-done="14"> Learned</label></div>
+<section><h3>What is it?</h3><p>Subscribe safely to external stores.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Imagine React is one office system and a separate system maintains information outside it. React needs a reliable way to subscribe to that external source and read its current snapshot.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use it when integrating React with an external store or subscription system that exists outside normal React state.</p></section>
+<section><h3>Practical example</h3><pre><code>import { useSyncExternalStore } from &quot;react&quot;;
+
+function subscribe(callback) {
+  return externalStore.subscribe(callback);
+}
+
+function getSnapshot() {
+  return externalStore.getSnapshot();
+}
+
+function Component() {
+  const value = useSyncExternalStore(subscribe, getSnapshot);
+
+  return &lt;p&gt;{value}&lt;/p&gt;;
+}</code></pre><button class="copy" onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. Why would an application use an external store instead of simply putting the value in useState?</div>
+        <details><summary>How to approach / expected direction</summary><p>The guide frames this hook around safely subscribing to external stores.</p></details></div><div class="question"><div class="q">2. What two responsibilities are visible in the example: how React subscribes and how it reads the current value?</div>
+        <details><summary>How to approach / expected direction</summary><p>The intern should identify subscription setup and snapshot reading as distinct responsibilities.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Explain the hook without reading the definition. Modify the example, predict the behavior before running it, then explain the result. For optimization or advanced hooks, also explain why you would NOT use the hook unnecessarily.</p></section>
+</article><article class="card" data-search="useinsertioneffect support library-level style insertion before layout effects. use it primarily for library-level css/style insertion. it is not a normal application hook for everyday effects.">
+<div class="card-head"><span class="num">15</span><div><h2>useInsertionEffect</h2><span class="tag">React Hooks</span></div><label class="done"><input type="checkbox" data-done="15"> Learned</label></div>
+<section><h3>What is it?</h3><p>Support library-level style insertion before layout effects.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Imagine a stage crew placing a required backdrop before the actors begin checking their positions. Some styling libraries need to insert styles at a very specific point in the rendering process.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use it primarily for library-level CSS/style insertion. It is not a normal application hook for everyday effects.</p></section>
+<section><h3>Practical example</h3><pre><code>import { useInsertionEffect } from &quot;react&quot;;
+
+function StyleLibraryIntegration() {
+  useInsertionEffect(() =&gt; {
+    // Library-level style insertion work
+  }, []);
+
+  return &lt;div&gt;Styled component&lt;/div&gt;;
+}</code></pre><button class="copy" onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. Why is useInsertionEffect generally a library-level concern rather than a hook an intern should reach for whenever styling is needed?</div>
+        <details><summary>How to approach / expected direction</summary><p>Look for the guide&#x27;s specific purpose: style insertion before layout effects.</p></details></div><div class="question"><div class="q">2. How is its timing related to layout effects?</div>
+        <details><summary>How to approach / expected direction</summary><p>The intern should avoid treating it as a generic replacement for useEffect or useLayoutEffect.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Explain the hook without reading the definition. Modify the example, predict the behavior before running it, then explain the result. For optimization or advanced hooks, also explain why you would NOT use the hook unnecessarily.</p></section>
+</article><article class="card" data-search="custom hooks extract reusable stateful logic into functions beginning with use. create a custom hook when multiple components need the same stateful behavior, synchronization or hook combination.">
+<div class="card-head"><span class="num">16</span><div><h2>Custom Hooks</h2><span class="tag">React Hooks</span></div><label class="done"><input type="checkbox" data-done="16"> Learned</label></div>
+<section><h3>What is it?</h3><p>Extract reusable stateful logic into functions beginning with use.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Imagine writing a reusable recipe. Different screens can use the same recipe for behavior while choosing different ingredients or UI around it.</p></section>
+<section><h3>When / why would you use it?</h3><p>Create a custom hook when multiple components need the same stateful behavior, synchronization or hook combination.</p></section>
+<section><h3>Practical example</h3><pre><code>function useDocumentTitle(title) {
+  useEffect(() =&gt; {
+    document.title = title;
+  }, [title]);
+}
+
+function Profile() {
+  useDocumentTitle(&quot;Profile&quot;);
+  return &lt;h1&gt;Profile&lt;/h1&gt;;
+}</code></pre><button class="copy" onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. What makes a function a custom hook rather than just a normal utility function?</div>
+        <details><summary>How to approach / expected direction</summary><p>The intern should identify reusable stateful/hook-based logic and the convention of starting with use.</p></details></div><div class="question"><div class="q">2. What kind of logic is a good candidate for extraction into a custom hook?</div>
+        <details><summary>How to approach / expected direction</summary><p>Look for behavior that is repeated across components, not merely a pure calculation that could be a normal utility.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Explain the hook without reading the definition. Modify the example, predict the behavior before running it, then explain the result. For optimization or advanced hooks, also explain why you would NOT use the hook unnecessarily.</p></section>
+</article><article class="card" data-search="hook composition combine hooks to create higher-level reusable behavior. use hook composition when a feature requires several related behaviors and the combination itself is reusable.">
+<div class="card-head"><span class="num">17</span><div><h2>Hook composition</h2><span class="tag">React Hooks</span></div><label class="done"><input type="checkbox" data-done="17"> Learned</label></div>
+<section><h3>What is it?</h3><p>Combine hooks to create higher-level reusable behavior.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Instead of building one huge machine, combine smaller machines that each perform one job. A custom hook can compose useState, useEffect, useRef and other hooks into one reusable behavior.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use hook composition when a feature requires several related behaviors and the combination itself is reusable.</p></section>
+<section><h3>Practical example</h3><pre><code>function useSearch(query) {
+  const [results, setResults] = useState([]);
+
+  useEffect(() =&gt; {
+    // fetch/search based on query
+  }, [query]);
+
+  return results;
+}
+
+function SearchPage() {
+  const results = useSearch(&quot;react&quot;);
+  return &lt;Results items={results} /&gt;;
+}</code></pre><button class="copy" onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. Why can composing several smaller hooks be easier to reuse than copying the same hook calls into many components?</div>
+        <details><summary>How to approach / expected direction</summary><p>Look for abstraction: the custom hook exposes the useful behavior while hiding implementation details.</p></details></div><div class="question"><div class="q">2. If useSearch internally used state, an effect and a ref, what would the consuming component need to know about those internal details?</div>
+        <details><summary>How to approach / expected direction</summary><p>The consumer generally uses the custom hook&#x27;s public return value/API rather than managing every internal hook itself.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Explain the hook without reading the definition. Modify the example, predict the behavior before running it, then explain the result. For optimization or advanced hooks, also explain why you would NOT use the hook unnecessarily.</p></section>
+</article><article class="card" data-search="rules of hooks learn where and how hooks may legally be called. call hooks at the top level of react function components or custom hooks, not inside conditions, loops or nested functions.">
+<div class="card-head"><span class="num">18</span><div><h2>Rules of Hooks</h2><span class="tag">React Hooks</span></div><label class="done"><input type="checkbox" data-done="18"> Learned</label></div>
+<section><h3>What is it?</h3><p>Learn where and how hooks may legally be called.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Think of a railway switch system: it must follow a predictable order so the system knows which track corresponds to which train. Hooks rely on consistent call order.</p></section>
+<section><h3>When / why would you use it?</h3><p>Call hooks at the top level of React function components or custom hooks, not inside conditions, loops or nested functions.</p></section>
+<section><h3>Practical example</h3><pre><code>function Profile({ loggedIn }) {
+  const [name, setName] = useState(&quot;&quot;);
+
+  if (!loggedIn) {
+    return &lt;p&gt;Please log in&lt;/p&gt;;
+  }
+
+  // Do not conditionally call another hook here.
+  return &lt;p&gt;{name}&lt;/p&gt;;
+}</code></pre><button class="copy" onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. Why would calling a hook conditionally make React&#x27;s hook state tracking unreliable?</div>
+        <details><summary>How to approach / expected direction</summary><p>The intern should connect the rule with consistent hook call order across renders.</p></details></div><div class="question"><div class="q">2. A developer writes a hook inside an if statement because it &#x27;only needs to run sometimes.&#x27; What should they investigate as an alternative design?</div>
+        <details><summary>How to approach / expected direction</summary><p>Look for moving the condition inside the hook&#x27;s logic, restructuring the component, or splitting components so the hook itself is called consistently.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Explain the hook without reading the definition. Modify the example, predict the behavior before running it, then explain the result. For optimization or advanced hooks, also explain why you would NOT use the hook unnecessarily.</p></section>
+<footer>
+  <div style="max-width: 650px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; align-items: center;">
+    <div style="font-weight: 600; color: #1e293b;">Step 03 Complete → Next: Step 04 (Advanced Hooks & Performance)</div>
+    <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+      <a href="react-learning-step-02-state-component-logic.html" style="display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; background: #f1f5f9; color: #1e293b; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 14px; border: 1px solid #cbd5e1;">← Step 02 (State & Logic)</a>
+      <a href="../index.html" style="display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; background: #2563eb; color: #fff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 14px; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);">← Back to Portal</a>
+      <span style="display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; background: #e2e8f0; color: #64748b; border-radius: 8px; font-weight: 600; font-size: 14px;">Next: Step 04 (Roadmap)</span>
+    </div>
+    <div style="font-size: 13px; color: var(--muted);">Your concept progress is automatically saved in this browser.</div>
+  </div>
+</footer>
+<script>
+const checks=[...document.querySelectorAll("[data-done]")],progress=document.getElementById("progress");
+function updateProgress(){const done=checks.filter(x=>x.checked).length;progress.textContent=`${done} / ${checks.length} learned`;localStorage.setItem("react-step03-progress",JSON.stringify(checks.map(x=>x.checked)))}
+const saved=JSON.parse(localStorage.getItem("react-step03-progress")||"[]");checks.forEach((x,i)=>x.checked=!!saved[i]);updateProgress();checks.forEach(x=>x.addEventListener("change",updateProgress));
+document.getElementById("search").addEventListener("input",e=>{const q=e.target.value.toLowerCase().trim();document.querySelectorAll(".card").forEach(c=>c.classList.toggle("hidden",q&&!c.dataset.search.includes(q)))});
+async function copyCode(btn){await navigator.clipboard.writeText(btn.previousElementSibling.innerText);const old=btn.textContent;btn.textContent="Copied!";setTimeout(()=>btn.textContent=old,900)}
+</script></body></html>

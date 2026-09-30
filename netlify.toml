@@ -12,12 +12,12 @@
 
 [[redirects]]
   from = "/step-02"
-  to = "/modules/react-learning-step-02-state-and-logic.html"
+  to = "/modules/react-learning-step-02-state-component-logic.html"
   status = 200
 
 [[redirects]]
   from = "/step-03"
-  to = "/modules/react-learning-step-03-hooks-and-effects.html"
+  to = "/modules/react-learning-step-03-react-hooks.html"
   status = 200
 
 # Security and caching headers

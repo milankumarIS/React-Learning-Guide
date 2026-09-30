@@ -1,0 +1,322 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>React Intern Learning — Step 02: State & Component Logic</title>
+<style>
+:root{--bg:#f6f7fb;--panel:#fff;--text:#172033;--muted:#64748b;--line:#e2e8f0;--accent:#2563eb;--accent2:#eff6ff}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
+header{background:linear-gradient(135deg,#111827,#1e3a8a);color:#fff;padding:48px 20px}.wrap,main,.toolbar-inner{max-width:1050px;margin:auto}h1{font-size:clamp(30px,5vw,48px);line-height:1.1;margin:10px 0}h2{margin:0;font-size:23px}h3{font-size:15px;text-transform:uppercase;letter-spacing:.06em;margin:22px 0 8px;color:#334155}
+.lead{max-width:850px;color:#dbeafe;font-size:17px}.pill{border:1px solid #ffffff44;background:#ffffff14;padding:6px 11px;border-radius:999px;font-size:13px;display:inline-block;margin:3px}
+.toolbar{position:sticky;top:0;z-index:5;background:#fffffff2;backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:12px 20px}.toolbar-inner{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+input[type=search]{flex:1;min-width:240px;padding:11px 14px;border:1px solid var(--line);border-radius:10px;font-size:14px}.progress{font-size:13px;color:var(--muted)}main{padding:28px 20px 70px}
+.section-intro,.card{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 5px 20px #0f172a08}.section-intro{padding:20px;margin-bottom:18px}.card{padding:25px;margin:18px auto}
+.card-head{display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--line);padding-bottom:18px}.num{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:var(--accent2);color:var(--accent);font-weight:800}.tag{font-size:12px;color:var(--muted)}.done{margin-left:auto;font-size:13px;color:var(--muted);white-space:nowrap}
+section p{margin:6px 0;color:#334155}.layman{background:#f8fafc;border-left:4px solid var(--accent);padding:2px 15px;border-radius:0 10px 10px 0}
+pre{background:#0f172a;color:#e2e8f0;padding:17px;border-radius:10px;overflow:auto;font-size:13px;line-height:1.55}button{border:0;background:#e2e8f0;padding:7px 10px;border-radius:7px;cursor:pointer}
+.question{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:9px 0}.q{font-weight:600}details{margin-top:8px;color:var(--muted);font-size:14px}summary{cursor:pointer;color:var(--accent)}
+.task{background:#f0fdf4;border:1px solid #bbf7d0;padding:4px 15px;border-radius:10px}footer{text-align:center;color:var(--muted);padding:35px 20px}.hidden{display:none!important}
+@media(max-width:650px){.card{padding:18px}.done{font-size:12px}}
+.top-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.15);flex-wrap:wrap;gap:10px}
+.nav-link{display:inline-flex;align-items:center;gap:6px;color:#dbeafe;text-decoration:none;font-size:13.5px;font-weight:600;background:rgba(255,255,255,.12);padding:7px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.2);transition:all .2s ease}
+.nav-link:hover{background:rgba(255,255,255,.22);color:#fff;transform:translateY(-1px)}
+.nav-meta{font-size:13px;color:#93c5fd;font-weight:500}
+</style></head><body>
+<header><div class="wrap">
+<nav class="top-nav">
+  <a href="../index.html" class="nav-link">← All Modules Portal</a>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <a href="react-learning-step-01-fundamentals.html" class="nav-link">← Step 01</a>
+    <span class="nav-meta">Step 2 of 27</span>
+    <a href="react-learning-step-03-react-hooks.html" class="nav-link">Step 03 →</a>
+  </div>
+</nav>
+<span class="pill">INTERN LEARNING CANVAS • STEP 02 / 27</span><h1>State & Component Logic</h1>
+<p class="lead">This module expands the second section of the React intern research guide into a practical worksheet. The goal is not to memorize APIs: interns should understand ownership, updates, immutability, derived values and how state should be shared.</p>
+<div><span class="pill">16 concepts</span><span class="pill">2 questions / concept</span><span class="pill">Use case + layman explanation + code</span></div></div></header>
+<div class="toolbar"><div class="toolbar-inner"><input id="search" type="search" placeholder="Search concepts, e.g. useState, immutability, lifting..."><span id="progress" class="progress"></span><button onclick="window.scrollTo({top:0,behavior:'smooth'})">Top</button></div></div>
+<main><div class="section-intro"><h2>How interns should use this page</h2>
+<p><b>1.</b> Read the explanation. <b>2.</b> Explain the layman example. <b>3.</b> Study and modify the code. <b>4.</b> Answer both questions without opening the expected-direction box. <b>5.</b> Open it and self-check. <b>6.</b> Mark “Learned” only when you can explain the concept and modify the example confidently.</p></div>
+<article class="card" data-search="what is state? state is data that belongs to a component and can change over time. a state change can cause react to render the component again so the ui reflects the current state. use state for information that can change during the lifetime of the ui and should affect what is displayed or how the component behaves.">
+<div class="card-head"><span class="num">01</span><div><h2>What is state?</h2><span class="tag">State & Component Logic</span></div><label class="done"><input type="checkbox" data-done="01"> Learned</label></div>
+<section><h3>What is it?</h3><p>State is data that belongs to a component and can change over time. A state change can cause React to render the component again so the UI reflects the current state.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Think of a light switch. The current state is ON or OFF. When the state changes, what you see changes too.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use state for information that can change during the lifetime of the UI and should affect what is displayed or how the component behaves.</p></section>
+<section><h3>Practical example</h3><pre><code>function Counter() {
+  const [count, setCount] = useState(0);
+
+  return &lt;button onClick={() =&gt; setCount(count + 1)}&gt;
+    Count: {count}
+  &lt;/button&gt;;
+}</code></pre><button class="copy" onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. What makes a piece of data a good candidate for React state instead of a normal local variable?</div>
+        <details><summary>How to approach / expected direction</summary><p>Look for the ideas of changing data, rendering and UI dependency.</p></details></div><div class="question"><div class="q">2. If a value changes but the UI does not need to react to the change, should it automatically become state? Explain your reasoning.</div>
+        <details><summary>How to approach / expected direction</summary><p>The intern should consider whether the value participates in the rendered UI or component behavior rather than storing everything in state.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Explain the concept without reading the definition. Then change the example slightly, predict the result, run it, and explain why your prediction was correct or incorrect.</p></section>
+</article><article class="card" data-search="usestate usestate is the primary react hook for adding local state to a function component. it gives the component a current value and a setter used to request an update. use it for simple local values such as counters, input values, toggles, selected tabs, modal visibility and small ui state.">
+<div class="card-head"><span class="num">02</span><div><h2>useState</h2><span class="tag">State & Component Logic</span></div><label class="done"><input type="checkbox" data-done="02"> Learned</label></div>
+<section><h3>What is it?</h3><p>useState is the primary React Hook for adding local state to a function component. It gives the component a current value and a setter used to request an update.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Imagine a notebook with a current score written on it. You read the score and use a controlled way to write the new score when something happens.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use it for simple local values such as counters, input values, toggles, selected tabs, modal visibility and small UI state.</p></section>
+<section><h3>Practical example</h3><pre><code>import { useState } from &quot;react&quot;;
+
+function Toggle() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    &lt;button onClick={() =&gt; setOpen(!open)}&gt;
+      {open ? &quot;Close&quot; : &quot;Open&quot;}
+    &lt;/button&gt;
+  );
+}</code></pre><button class="copy" onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. What are the two values returned by useState, and what responsibility does each one have?</div>
+        <details><summary>How to approach / expected direction</summary><p>The answer should identify the state value and setter function.</p></details></div><div class="question"><div class="q">2. Why does calling the setter matter more than directly changing the variable returned by useState?</div>
+        <details><summary>How to approach / expected direction</summary><p>Look for React&#x27;s update mechanism and the idea that direct reassignment does not correctly request a React state update.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Explain the concept without reading the definition. Then change the example slightly, predict the result, run it, and explain why your prediction was correct or incorrect.</p></section>
+</article><article class="card" data-search="state updates a state setter requests a state update. react may schedule and batch updates, then render the component using the resulting state. use normal state setters whenever the user interaction or logic needs the ui to reflect new state.">
+<div class="card-head"><span class="num">03</span><div><h2>State updates</h2><span class="tag">State & Component Logic</span></div><label class="done"><input type="checkbox" data-done="03"> Learned</label></div>
+<section><h3>What is it?</h3><p>A state setter requests a state update. React may schedule and batch updates, then render the component using the resulting state.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Think of placing several orders at a restaurant. The kitchen can group the work rather than immediately preparing every single instruction independently.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use normal state setters whenever the user interaction or logic needs the UI to reflect new state.</p></section>
+<section><h3>Practical example</h3><pre><code>const [count, setCount] = useState(0);
+
+function handleClick() {
+  setCount(count + 1);
+  setCount(count + 1);
+}</code></pre><button class="copy" onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. Why might the two setCount calls above not produce the result a beginner expects?</div>
+        <details><summary>How to approach / expected direction</summary><p>The key idea is that updates may be batched and the captured value may be the same for both calls.</p></details></div><div class="question"><div class="q">2. What should you investigate when several state updates depend on the same current state value?</div>
+        <details><summary>How to approach / expected direction</summary><p>This leads naturally to functional state updates when the next value depends on the previous one.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Explain the concept without reading the definition. Then change the example slightly, predict the result, run it, and explain why your prediction was correct or incorrect.</p></section>
+</article><article class="card" data-search="functional state updates a functional state update gives the setter a function that receives the previous state and calculates the next state. it is useful when the next value depends on the previous value. use it when multiple updates may happen together or whenever the next state is calculated from the previous state.">
+<div class="card-head"><span class="num">04</span><div><h2>Functional state updates</h2><span class="tag">State & Component Logic</span></div><label class="done"><input type="checkbox" data-done="04"> Learned</label></div>
+<section><h3>What is it?</h3><p>A functional state update gives the setter a function that receives the previous state and calculates the next state. It is useful when the next value depends on the previous value.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Imagine saying, “Take whatever score is currently on the board and add one,” rather than saying, “Take the score I saw five minutes ago and add one.”</p></section>
+<section><h3>When / why would you use it?</h3><p>Use it when multiple updates may happen together or whenever the next state is calculated from the previous state.</p></section>
+<section><h3>Practical example</h3><pre><code>function handleClick() {
+  setCount(prevCount =&gt; prevCount + 1);
+  setCount(prevCount =&gt; prevCount + 1);
+}</code></pre><button class="copy" onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. Why is prevCount safer than using count directly when the new value depends on the old value?</div>
+        <details><summary>How to approach / expected direction</summary><p>The intern should understand that React supplies the latest pending state to the updater function.</p></details></div><div class="question"><div class="q">2. How would you rewrite an update that adds an item to an array when several updates could happen close together?</div>
+        <details><summary>How to approach / expected direction</summary><p>For arrays, the same principle is used: derive the next array from the previous array rather than relying on a potentially stale captured value.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Explain the concept without reading the definition. Then change the example slightly, predict the result, run it, and explain why your prediction was correct or incorrect.</p></section>
+</article><article class="card" data-search="state immutability react state should be updated without mutating the existing object or array. instead, create a new value representing the updated state. use immutable updates for objects, arrays and nested state so changes are explicit and react can reliably detect new references.">
+<div class="card-head"><span class="num">05</span><div><h2>State immutability</h2><span class="tag">State & Component Logic</span></div><label class="done"><input type="checkbox" data-done="05"> Learned</label></div>
+<section><h3>What is it?</h3><p>React state should be updated without mutating the existing object or array. Instead, create a new value representing the updated state.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Think of an official document. Instead of secretly changing the old signed copy, create an updated copy so everyone can clearly identify the new version.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use immutable updates for objects, arrays and nested state so changes are explicit and React can reliably detect new references.</p></section>
+<section><h3>Practical example</h3><pre><code>const [user, setUser] = useState({
+  name: &quot;Milan&quot;,
+  role: &quot;Intern&quot;
+});
+
+setUser({
+  ...user,
+  role: &quot;Developer&quot;
+});</code></pre><button class="copy" onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. What is the difference between changing user.role directly and creating a new object with the updated role?</div>
+        <details><summary>How to approach / expected direction</summary><p>Look for new object/reference creation instead of modifying the existing state value.</p></details></div><div class="question"><div class="q">2. Why is immutability especially important when state contains arrays or objects?</div>
+        <details><summary>How to approach / expected direction</summary><p>The intern should connect immutable updates with predictable change detection, debugging and avoiding accidental shared mutations.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Explain the concept without reading the definition. Then change the example slightly, predict the result, run it, and explain why your prediction was correct or incorrect.</p></section>
+</article><article class="card" data-search="updating objects in state to update an object in state, create a new object and copy the properties that should remain unchanged, then override the property being changed. use this whenever state is an object containing several related values.">
+<div class="card-head"><span class="num">06</span><div><h2>Updating objects in state</h2><span class="tag">State & Component Logic</span></div><label class="done"><input type="checkbox" data-done="06"> Learned</label></div>
+<section><h3>What is it?</h3><p>To update an object in state, create a new object and copy the properties that should remain unchanged, then override the property being changed.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Imagine filling out a new form version: you copy the existing information and change only the field that needs correction.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use this whenever state is an object containing several related values.</p></section>
+<section><h3>Practical example</h3><pre><code>const [profile, setProfile] = useState({
+  name: &quot;Riya&quot;,
+  city: &quot;Bhubaneswar&quot;
+});
+
+setProfile(prev =&gt; ({
+  ...prev,
+  city: &quot;Cuttack&quot;
+}));</code></pre><button class="copy" onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. Why is the spread operator useful when updating an object in state?</div>
+        <details><summary>How to approach / expected direction</summary><p>The answer should explain copying existing properties before overriding the changed one.</p></details></div><div class="question"><div class="q">2. What could be lost if you replaced the entire object with { city: &#x27;Cuttack&#x27; }?</div>
+        <details><summary>How to approach / expected direction</summary><p>The intern should notice that other fields such as name would disappear if they are not included.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Explain the concept without reading the definition. Then change the example slightly, predict the result, run it, and explain why your prediction was correct or incorrect.</p></section>
+</article><article class="card" data-search="updating arrays in state arrays in state should be replaced with a new array when adding, removing or changing items. common tools include map, filter and spread. use immutable array operations for lists such as todos, products, users, selected ids and cart items.">
+<div class="card-head"><span class="num">07</span><div><h2>Updating arrays in state</h2><span class="tag">State & Component Logic</span></div><label class="done"><input type="checkbox" data-done="07"> Learned</label></div>
+<section><h3>What is it?</h3><p>Arrays in state should be replaced with a new array when adding, removing or changing items. Common tools include map, filter and spread.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Think of a shopping list. You make a new version of the list when adding or removing an item instead of secretly editing the original shared list.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use immutable array operations for lists such as todos, products, users, selected IDs and cart items.</p></section>
+<section><h3>Practical example</h3><pre><code>const [todos, setTodos] = useState([]);
+
+function addTodo(todo) {
+  setTodos(prev =&gt; [...prev, todo]);
+}
+
+function removeTodo(id) {
+  setTodos(prev =&gt; prev.filter(todo =&gt; todo.id !== id));
+}</code></pre><button class="copy" onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. How would you add one item without mutating the previous array?</div>
+        <details><summary>How to approach / expected direction</summary><p>Look for a new array created with spread or another immutable approach.</p></details></div><div class="question"><div class="q">2. Which array method would you consider for removing items based on an ID, and what should its callback return?</div>
+        <details><summary>How to approach / expected direction</summary><p>filter is the natural concept to investigate for producing an array without matching items.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Explain the concept without reading the definition. Then change the example slightly, predict the result, run it, and explain why your prediction was correct or incorrect.</p></section>
+</article><article class="card" data-search="derived state derived state is information that can be calculated from existing props or state. it often does not need its own state variable. prefer calculating values during rendering when they can be reliably derived from existing data instead of duplicating them in state.">
+<div class="card-head"><span class="num">08</span><div><h2>Derived state</h2><span class="tag">State & Component Logic</span></div><label class="done"><input type="checkbox" data-done="08"> Learned</label></div>
+<section><h3>What is it?</h3><p>Derived state is information that can be calculated from existing props or state. It often does not need its own state variable.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>If you already know the price and quantity, the total bill is a calculation—not another notebook value that must be separately maintained.</p></section>
+<section><h3>When / why would you use it?</h3><p>Prefer calculating values during rendering when they can be reliably derived from existing data instead of duplicating them in state.</p></section>
+<section><h3>Practical example</h3><pre><code>const [price, setPrice] = useState(100);
+const [quantity, setQuantity] = useState(2);
+
+const total = price * quantity;</code></pre><button class="copy" onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. Why can storing total separately from price and quantity create a consistency problem?</div>
+        <details><summary>How to approach / expected direction</summary><p>The intern should identify duplicated sources of truth.</p></details></div><div class="question"><div class="q">2. How would you decide whether a value should be stored in state or calculated from existing state?</div>
+        <details><summary>How to approach / expected direction</summary><p>Look for a rule based on whether the value can be calculated from existing reactive inputs without needing independent updates.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Explain the concept without reading the definition. Then change the example slightly, predict the result, run it, and explain why your prediction was correct or incorrect.</p></section>
+</article><article class="card" data-search="lifting state up lifting state up means moving shared state to the closest common parent of components that need to coordinate around it. use this when sibling components need to stay synchronized and local state in one sibling cannot cleanly control the other.">
+<div class="card-head"><span class="num">09</span><div><h2>Lifting state up</h2><span class="tag">State & Component Logic</span></div><label class="done"><input type="checkbox" data-done="09"> Learned</label></div>
+<section><h3>What is it?</h3><p>Lifting state up means moving shared state to the closest common parent of components that need to coordinate around it.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Two siblings cannot directly own one shared notebook. Their common parent can hold the notebook and pass the relevant information down.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use this when sibling components need to stay synchronized and local state in one sibling cannot cleanly control the other.</p></section>
+<section><h3>Practical example</h3><pre><code>function Parent() {
+  const [selectedId, setSelectedId] = useState(null);
+
+  return (
+    &lt;&gt;
+      &lt;List selectedId={selectedId} onSelect={setSelectedId} /&gt;
+      &lt;Details selectedId={selectedId} /&gt;
+    &lt;/&gt;
+  );
+}</code></pre><button class="copy" onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. Why is the common parent often the right place for state shared by two siblings?</div>
+        <details><summary>How to approach / expected direction</summary><p>Look for one source of truth and coordinated sibling behavior.</p></details></div><div class="question"><div class="q">2. What signals that state may need to be lifted instead of duplicated in both child components?</div>
+        <details><summary>How to approach / expected direction</summary><p>The intern should identify duplicated state that can drift out of sync as a reason to lift it.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Explain the concept without reading the definition. Then change the example slightly, predict the result, run it, and explain why your prediction was correct or incorrect.</p></section>
+</article><article class="card" data-search="sharing state between components components can coordinate by sharing state through a common parent, context or an external state solution depending on scope and complexity. choose the simplest sharing mechanism that fits the number of consumers and the distance between them in the component tree.">
+<div class="card-head"><span class="num">10</span><div><h2>Sharing state between components</h2><span class="tag">State & Component Logic</span></div><label class="done"><input type="checkbox" data-done="10"> Learned</label></div>
+<section><h3>What is it?</h3><p>Components can coordinate by sharing state through a common parent, context or an external state solution depending on scope and complexity.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Imagine several people needing the same notice board. If only two people need it, their team lead may manage it. If an entire office needs it, a shared central board may make more sense.</p></section>
+<section><h3>When / why would you use it?</h3><p>Choose the simplest sharing mechanism that fits the number of consumers and the distance between them in the component tree.</p></section>
+<section><h3>Practical example</h3><pre><code>function App() {
+  const [theme, setTheme] = useState(&quot;light&quot;);
+
+  return (
+    &lt;Page theme={theme} onThemeChange={setTheme} /&gt;
+  );
+}</code></pre><button class="copy" onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. When is lifting state through props enough, and when might another sharing mechanism become useful?</div>
+        <details><summary>How to approach / expected direction</summary><p>Look for scope: local state, lifted state, context or external stores solve different problems.</p></details></div><div class="question"><div class="q">2. Why should you avoid introducing global state just because two components need to share one value?</div>
+        <details><summary>How to approach / expected direction</summary><p>The expected reasoning should emphasize keeping state as local as practical and avoiding unnecessary complexity.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Explain the concept without reading the definition. Then change the example slightly, predict the result, run it, and explain why your prediction was correct or incorrect.</p></section>
+</article><article class="card" data-search="controlled components a controlled component is an input whose value is driven by react state. react becomes the source of truth for the current input value. use controlled inputs when you need validation, conditional ui, instant feedback, or direct access to the current form value.">
+<div class="card-head"><span class="num">11</span><div><h2>Controlled components</h2><span class="tag">State & Component Logic</span></div><label class="done"><input type="checkbox" data-done="11"> Learned</label></div>
+<section><h3>What is it?</h3><p>A controlled component is an input whose value is driven by React state. React becomes the source of truth for the current input value.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Think of a form where a receptionist records every change in the official register. The displayed value and the register stay synchronized.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use controlled inputs when you need validation, conditional UI, instant feedback, or direct access to the current form value.</p></section>
+<section><h3>Practical example</h3><pre><code>function NameForm() {
+  const [name, setName] = useState(&quot;&quot;);
+
+  return (
+    &lt;input
+      value={name}
+      onChange={e =&gt; setName(e.target.value)}
+    /&gt;
+  );
+}</code></pre><button class="copy" onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. What is the source of truth for the input value in this example?</div>
+        <details><summary>How to approach / expected direction</summary><p>The answer should identify React state as the source of truth.</p></details></div><div class="question"><div class="q">2. Why are controlled inputs useful when a form needs live validation or conditional UI?</div>
+        <details><summary>How to approach / expected direction</summary><p>Look for the ability to inspect and react to each value change.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Explain the concept without reading the definition. Then change the example slightly, predict the result, run it, and explain why your prediction was correct or incorrect.</p></section>
+</article><article class="card" data-search="uncontrolled components an uncontrolled component lets the dom maintain the current input value, with react accessing it when needed, commonly through a ref. use uncontrolled inputs when direct dom-managed values are sufficient, particularly for some simple forms or integrations where the dom is the natural owner.">
+<div class="card-head"><span class="num">12</span><div><h2>Uncontrolled components</h2><span class="tag">State & Component Logic</span></div><label class="done"><input type="checkbox" data-done="12"> Learned</label></div>
+<section><h3>What is it?</h3><p>An uncontrolled component lets the DOM maintain the current input value, with React accessing it when needed, commonly through a ref.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Instead of the receptionist recording every keystroke, the customer fills the form and the receptionist reads the final value when required.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use uncontrolled inputs when direct DOM-managed values are sufficient, particularly for some simple forms or integrations where the DOM is the natural owner.</p></section>
+<section><h3>Practical example</h3><pre><code>function SimpleForm() {
+  const inputRef = useRef(null);
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    console.log(inputRef.current.value);
+  }
+
+  return (
+    &lt;form onSubmit={handleSubmit}&gt;
+      &lt;input ref={inputRef} /&gt;
+      &lt;button&gt;Submit&lt;/button&gt;
+    &lt;/form&gt;
+  );
+}</code></pre><button class="copy" onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. Who maintains the current value of an uncontrolled input?</div>
+        <details><summary>How to approach / expected direction</summary><p>The intern should identify the DOM as the owner of the input value.</p></details></div><div class="question"><div class="q">2. What role does a ref play in accessing the value at submission time?</div>
+        <details><summary>How to approach / expected direction</summary><p>The ref provides access to the underlying DOM node so its current value can be read.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Explain the concept without reading the definition. Then change the example slightly, predict the result, run it, and explain why your prediction was correct or incorrect.</p></section>
+</article><article class="card" data-search="component state vs application state local component state is usually concerned with one component or feature area. application state is shared information that multiple distant parts of an application need. keep ui-only state local when possible; consider shared/application state when many unrelated areas need the same source of truth.">
+<div class="card-head"><span class="num">13</span><div><h2>Component state vs application state</h2><span class="tag">State & Component Logic</span></div><label class="done"><input type="checkbox" data-done="13"> Learned</label></div>
+<section><h3>What is it?</h3><p>Local component state is usually concerned with one component or feature area. Application state is shared information that multiple distant parts of an application need.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>A desk has its own notebook, while the company has information that many departments need. Not every piece of information belongs in the company-wide system.</p></section>
+<section><h3>When / why would you use it?</h3><p>Keep UI-only state local when possible; consider shared/application state when many unrelated areas need the same source of truth.</p></section>
+<section><h3>Practical example</h3><pre><code>// Local UI state
+const [isModalOpen, setIsModalOpen] = useState(false);
+
+// Potential shared application state
+const currentUser = /* shared authentication state */;</code></pre><button class="copy" onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. Why might modal visibility remain local while authenticated-user information is shared?</div>
+        <details><summary>How to approach / expected direction</summary><p>The distinction should be based on who needs the information and its scope.</p></details></div><div class="question"><div class="q">2. What questions would you ask before moving local state into a global store?</div>
+        <details><summary>How to approach / expected direction</summary><p>Look for consumer count, ownership, synchronization needs and complexity rather than “global is always better.”</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Explain the concept without reading the definition. Then change the example slightly, predict the result, run it, and explain why your prediction was correct or incorrect.</p></section>
+</article><article class="card" data-search="state colocation state colocation means keeping state close to the components that actually use it instead of moving every piece of state to a high-level parent. use colocation to reduce prop drilling, unnecessary rerenders and large components that own unrelated state.">
+<div class="card-head"><span class="num">14</span><div><h2>State colocation</h2><span class="tag">State & Component Logic</span></div><label class="done"><input type="checkbox" data-done="14"> Learned</label></div>
+<section><h3>What is it?</h3><p>State colocation means keeping state close to the components that actually use it instead of moving every piece of state to a high-level parent.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Keep your keys near the door rather than placing every household item in one central cupboard. Put things where they are naturally used.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use colocation to reduce prop drilling, unnecessary rerenders and large components that own unrelated state.</p></section>
+<section><h3>Practical example</h3><pre><code>function SearchPanel() {
+  const [query, setQuery] = useState(&quot;&quot;);
+
+  return (
+    &lt;input
+      value={query}
+      onChange={e =&gt; setQuery(e.target.value)}
+    /&gt;
+  );
+}</code></pre><button class="copy" onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. What problems can appear when unrelated state is moved into a very high-level component?</div>
+        <details><summary>How to approach / expected direction</summary><p>Look for unnecessary parent complexity and wider-than-needed update scope.</p></details></div><div class="question"><div class="q">2. How does keeping search state inside SearchPanel improve ownership and maintainability?</div>
+        <details><summary>How to approach / expected direction</summary><p>The intern should connect local ownership with simpler component APIs and clearer responsibilities.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Explain the concept without reading the definition. Then change the example slightly, predict the result, run it, and explain why your prediction was correct or incorrect.</p></section>
+</article><article class="card" data-search="state initialization state can be initialized with a direct initial value or, when calculating the initial value is expensive, a lazy initializer function. use direct initialization for simple values. consider lazy initialization when the initial calculation itself is expensive.">
+<div class="card-head"><span class="num">15</span><div><h2>State initialization</h2><span class="tag">State & Component Logic</span></div><label class="done"><input type="checkbox" data-done="15"> Learned</label></div>
+<section><h3>What is it?</h3><p>State can be initialized with a direct initial value or, when calculating the initial value is expensive, a lazy initializer function.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Imagine opening a file cabinet. If finding the initial document takes effort, you would rather perform that search only when the cabinet is first opened rather than every time you look at the cabinet.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use direct initialization for simple values. Consider lazy initialization when the initial calculation itself is expensive.</p></section>
+<section><h3>Practical example</h3><pre><code>const [count, setCount] = useState(0);
+
+const [items, setItems] = useState(() =&gt; {
+  return createInitialItems();
+});</code></pre><button class="copy" onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. Why might a function passed to useState be useful when creating the initial value is expensive?</div>
+        <details><summary>How to approach / expected direction</summary><p>The key idea is avoiding unnecessary initial calculation work.</p></details></div><div class="question"><div class="q">2. Should every useState call use a function initializer? What would guide your decision?</div>
+        <details><summary>How to approach / expected direction</summary><p>The expected reasoning should favor the simplest form for simple values and lazy initialization only when useful.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Explain the concept without reading the definition. Then change the example slightly, predict the result, run it, and explain why your prediction was correct or incorrect.</p></section>
+</article><article class="card" data-search="preserving and resetting state react can preserve state when it considers a component to have the same identity. changing component identity or using keys intentionally can cause state to reset. understand this when switching views, rendering components conditionally, resetting forms and using keys to intentionally reset component state.">
+<div class="card-head"><span class="num">16</span><div><h2>Preserving and resetting state</h2><span class="tag">State & Component Logic</span></div><label class="done"><input type="checkbox" data-done="16"> Learned</label></div>
+<section><h3>What is it?</h3><p>React can preserve state when it considers a component to have the same identity. Changing component identity or using keys intentionally can cause state to reset.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Think of a student keeping the same notebook when they remain in the same class. If the student is replaced by a different identity, a fresh notebook may be appropriate.</p></section>
+<section><h3>When / why would you use it?</h3><p>Understand this when switching views, rendering components conditionally, resetting forms and using keys to intentionally reset component state.</p></section>
+<section><h3>Practical example</h3><pre><code>function App({ userId }) {
+  return &lt;ProfileForm key={userId} userId={userId} /&gt;;
+}</code></pre><button class="copy" onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. Why can changing a key cause a component&#x27;s state to reset?</div>
+        <details><summary>How to approach / expected direction</summary><p>The intern should connect key changes with component identity.</p></details></div><div class="question"><div class="q">2. What real-world situation might make an intentional state reset useful, such as switching between users?</div>
+        <details><summary>How to approach / expected direction</summary><p>Look for examples such as resetting a form when the selected record changes.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Explain the concept without reading the definition. Then change the example slightly, predict the result, run it, and explain why your prediction was correct or incorrect.</p></section>
+<footer>
+  <div style="max-width: 650px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; align-items: center;">
+    <div style="font-weight: 600; color: #1e293b;">Step 02 Complete → Next: Step 03 (React Hooks)</div>
+    <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+      <a href="react-learning-step-01-fundamentals.html" style="display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; background: #f1f5f9; color: #1e293b; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 14px; border: 1px solid #cbd5e1;">← Step 01 (Fundamentals)</a>
+      <a href="../index.html" style="display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; background: #2563eb; color: #fff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 14px; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);">← Back to Portal</a>
+      <a href="react-learning-step-03-react-hooks.html" style="display: inline-flex; align-items: center; gap: 6px; padding: 10px 16px; background: #059669; color: #fff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 14px; box-shadow: 0 4px 12px rgba(5, 150, 105, 0.25);">Next: Step 03 (Hooks) →</a>
+    </div>
+    <div style="font-size: 13px; color: var(--muted);">Your concept progress is automatically saved in this browser.</div>
+  </div>
+</footer>
+<script>
+const checks=[...document.querySelectorAll("[data-done]")],progress=document.getElementById("progress");
+function updateProgress(){const done=checks.filter(x=>x.checked).length;progress.textContent=`${done} / ${checks.length} learned`;localStorage.setItem("react-step02-progress",JSON.stringify(checks.map(x=>x.checked)))}
+const saved=JSON.parse(localStorage.getItem("react-step02-progress")||"[]");checks.forEach((x,i)=>x.checked=!!saved[i]);updateProgress();checks.forEach(x=>x.addEventListener("change",updateProgress));
+document.getElementById("search").addEventListener("input",e=>{const q=e.target.value.toLowerCase().trim();document.querySelectorAll(".card").forEach(c=>c.classList.toggle("hidden",q&&!c.dataset.search.includes(q)))});
+async function copyCode(btn){await navigator.clipboard.writeText(btn.previousElementSibling.innerText);const old=btn.textContent;btn.textContent="Copied!";setTimeout(()=>btn.textContent=old,900)}
+</script></body></html>
