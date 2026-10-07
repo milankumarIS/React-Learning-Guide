@@ -1,0 +1,261 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>React Intern Learning — Step 05: Component Communication</title>
+<style>
+:root{--bg:#f6f7fb;--panel:#fff;--text:#172033;--muted:#64748b;--line:#e2e8f0;--accent:#2563eb;--accent2:#eff6ff}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
+header{background:linear-gradient(135deg,#111827,#1e3a8a);color:#fff;padding:48px 20px}.wrap,main,.toolbar-inner{max-width:1050px;margin:auto}h1{font-size:clamp(30px,5vw,48px);line-height:1.1;margin:10px 0}h2{margin:0;font-size:23px}h3{font-size:15px;text-transform:uppercase;letter-spacing:.06em;margin:22px 0 8px;color:#334155}.lead{max-width:850px;color:#dbeafe;font-size:17px}.pill{border:1px solid #ffffff44;background:#ffffff14;padding:6px 11px;border-radius:999px;font-size:13px;display:inline-block;margin:3px}
+.toolbar{position:sticky;top:0;z-index:5;background:#fffffff2;backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:12px 20px}.toolbar-inner{display:flex;gap:10px;align-items:center;flex-wrap:wrap}input[type=search]{flex:1;min-width:240px;padding:11px 14px;border:1px solid var(--line);border-radius:10px;font-size:14px}.progress{font-size:13px;color:var(--muted)}main{padding:28px 20px 70px}
+.section-intro,.card{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 5px 20px #0f172a08}.section-intro{padding:20px;margin-bottom:18px}.card{padding:25px;margin:18px auto}.card-head{display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--line);padding-bottom:18px}.num{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:var(--accent2);color:var(--accent);font-weight:800}.tag{font-size:12px;color:var(--muted)}.done{margin-left:auto;font-size:13px;color:var(--muted);white-space:nowrap}
+section p{margin:6px 0;color:#334155}.layman{background:#f8fafc;border-left:4px solid var(--accent);padding:2px 15px;border-radius:0 10px 10px 0}pre{background:#0f172a;color:#e2e8f0;padding:17px;border-radius:10px;overflow:auto;font-size:13px;line-height:1.55}button{border:0;background:#e2e8f0;padding:7px 10px;border-radius:7px;cursor:pointer}.question{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:9px 0}.q{font-weight:600}details{margin-top:8px;color:var(--muted);font-size:14px}summary{cursor:pointer;color:var(--accent)}.task{background:#f0fdf4;border:1px solid #bbf7d0;padding:4px 15px;border-radius:10px}footer{text-align:center;color:var(--muted);padding:35px 20px}.hidden{display:none!important}@media(max-width:650px){.card{padding:18px}}
+
+/* Shared warm editorial theme */
+:root{--bg:#f5f1e8;--panel:#fffdf8;--text:#28312e;--muted:#65706a;--line:#dfd8ca;--accent:#355c53;--accent2:#e5eee4}
+body{background:var(--bg);color:var(--text);font-family:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+header,.hero{background:#e9ede6!important;color:var(--text)!important;border-bottom:1px solid #cbd5ca}
+header h1,.hero h1,h1{font-family:Georgia,"Times New Roman",serif;color:var(--text)!important;font-weight:600;letter-spacing:-.035em}
+header .lead,.hero .lead,.hero p{color:#5e6962!important}.pill,.eyebrow{background:#f7f4ec!important;color:#526259!important;border:1px solid #d4ddd2!important;border-radius:4px!important;letter-spacing:.04em}
+.toolbar{background:rgba(245,241,232,.97)!important;backdrop-filter:none!important;border-color:var(--line)!important}.toolbar input,input[type=search]{background:#fffdf8!important;border-color:#d7d0c2!important;border-radius:5px!important;color:var(--text)!important}
+.section-intro,.intro,.card{background:var(--panel)!important;border-color:var(--line)!important;border-radius:8px!important;box-shadow:none!important}.section-intro,.intro{border-left:3px solid #8eaa9a!important}.card{padding:24px!important}
+h2{font-family:Georgia,"Times New Roman",serif!important;color:var(--text)!important;letter-spacing:-.02em}h3{color:#4b5d54!important;text-transform:none!important;letter-spacing:0!important}.note,section p,p{color:#5e6962!important}
+.num{background:var(--accent2)!important;color:var(--accent)!important;border-radius:50%!important}.tag{background:#f0ede5!important;color:#59675f!important;border-radius:3px!important;padding:3px 7px!important}.card-head{border-color:var(--line)!important}
+.layman,.grid section{background:#f4f1e9!important;border-color:#e2ddd2!important;border-radius:5px!important}.layman{border-left-color:#789384!important}.questions{background:#eef3ed!important;border-left-color:#789384!important}.question,details{border-color:var(--line)!important;border-radius:5px!important}summary{color:var(--accent)!important}
+.task{background:#f5f0df!important;border-color:#e3d2a6!important;border-radius:5px!important;color:#65552d!important}pre,.code{background:#2d3632!important;border-radius:6px!important}.codebar{border-color:#52605a!important}button,.codebar button{background:#e9e4d8!important;color:#35433c!important;border-radius:4px!important}footer{color:#6d766f!important}footer a[style]{background:#e9e4d8!important;color:#35433c!important;border:1px solid #d4ddd2!important;border-radius:5px!important;box-shadow:none!important}
+.nav-link{background:#f7f4ec!important;color:#41564b!important;border-color:#cbd5ca!important;border-radius:5px!important}.nav-link:hover{background:#dfe9df!important;color:#294a42!important;transform:none!important}
+.top-nav{border-color:#cbd5ca!important}.top-nav .nav-meta,.nav-meta{color:#486358!important}.back-btn,.module-nav a{display:inline-flex;align-items:center;gap:6px;padding:8px 13px;background:#f7f4ec!important;color:#355c53!important;text-decoration:none;border:1px solid #cbd5ca!important;border-radius:5px;font-size:13.5px;font-weight:700}.back-btn:hover,.module-nav a:hover{background:#dfe9df!important;color:#294a42!important}.module-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:22px;padding-bottom:14px;border-bottom:1px solid #cbd5ca}.module-nav .nav-group{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.module-footer{max-width:720px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:14px}.module-footer .footer-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}.module-footer a{display:inline-flex;align-items:center;gap:6px;padding:9px 14px;background:#e9e4d8;color:#355c53;text-decoration:none;border:1px solid #cbd5ca;border-radius:5px;font-size:14px;font-weight:700}.module-footer a:hover{background:#dfe9df;color:#294a42}
+</style></head><body>
+<header><div class="wrap"><nav class="module-nav"><a href="../index.html">← All Modules</a><div class="nav-group"><a href="react-learning-step-04-useeffect-side-effects.html">← Step 04</a><span class="nav-meta">Step 5 of 27</span><a href="react-learning-step-06-forms.html">Step 06 →</a></div></nav><span class="pill">INTERN LEARNING CANVAS • STEP 05 / 27</span><h1>Component Communication</h1>
+<p class="lead">This module turns the fifth section of the React intern guide into a practical learning worksheet. The focus is how components exchange information, where state should live, and how props, callbacks, Context and composition create clear communication boundaries.</p>
+<span class="pill">13 concepts</span><span class="pill">2 questions / concept</span><span class="pill">Use case + layman explanation + code</span></div></header>
+<div class="toolbar"><div class="toolbar-inner"><input id="search" type="search" placeholder="Search props, callbacks, Context, composition..."><span id="progress" class="progress"></span><button onclick="scrollTo({top:0,behavior:'smooth'})">Top</button></div></div>
+<main><div class="section-intro"><h2>How interns should use this page</h2><p><b>1.</b> Identify who owns the state. <b>2.</b> Identify who needs to read it. <b>3.</b> Identify who needs to request changes. <b>4.</b> Choose the simplest communication mechanism. <b>5.</b> Answer the questions before opening the expected-direction box. <b>6.</b> Draw the data flow for the mini task.</p></div><article class="card" data-search="parent → child communication a parent component sends information to a child through props. the child receives the values and uses them while rendering or handling events. use props when the parent owns the data and the child only needs to display it or use it to perform its job.">
+<div class="card-head"><span class="num">01</span><div><h2>Parent → Child communication</h2><span class="tag">Component Communication</span></div><label class="done"><input type="checkbox" data-done="1"> Learned</label></div>
+<section><h3>What is it?</h3><p>A parent component sends information to a child through props. The child receives the values and uses them while rendering or handling events.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Think of a manager giving an employee an instruction sheet. The employee can use the information, but the manager remains the owner of the instruction.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use props when the parent owns the data and the child only needs to display it or use it to perform its job.</p></section>
+<section><h3>Practical example</h3><pre><code>function Parent() {
+  const user = { name: &quot;Milan&quot;, role: &quot;Developer&quot; };
+
+  return &lt;Profile user={user} /&gt;;
+}
+
+function Profile({ user }) {
+  return &lt;h2&gt;{user.name} — {user.role}&lt;/h2&gt;;
+}</code></pre><button onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. Who owns the user object in this example, and how does the child receive it?</div><details><summary>How to approach / expected direction</summary><p>Look for one-way parent-to-child data flow through props.</p></details></div><div class="question"><div class="q">2. If Profile needs another value from its parent, what is the normal React mechanism for passing it?</div><details><summary>How to approach / expected direction</summary><p>The intern should identify props as the normal communication boundary.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Draw the component tree for your example. Mark who owns each piece of state, where the data travels, and which component is allowed to request changes. Then modify the example and explain the new data flow.</p></section>
+</article><article class="card" data-search="child → parent communication a child normally communicates an event or result to its parent by calling a callback function supplied through props. use callback props when a child interaction needs to cause the parent to update state or perform an action.">
+<div class="card-head"><span class="num">02</span><div><h2>Child → Parent communication</h2><span class="tag">Component Communication</span></div><label class="done"><input type="checkbox" data-done="2"> Learned</label></div>
+<section><h3>What is it?</h3><p>A child normally communicates an event or result to its parent by calling a callback function supplied through props.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Imagine an employee reporting, “The task is complete.” The manager supplied the reporting process, while the employee triggers it when something happens.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use callback props when a child interaction needs to cause the parent to update state or perform an action.</p></section>
+<section><h3>Practical example</h3><pre><code>function Parent() {
+  const [selected, setSelected] = useState(null);
+
+  return (
+    &lt;Child onSelect={id =&gt; setSelected(id)} /&gt;
+  );
+}
+
+function Child({ onSelect }) {
+  return &lt;button onClick={() =&gt; onSelect(42)}&gt;Select&lt;/button&gt;;
+}</code></pre><button onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. Why does the parent pass a function instead of letting the child directly modify the parent&#x27;s state?</div><details><summary>How to approach / expected direction</summary><p>Look for ownership: the parent owns its state and exposes a controlled way to request an update.</p></details></div><div class="question"><div class="q">2. What happens to the data flow when Child calls onSelect(42)?</div><details><summary>How to approach / expected direction</summary><p>The callback carries an event/value from child back to logic owned by the parent.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Draw the component tree for your example. Mark who owns each piece of state, where the data travels, and which component is allowed to request changes. Then modify the example and explain the new data flow.</p></section>
+</article><article class="card" data-search="sibling communication siblings do not normally update one another&#x27;s state directly. shared state is commonly moved to their nearest common parent, which passes data and callbacks down. use this when two sibling components need to stay synchronized.">
+<div class="card-head"><span class="num">03</span><div><h2>Sibling communication</h2><span class="tag">Component Communication</span></div><label class="done"><input type="checkbox" data-done="3"> Learned</label></div>
+<section><h3>What is it?</h3><p>Siblings do not normally update one another&#x27;s state directly. Shared state is commonly moved to their nearest common parent, which passes data and callbacks down.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Two coworkers need the same information. Instead of secretly editing each other&#x27;s notebooks, their team lead keeps the shared record and communicates the relevant pieces.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use this when two sibling components need to stay synchronized.</p></section>
+<section><h3>Practical example</h3><pre><code>function Parent() {
+  const [value, setValue] = useState(&quot;&quot;);
+
+  return (
+    &lt;&gt;
+      &lt;Input value={value} onChange={setValue} /&gt;
+      &lt;Preview value={value} /&gt;
+    &lt;/&gt;
+  );
+}</code></pre><button onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. Why can the common parent be a better owner of state used by two siblings?</div><details><summary>How to approach / expected direction</summary><p>Look for one source of truth and coordination through the parent.</p></details></div><div class="question"><div class="q">2. What problem can occur if both siblings keep separate copies of the same shared value?</div><details><summary>How to approach / expected direction</summary><p>The copies can become inconsistent or require awkward synchronization.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Draw the component tree for your example. Mark who owns each piece of state, where the data travels, and which component is allowed to request changes. Then modify the example and explain the new data flow.</p></section>
+</article><article class="card" data-search="prop drilling prop drilling means passing data through intermediate components that do not actually need the data, only so a deeper component can receive it. use direct props when the tree is shallow; consider composition, context or an appropriate shared-state solution when repeated deep passing becomes a real problem.">
+<div class="card-head"><span class="num">04</span><div><h2>Prop drilling</h2><span class="tag">Component Communication</span></div><label class="done"><input type="checkbox" data-done="4"> Learned</label></div>
+<section><h3>What is it?</h3><p>Prop drilling means passing data through intermediate components that do not actually need the data, only so a deeper component can receive it.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Imagine passing a message through five people when only the fifth person needs it. The middle people become messengers rather than participants.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use direct props when the tree is shallow; consider composition, Context or an appropriate shared-state solution when repeated deep passing becomes a real problem.</p></section>
+<section><h3>Practical example</h3><pre><code>function App({ user }) {
+  return &lt;Layout user={user} /&gt;;
+}
+
+function Layout({ user }) {
+  return &lt;Sidebar user={user} /&gt;;
+}
+
+function Sidebar({ user }) {
+  return &lt;UserMenu user={user} /&gt;;
+}</code></pre><button onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. Why can prop drilling make a component tree harder to maintain?</div><details><summary>How to approach / expected direction</summary><p>The issue is not passing props itself; it is unnecessary intermediate plumbing and growing coupling.</p></details></div><div class="question"><div class="q">2. Should every chain of two or three props automatically be replaced with Context? Why or why not?</div><details><summary>How to approach / expected direction</summary><p>A good answer balances simplicity: props are often preferable for local, explicit relationships.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Draw the component tree for your example. Mark who owns each piece of state, where the data travels, and which component is allowed to request changes. Then modify the example and explain the new data flow.</p></section>
+</article><article class="card" data-search="context for communication context allows a value to be made available to descendants without passing it manually through every intermediate component. use context when many descendants need the same value and prop passing becomes cumbersome, such as theme, locale or authentication information.">
+<div class="card-head"><span class="num">05</span><div><h2>Context for communication</h2><span class="tag">Component Communication</span></div><label class="done"><input type="checkbox" data-done="5"> Learned</label></div>
+<section><h3>What is it?</h3><p>Context allows a value to be made available to descendants without passing it manually through every intermediate component.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Think of a building-wide notice board. People on different floors can access the same information without every floor manager forwarding it.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use Context when many descendants need the same value and prop passing becomes cumbersome, such as theme, locale or authentication information.</p></section>
+<section><h3>Practical example</h3><pre><code>const UserContext = createContext(null);
+
+function App() {
+  return (
+    &lt;UserContext.Provider value={{ name: &quot;Milan&quot; }}&gt;
+      &lt;Dashboard /&gt;
+    &lt;/UserContext.Provider&gt;
+  );
+}
+
+function Profile() {
+  const user = useContext(UserContext);
+  return &lt;p&gt;{user.name}&lt;/p&gt;;
+}</code></pre><button onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. What problem does Context solve compared with passing user through every intermediate component?</div><details><summary>How to approach / expected direction</summary><p>Look for reducing intermediate prop plumbing.</p></details></div><div class="question"><div class="q">2. Why is Context not automatically the best solution for every shared value?</div><details><summary>How to approach / expected direction</summary><p>The intern should consider scope, coupling and whether ordinary props or another state solution would be simpler.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Draw the component tree for your example. Mark who owns each piece of state, where the data travels, and which component is allowed to request changes. Then modify the example and explain the new data flow.</p></section>
+</article><article class="card" data-search="callbacks as communication contracts a callback prop can define a clear contract: the child reports that something happened and supplies the information the parent needs. use callbacks to keep ownership of state and business decisions in the appropriate parent while allowing reusable children to report events.">
+<div class="card-head"><span class="num">06</span><div><h2>Callbacks as communication contracts</h2><span class="tag">Component Communication</span></div><label class="done"><input type="checkbox" data-done="6"> Learned</label></div>
+<section><h3>What is it?</h3><p>A callback prop can define a clear contract: the child reports that something happened and supplies the information the parent needs.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>A delivery worker follows a predefined reporting format instead of directly changing the company&#x27;s internal records.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use callbacks to keep ownership of state and business decisions in the appropriate parent while allowing reusable children to report events.</p></section>
+<section><h3>Practical example</h3><pre><code>function SearchInput({ onSearch }) {
+  return (
+    &lt;input
+      onChange={e =&gt; onSearch(e.target.value)}
+      placeholder=&quot;Search&quot;
+    /&gt;
+  );
+}
+
+function Page() {
+  function handleSearch(query) {
+    console.log(&quot;Search:&quot;, query);
+  }
+
+  return &lt;SearchInput onSearch={handleSearch} /&gt;;
+}</code></pre><button onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. What makes onSearch a useful API for a reusable SearchInput?</div><details><summary>How to approach / expected direction</summary><p>Look for a small, intention-based API rather than exposing parent implementation details.</p></details></div><div class="question"><div class="q">2. Why should SearchInput avoid knowing how the parent will store or process the query?</div><details><summary>How to approach / expected direction</summary><p>The child should report the event/value; the parent decides what the event means for its feature.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Draw the component tree for your example. Mark who owns each piece of state, where the data travels, and which component is allowed to request changes. Then modify the example and explain the new data flow.</p></section>
+</article><article class="card" data-search="composition composition means building larger components by combining smaller components and allowing callers to provide pieces of ui. use composition for layouts, cards, dialogs, pages and reusable containers.">
+<div class="card-head"><span class="num">07</span><div><h2>Composition</h2><span class="tag">Component Communication</span></div><label class="done"><input type="checkbox" data-done="7"> Learned</label></div>
+<section><h3>What is it?</h3><p>Composition means building larger components by combining smaller components and allowing callers to provide pieces of UI.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>A house is assembled from rooms and furniture rather than becoming one giant inseparable object.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use composition for layouts, cards, dialogs, pages and reusable containers.</p></section>
+<section><h3>Practical example</h3><pre><code>function Card({ children, footer }) {
+  return (
+    &lt;section className=&quot;card&quot;&gt;
+      &lt;div&gt;{children}&lt;/div&gt;
+      &lt;footer&gt;{footer}&lt;/footer&gt;
+    &lt;/section&gt;
+  );
+}
+
+&lt;Card footer={&lt;button&gt;Save&lt;/button&gt;}&gt;
+  &lt;h2&gt;Profile&lt;/h2&gt;
+  &lt;p&gt;User details&lt;/p&gt;
+&lt;/Card&gt;</code></pre><button onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. How does children make Card more reusable than hardcoding a specific body?</div><details><summary>How to approach / expected direction</summary><p>Look for structure/layout being owned by Card while content is supplied by the caller.</p></details></div><div class="question"><div class="q">2. What responsibility should Card own, and what responsibility should its caller own?</div><details><summary>How to approach / expected direction</summary><p>The caller controls content; the container controls the surrounding structure and behavior.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Draw the component tree for your example. Mark who owns each piece of state, where the data travels, and which component is allowed to request changes. Then modify the example and explain the new data flow.</p></section>
+</article><article class="card" data-search="render props a render prop is a prop whose value is a function that a component calls to determine what ui to render or what data to expose. use this pattern when a reusable component owns behavior or data but consumers need control over the rendered ui. in modern react, custom hooks often solve many of the same problems more simply.">
+<div class="card-head"><span class="num">08</span><div><h2>Render props</h2><span class="tag">Component Communication</span></div><label class="done"><input type="checkbox" data-done="8"> Learned</label></div>
+<section><h3>What is it?</h3><p>A render prop is a prop whose value is a function that a component calls to determine what UI to render or what data to expose.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Think of a service provider that supplies information, while the customer decides how that information should be presented.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use this pattern when a reusable component owns behavior or data but consumers need control over the rendered UI. In modern React, custom hooks often solve many of the same problems more simply.</p></section>
+<section><h3>Practical example</h3><pre><code>function MouseTracker({ render }) {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  return render(position);
+}
+
+&lt;MouseTracker
+  render={({ x, y }) =&gt; &lt;p&gt;{x}, {y}&lt;/p&gt;}
+/&gt;</code></pre><button onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. What does MouseTracker own and what does the caller control?</div><details><summary>How to approach / expected direction</summary><p>The reusable component owns behavior/state; the render function controls presentation.</p></details></div><div class="question"><div class="q">2. Why might a custom hook be considered instead of a render prop in modern React code?</div><details><summary>How to approach / expected direction</summary><p>Look for simpler separation of reusable logic from UI through hooks.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Draw the component tree for your example. Mark who owns each piece of state, where the data travels, and which component is allowed to request changes. Then modify the example and explain the new data flow.</p></section>
+</article><article class="card" data-search="higher-order components (hoc) a higher-order component is a function that takes a component and returns an enhanced component. use hocs when working with existing libraries or architectures that use component enhancement. they are less common for new code where hooks and composition may be clearer.">
+<div class="card-head"><span class="num">09</span><div><h2>Higher-Order Components (HOC)</h2><span class="tag">Component Communication</span></div><label class="done"><input type="checkbox" data-done="9"> Learned</label></div>
+<section><h3>What is it?</h3><p>A Higher-Order Component is a function that takes a component and returns an enhanced component.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Think of a service wrapper around an existing machine: the machine remains the core device, while the wrapper adds capability.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use HOCs when working with existing libraries or architectures that use component enhancement. They are less common for new code where hooks and composition may be clearer.</p></section>
+<section><h3>Practical example</h3><pre><code>function withLoading(Component) {
+  return function WithLoading({ loading, ...props }) {
+    if (loading) return &lt;p&gt;Loading...&lt;/p&gt;;
+    return &lt;Component {...props} /&gt;;
+  };
+}
+
+const UserListWithLoading = withLoading(UserList);</code></pre><button onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. What does a HOC receive and what does it return?</div><details><summary>How to approach / expected direction</summary><p>Look for component-in/component-out enhancement.</p></details></div><div class="question"><div class="q">2. What potential complexity can appear when many HOCs wrap the same component?</div><details><summary>How to approach / expected direction</summary><p>The intern may identify wrapper nesting, prop tracing and debugging/display-name complexity as possible costs.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Draw the component tree for your example. Mark who owns each piece of state, where the data travels, and which component is allowed to request changes. Then modify the example and explain the new data flow.</p></section>
+</article><article class="card" data-search="compound components compound components are a group of components designed to work together around shared state or an implicit coordination api. use them when a component has multiple related subcomponents and you want consumers to compose the structure while the system coordinates behavior.">
+<div class="card-head"><span class="num">10</span><div><h2>Compound components</h2><span class="tag">Component Communication</span></div><label class="done"><input type="checkbox" data-done="10"> Learned</label></div>
+<section><h3>What is it?</h3><p>Compound components are a group of components designed to work together around shared state or an implicit coordination API.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Think of a tab system: Tabs, TabList, Tab and TabPanel are separate pieces, but together they form one coordinated control.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use them when a component has multiple related subcomponents and you want consumers to compose the structure while the system coordinates behavior.</p></section>
+<section><h3>Practical example</h3><pre><code>&lt;Tabs&gt;
+  &lt;Tabs.List&gt;
+    &lt;Tabs.Tab value=&quot;profile&quot;&gt;Profile&lt;/Tabs.Tab&gt;
+    &lt;Tabs.Tab value=&quot;settings&quot;&gt;Settings&lt;/Tabs.Tab&gt;
+  &lt;/Tabs.List&gt;
+
+  &lt;Tabs.Panel value=&quot;profile&quot;&gt;Profile content&lt;/Tabs.Panel&gt;
+  &lt;Tabs.Panel value=&quot;settings&quot;&gt;Settings content&lt;/Tabs.Panel&gt;
+&lt;/Tabs&gt;</code></pre><button onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. Why can compound components be more flexible than a component with dozens of configuration props?</div><details><summary>How to approach / expected direction</summary><p>Look for flexible composition and a coordinated component family.</p></details></div><div class="question"><div class="q">2. What shared information might Tabs internally coordinate between Tab and TabPanel?</div><details><summary>How to approach / expected direction</summary><p>The intern should think about active tab state, registration/selection and relationships between subcomponents.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Draw the component tree for your example. Mark who owns each piece of state, where the data travels, and which component is allowed to request changes. Then modify the example and explain the new data flow.</p></section>
+</article><article class="card" data-search="context vs props props make data flow explicit between a parent and child. context provides implicit access to a value for descendants that opt into the context. use props for explicit local relationships and context when many descendants need the same value without repeated intermediate passing.">
+<div class="card-head"><span class="num">11</span><div><h2>Context vs props</h2><span class="tag">Component Communication</span></div><label class="done"><input type="checkbox" data-done="11"> Learned</label></div>
+<section><h3>What is it?</h3><p>Props make data flow explicit between a parent and child. Context provides implicit access to a value for descendants that opt into the context.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>Props are like a person handing you a document directly. Context is like accessing a shared notice board.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use props for explicit local relationships and Context when many descendants need the same value without repeated intermediate passing.</p></section>
+<section><h3>Practical example</h3><pre><code>// Explicit
+&lt;Profile user={user} /&gt;
+
+// Context
+&lt;UserContext.Provider value={user}&gt;
+  &lt;DeepTree /&gt;
+&lt;/UserContext.Provider&gt;</code></pre><button onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. What makes props easier to trace than Context in a simple parent-child relationship?</div><details><summary>How to approach / expected direction</summary><p>Props visibly document the data boundary in the component call.</p></details></div><div class="question"><div class="q">2. What signs might indicate that Context is more appropriate than adding another long prop chain?</div><details><summary>How to approach / expected direction</summary><p>Repeated deep passing to many descendants is a common signal to consider Context.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Draw the component tree for your example. Mark who owns each piece of state, where the data travels, and which component is allowed to request changes. Then modify the example and explain the new data flow.</p></section>
+</article><article class="card" data-search="global state vs context context is a delivery mechanism for values through a component tree; it does not by itself provide all the behavior of a complete global state-management architecture. use context for suitable shared values; use a dedicated state-management approach when application state has complex updates, selectors, persistence, debugging or other requirements.">
+<div class="card-head"><span class="num">12</span><div><h2>Global state vs Context</h2><span class="tag">Component Communication</span></div><label class="done"><input type="checkbox" data-done="12"> Learned</label></div>
+<section><h3>What is it?</h3><p>Context is a delivery mechanism for values through a component tree; it does not by itself provide all the behavior of a complete global state-management architecture.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>A company notice board can distribute information, but it is not automatically the company&#x27;s complete accounting system.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use Context for suitable shared values; use a dedicated state-management approach when application state has complex updates, selectors, persistence, debugging or other requirements.</p></section>
+<section><h3>Practical example</h3><pre><code>// Context can expose a shared value:
+const AuthContext = createContext(null);
+
+// A more complex application store may have
+// its own update and subscription architecture.</code></pre><button onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. Why is saying &#x27;Context is global state management&#x27; an oversimplification?</div><details><summary>How to approach / expected direction</summary><p>The intern should distinguish value distribution from state architecture.</p></details></div><div class="question"><div class="q">2. What requirements might make a dedicated state-management solution worth considering?</div><details><summary>How to approach / expected direction</summary><p>Look for complexity, update patterns, selectors, persistence, tooling or many consumers as possible considerations.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Draw the component tree for your example. Mark who owns each piece of state, where the data travels, and which component is allowed to request changes. Then modify the example and explain the new data flow.</p></section>
+</article><article class="card" data-search="communication design and ownership good component communication starts by deciding who should own the state and what public interface other components should use. use the simplest ownership model: keep state local when possible, lift it when siblings need it, use context for appropriate deep shared values, and use external state when the application&#x27;s complexity justifies it.">
+<div class="card-head"><span class="num">13</span><div><h2>Communication design and ownership</h2><span class="tag">Component Communication</span></div><label class="done"><input type="checkbox" data-done="13"> Learned</label></div>
+<section><h3>What is it?</h3><p>Good component communication starts by deciding who should own the state and what public interface other components should use.</p></section>
+<section class="layman"><h3>🧠 Layman example</h3><p>A company works better when ownership is clear: one department owns the record while others submit requests through defined processes.</p></section>
+<section><h3>When / why would you use it?</h3><p>Use the simplest ownership model: keep state local when possible, lift it when siblings need it, use Context for appropriate deep shared values, and use external state when the application&#x27;s complexity justifies it.</p></section>
+<section><h3>Practical example</h3><pre><code>function SearchPage() {
+  const [query, setQuery] = useState(&quot;&quot;);
+
+  return (
+    &lt;&gt;
+      &lt;SearchInput value={query} onChange={setQuery} /&gt;
+      &lt;Results query={query} /&gt;
+    &lt;/&gt;
+  );
+}</code></pre><button onclick="copyCode(this)">Copy code</button></section>
+<section><h3>Intern questions</h3><div class="question"><div class="q">1. Before choosing Context or a global store, what questions should you ask about ownership and consumers?</div><details><summary>How to approach / expected direction</summary><p>Look for scope, number of consumers, update frequency, coupling and complexity.</p></details></div><div class="question"><div class="q">2. How would you explain the difference between &#x27;where state lives&#x27; and &#x27;how components communicate about it&#x27;?</div><details><summary>How to approach / expected direction</summary><p>State ownership is about who controls the source of truth; communication is about the interface through which components exchange information.</p></details></div></section>
+<section class="task"><h3>💡 Mini task</h3><p>Draw the component tree for your example. Mark who owns each piece of state, where the data travels, and which component is allowed to request changes. Then modify the example and explain the new data flow.</p></section>
+</article></main>
+<footer><div class="module-footer"><div>Step 05 complete. Continue when you are ready.</div><div class="footer-actions"><a href="react-learning-step-04-useeffect-side-effects.html">← Step 04</a><a href="../index.html">All Modules</a><a href="react-learning-step-06-forms.html">Next: Step 06 →</a></div><small>Your progress is saved in this browser.</small></div></footer>
+<script>
+const checks=[...document.querySelectorAll("[data-done]")],progress=document.getElementById("progress");
+function updateProgress(){const done=checks.filter(x=>x.checked).length;progress.textContent=`${done} / ${checks.length} learned`;localStorage.setItem("react-step05-progress",JSON.stringify(checks.map(x=>x.checked)))}
+const saved=JSON.parse(localStorage.getItem("react-step05-progress")||"[]");checks.forEach((x,i)=>x.checked=!!saved[i]);updateProgress();checks.forEach(x=>x.addEventListener("change",updateProgress));
+document.getElementById("search").addEventListener("input",e=>{const q=e.target.value.toLowerCase().trim();document.querySelectorAll(".card").forEach(c=>c.classList.toggle("hidden",q&&!c.dataset.search.includes(q)))});
+async function copyCode(btn){await navigator.clipboard.writeText(btn.previousElementSibling.innerText);const old=btn.textContent;btn.textContent="Copied!";setTimeout(()=>btn.textContent=old,900)}
+</script></body></html>
