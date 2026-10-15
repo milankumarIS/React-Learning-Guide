@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>React Learning Canvas — Step 10: State Management</title>
+<style>
+:root{color-scheme:dark;--bg:#08111f;--panel:#101d30;--text:#eaf1fb;--muted:#a9b8ce;--line:#263953;--accent:#70d6c5;--blue:#8bb8ff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 10% 0%,#132b49 0,transparent 36%),var(--bg);color:var(--text);font:16px/1.65 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+header{padding:42px max(22px,calc((100vw - 1100px)/2));background:linear-gradient(120deg,#122a47,#15213b 70%,#20304a);border-bottom:1px solid var(--line)}.eyebrow{color:var(--accent);font-size:.78rem;letter-spacing:.15em;font-weight:800}h1{font-size:clamp(2rem,5vw,3.5rem);line-height:1.12;margin:.5rem 0 1rem}header p{max-width:760px;color:#c8d5e7;margin:0}
+main{max-width:1100px;margin:auto;padding:24px 18px 70px}.toolbar{position:sticky;top:0;z-index:5;display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:14px 0;background:rgba(8,17,31,.94);backdrop-filter:blur(12px)}input[type=search]{flex:1;min-width:210px;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font:inherit}.progress{color:var(--muted);font-size:.92rem;white-space:nowrap}.bar{height:6px;background:#24364e;border-radius:10px;overflow:hidden;flex-basis:100%}.bar span{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
+button{cursor:pointer;border:1px solid #3a5473;background:#1a2d47;color:var(--text);border-radius:9px;padding:8px 12px;font:inherit}button:hover{border-color:var(--accent)}.intro{padding:18px 20px;background:var(--panel);border:1px solid var(--line);border-radius:14px;margin:10px 0 24px}.intro strong{color:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.card{background:linear-gradient(160deg,var(--panel),#0d192a);border:1px solid var(--line);border-radius:16px;padding:22px;min-width:0;box-shadow:0 10px 26px #0002}.card h2{font-size:1.4rem;line-height:1.25;margin:13px 0 4px}.card h3{font-size:.96rem;color:var(--blue);margin:22px 0 6px}.card p{margin:6px 0}.card-top{display:flex;align-items:center;justify-content:space-between;gap:10px}.num{font-size:.8rem;font-weight:800;color:var(--accent);border:1px solid #2e6d69;border-radius:7px;padding:4px 7px}.tag{margin-left:8px;font-size:.7rem;letter-spacing:.1em;color:var(--muted)}.learn{font-size:.85rem;color:var(--muted);display:flex;gap:7px;align-items:center}.learn input{accent-color:var(--accent)}.source-note{color:var(--muted);font-size:.92rem}.analogy,.task{border-left:3px solid var(--accent);background:#102a35;padding:12px 14px;border-radius:0 10px 10px 0;margin-top:14px}.analogy p,.task p{margin-bottom:0}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#07101d;border:1px solid #20334c;border-radius:10px;padding:14px;font:.82rem/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;color:#d6e7ff}code{font:inherit}.copy{font-size:.84rem}ol{padding-left:22px}li{margin:8px 0}details{border-top:1px solid var(--line);margin-top:18px;padding-top:13px}summary{cursor:pointer;color:var(--accent);font-weight:700}.hint{color:var(--muted);font-size:.9rem}.empty{display:none;padding:30px;text-align:center;color:var(--muted)}footer{text-align:center;color:var(--muted);font-size:.86rem;padding:35px 10px}
+@media(max-width:760px){.grid{grid-template-columns:1fr}header{padding-top:32px;padding-bottom:32px}.card{padding:18px}.toolbar{gap:9px}.progress{font-size:.82rem}}
+
+/* Shared warm editorial theme and module navigation */
+:root{color-scheme:light;--bg:#f5f1e8;--panel:#fffdf8;--panel2:#fffdf8;--text:#28312e;--muted:#65706a;--line:#dfd8ca;--accent:#355c53;--blue:#587b70}
+body{background:#f5f1e8!important;background-image:none!important;color:#28312e!important;font-family:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif!important}
+header,.hero{background:#e9ede6!important;color:#28312e!important;border-color:#cbd5ca!important}header h1,.hero h1,h1{font-family:Georgia,"Times New Roman",serif!important;color:#28312e!important;font-weight:600;letter-spacing:-.035em}header p,.hero p{color:#5e6962!important}.eyebrow{color:#486358!important}
+.module-nav{max-width:1100px;margin:0 auto 22px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding-bottom:14px;border-bottom:1px solid #cbd5ca}.module-nav .nav-group{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.module-nav a{display:inline-flex;align-items:center;gap:6px;padding:8px 13px;background:#f7f4ec;color:#355c53;text-decoration:none;border:1px solid #cbd5ca;border-radius:5px;font-size:13.5px;font-weight:700}.module-nav a:hover{background:#dfe9df;color:#294a42}.nav-meta{color:#486358;font-size:13px;font-weight:700}
+.toolbar{background:rgba(245,241,232,.97)!important;backdrop-filter:none!important}.toolbar input,input[type=search]{background:#fffdf8!important;color:#28312e!important;border-color:#d7d0c2!important;border-radius:5px!important}.progress,.hint,.source-note{color:#65706a!important}.bar{background:#dedbd1!important}.bar span{background:#587b59!important}button{background:#e9e4d8!important;color:#35433c!important;border-color:#d4ddd2!important;border-radius:4px!important}
+.intro,.card{background:#fffdf8!important;border-color:#dfd8ca!important;border-radius:8px!important;box-shadow:none!important}.intro{border-left:3px solid #8eaa9a!important}.intro strong{color:#355c53!important}.card h2{font-family:Georgia,"Times New Roman",serif!important;color:#28312e!important;letter-spacing:-.02em}.card h3{color:#4b5d54!important}.card p,p{color:#5e6962!important}.num{background:#e5eee4!important;border-color:#cbdac8!important;color:#355c53!important;border-radius:50%!important}.tag{color:#59675f!important}.analogy,.task{background:#eef3ed!important;border-left-color:#789384!important;border-radius:0 5px 5px 0!important}.analogy p,.task p{color:#526159!important}pre{background:#2d3632!important;border-color:#52605a!important;border-radius:6px!important;color:#edf1ec!important}details{border-color:#dfd8ca!important}summary{color:#355c53!important}
+footer{background:#eee9df!important;color:#65706a!important;padding:32px 18px!important}.module-footer{max-width:720px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:14px}.footer-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}.footer-actions a{display:inline-flex;align-items:center;padding:9px 14px;background:#e9e4d8;color:#355c53;text-decoration:none;border:1px solid #cbd5ca;border-radius:5px;font-size:14px;font-weight:700}.footer-actions a:hover{background:#dfe9df;color:#294a42}
+</style></head><body>
+<header><nav class="module-nav"><a href="../index.html">← All Modules</a><div class="nav-group"><a href="react-learning-step-09-api-data-fetching.html">← Step 9</a><span class="nav-meta">Step 10 of 27</span></div></nav><div class="eyebrow">INTERN LEARNING CANVAS • STEP 10 / 27</div><h1>State Management</h1><p>Learn where state should live, how shared state flows through an app, and how Redux Toolkit and other state libraries organize updates.</p></header>
+<main><div class="toolbar"><input id="search" type="search" placeholder="Search state management concepts…" aria-label="Search concepts"><span class="progress" id="progress">0 / 18 learned</span><button id="reset" type="button">Reset progress</button><button type="button" onclick="window.scrollTo({top:0,behavior:'smooth'})">Top ↑</button><div class="bar"><span id="bar"></span></div></div>
+<div class="intro"><strong>How to use this canvas</strong><br>For every topic, research what it is, why it exists, how it works, when to use it, common mistakes/trade-offs, and a small practical example. Start with the simplest state location that fits the requirement. Treat library examples as learning sketches and verify exact APIs in current official documentation.</div>
+<section class="grid" id="cards">
+<article class="card">
+ <div class="card-top"><div><span class="num">01</span><span class="tag">STATE MGMT</span></div><label class="learn"><input type="checkbox" class="learned" data-id="1"> Learned</label></div>
+ <h2>Local state</h2><p class="source-note">Use component-level state for isolated UI concerns.</p>
+ <h3>What is it?</h3><p>Local state belongs to a component and tracks values that affect that component&#x27;s UI.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>A notepad kept at one desk rather than shared across the whole office.</p></div>
+ <h3>When / why use it?</h3><p>Use for toggles, open/closed menus, input values, and small pieces of UI state used in one area.</p>
+ <h3>Practical example</h3><pre><code>const [isOpen, setIsOpen] = useState(false);
+return &lt;button onClick={() =&gt; setIsOpen(v =&gt; !v)}&gt;
+  {isOpen ? &quot;Close&quot; : &quot;Open&quot;}
+&lt;/button&gt;;</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>What clues suggest a value should stay local instead of becoming global state?</li><li>What can go wrong when unrelated components share a single state container?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Identify which components need the value and choose the narrowest owner that supports the required behavior.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Library APIs and maintenance status can change; verify current details in official documentation before choosing a tool.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Build a dropdown whose open state is local to the dropdown component.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">02</span><span class="tag">STATE MGMT</span></div><label class="learn"><input type="checkbox" class="learned" data-id="2"> Learned</label></div>
+ <h2>useReducer</h2><p class="source-note">Model structured local state transitions.</p>
+ <h3>What is it?</h3><p>useReducer stores state and updates it through a reducer function that receives the current state and an action.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>A clerk follows a fixed set of rules to update a record based on a submitted action.</p></div>
+ <h3>When / why use it?</h3><p>Use when state transitions are related, structured, or easier to reason about as named actions.</p>
+ <h3>Practical example</h3><pre><code>function reducer(state, action) {
+  switch (action.type) {
+    case &quot;increment&quot;: return { count: state.count + 1 };
+    case &quot;reset&quot;: return { count: 0 };
+    default: return state;
+  }
+}
+const [state, dispatch] = useReducer(reducer, { count: 0 });</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>When might useReducer be clearer than multiple useState calls?</li><li>Why should a reducer calculate next state rather than perform network requests or other side effects?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Map each action to its input state and returned next state; look for pure, testable transitions.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Library APIs and maintenance status can change; verify current details in official documentation before choosing a tool.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Build a form state reducer with reset, field-change, and submit actions.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">03</span><span class="tag">STATE MGMT</span></div><label class="learn"><input type="checkbox" class="learned" data-id="3"> Learned</label></div>
+ <h2>Context API</h2><p class="source-note">Share state through the component tree.</p>
+ <h3>What is it?</h3><p>Context makes a value available to descendant components without manually passing it through every intermediate prop.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>A shared announcement system lets many rooms receive the same message without a person carrying it door to door.</p></div>
+ <h3>When / why use it?</h3><p>Use for values needed across a subtree, such as theme, locale, or current user information.</p>
+ <h3>Practical example</h3><pre><code>const ThemeContext = createContext(&quot;light&quot;);
+
+function App() {
+  return &lt;ThemeContext.Provider value=&quot;dark&quot;&gt;
+    &lt;Toolbar /&gt;
+  &lt;/ThemeContext.Provider&gt;;
+}</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>How does Context differ from passing props explicitly?</li><li>What are the performance and design trade-offs of putting frequently changing state in Context?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Study createContext, provider placement, consumer behavior, and when explicit props remain simpler.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Library APIs and maintenance status can change; verify current details in official documentation before choosing a tool.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Create a theme context consumed by two separate components.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">04</span><span class="tag">STATE MGMT</span></div><label class="learn"><input type="checkbox" class="learned" data-id="4"> Learned</label></div>
+ <h2>Redux</h2><p class="source-note">Study predictable centralized state management.</p>
+ <h3>What is it?</h3><p>Redux uses a store and a predictable flow of actions and reducers to manage shared application state.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>A central register records changes using a consistent process so everyone sees the same state.</p></div>
+ <h3>When / why use it?</h3><p>Use when shared state and transitions need a consistent, inspectable pattern across many features.</p>
+ <h3>Practical example</h3><pre><code>// Conceptual Redux flow:
+dispatch({ type: &quot;cart/itemAdded&quot;, payload: product });
+// reducer calculates next state in the store.</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>What roles do the store, action, reducer, and dispatch play?</li><li>What kinds of application complexity might justify Redux instead of local state or Context?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Draw the one-way data flow and examine how devtools and predictable transitions help debugging.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Library APIs and maintenance status can change; verify current details in official documentation before choosing a tool.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Sketch Redux flow for adding an item to a shopping cart.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">05</span><span class="tag">STATE MGMT</span></div><label class="learn"><input type="checkbox" class="learned" data-id="5"> Learned</label></div>
+ <h2>Redux Toolkit</h2><p class="source-note">Use the recommended modern Redux approach.</p>
+ <h3>What is it?</h3><p>Redux Toolkit provides APIs and conventions that reduce boilerplate when setting up Redux stores, reducers, and async logic.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>A ready-made toolkit standardizes the tools used to maintain the central register.</p></div>
+ <h3>When / why use it?</h3><p>Use for new Redux applications instead of hand-writing repetitive setup patterns.</p>
+ <h3>Practical example</h3><pre><code>import { configureStore } from &quot;@reduxjs/toolkit&quot;;
+
+const store = configureStore({
+  reducer: { cart: cartReducer }
+});</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>Which common Redux setup tasks does Redux Toolkit simplify?</li><li>Why can concise reducer syntax still preserve immutable update semantics?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Explore configureStore, createSlice, middleware defaults, and the recommended Redux workflow.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Library APIs and maintenance status can change; verify current details in official documentation before choosing a tool.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Set up a small store with a cart reducer using Redux Toolkit.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">06</span><span class="tag">STATE MGMT</span></div><label class="learn"><input type="checkbox" class="learned" data-id="6"> Learned</label></div>
+ <h2>Zustand</h2><p class="source-note">Research a lightweight external state store.</p>
+ <h3>What is it?</h3><p>Zustand is a state-management library that exposes a store and lets components subscribe to selected state values.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>A small shared whiteboard that only notifies people watching the part that changed.</p></div>
+ <h3>When / why use it?</h3><p>Use when a lightweight shared store fits better than passing props through many levels.</p>
+ <h3>Practical example</h3><pre><code>import { create } from &quot;zustand&quot;;
+
+const useCounter = create(set =&gt; ({
+  count: 0,
+  increment: () =&gt; set(s =&gt; ({ count: s.count + 1 }))
+}));
+
+function Counter() {
+  const count = useCounter(s =&gt; s.count);
+  return &lt;button&gt;{count}&lt;/button&gt;;
+}</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>How does a component subscribe to state in Zustand?</li><li>What factors should you compare when choosing Zustand versus Context or Redux?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Research selector subscriptions, store organization, middleware, and persistence options.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Library APIs and maintenance status can change; verify current details in official documentation before choosing a tool.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Create a shared counter store and consume it from two components.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">07</span><span class="tag">STATE MGMT</span></div><label class="learn"><input type="checkbox" class="learned" data-id="7"> Learned</label></div>
+ <h2>MobX</h2><p class="source-note">Research observable/reactive state management.</p>
+ <h3>What is it?</h3><p>MobX tracks observable state and reacts to changes so dependent UI can update.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>A noticeboard automatically alerts people who are watching a changed notice.</p></div>
+ <h3>When / why use it?</h3><p>Use when its observable model and reactive programming style suit the team&#x27;s architecture.</p>
+ <h3>Practical example</h3><pre><code>// Illustrative MobX-style model:
+class CounterStore {
+  count = 0;
+  increment() { this.count += 1; }
+}
+// Research makeAutoObservable and observer for a working setup.</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>What does MobX mean by observable state and reactions?</li><li>How does its reactive model differ from explicit reducer/action flows?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Study observables, actions, computed values, and observer components; compare the debugging model.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Library APIs and maintenance status can change; verify current details in official documentation before choosing a tool.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Build a small observable counter following the official MobX setup guide.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">08</span><span class="tag">STATE MGMT</span></div><label class="learn"><input type="checkbox" class="learned" data-id="8"> Learned</label></div>
+ <h2>Jotai</h2><p class="source-note">Research atom-based state management.</p>
+ <h3>What is it?</h3><p>Jotai models state as small atoms that components can read and update, allowing state to be composed from focused units.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>Instead of one giant board, each fact has its own small note that interested people can read.</p></div>
+ <h3>When / why use it?</h3><p>Use when you want small pieces of shared state that can be composed without a large central reducer.</p>
+ <h3>Practical example</h3><pre><code>import { atom, useAtom } from &quot;jotai&quot;;
+
+const countAtom = atom(0);
+
+function Counter() {
+  const [count, setCount] = useAtom(countAtom);
+  return &lt;button onClick={() =&gt; setCount(c =&gt; c + 1)}&gt;{count}&lt;/button&gt;;
+}</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>What is an atom in Jotai?</li><li>How can atom granularity affect component subscriptions and state organization?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Research primitive and derived atoms, provider scope, and how components subscribe to atom values.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Library APIs and maintenance status can change; verify current details in official documentation before choosing a tool.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Create separate atoms for a counter and a theme preference.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">09</span><span class="tag">STATE MGMT</span></div><label class="learn"><input type="checkbox" class="learned" data-id="9"> Learned</label></div>
+ <h2>Recoil concepts</h2><p class="source-note">Understand atom/selector-based state ideas.</p>
+ <h3>What is it?</h3><p>Recoil introduced atom-based shared state and selectors for derived values; investigate its current maintenance status before selecting it for a new project.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>Small notes store source facts; a calculated view combines them when needed.</p></div>
+ <h3>When / why use it?</h3><p>Study as a state-management concept or when maintaining an existing codebase that uses it; verify current project status before adopting.</p>
+ <h3>Practical example</h3><pre><code>// Conceptual atom/selector idea (API is library-specific):
+// atom: source state
+// selector: derived value based on one or more atoms</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>How does a selector differ from an atom?</li><li>What should a team verify about a library&#x27;s current maintenance and compatibility before adopting it?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Focus on atom, selector, dependency graph, and library status rather than copying an unverified setup.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Library APIs and maintenance status can change; verify current details in official documentation before choosing a tool.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Diagram a derived full name built from first-name and last-name state.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">10</span><span class="tag">STATE MGMT</span></div><label class="learn"><input type="checkbox" class="learned" data-id="10"> Learned</label></div>
+ <h2>Store</h2><p class="source-note">Central place for shared application state.</p>
+ <h3>What is it?</h3><p>A store holds shared state and provides a defined way for components or logic to read and update it.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>A central source of truth rather than multiple conflicting copies of the same record.</p></div>
+ <h3>When / why use it?</h3><p>Use when multiple parts of an application must coordinate around the same shared data.</p>
+ <h3>Practical example</h3><pre><code>// Store shape depends on the chosen library:
+const initialState = { cartItems: [], theme: &quot;light&quot; };</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>What belongs in a shared store and what should remain local?</li><li>Why can duplicating the same state in multiple places create synchronization bugs?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>List state values, consumers, update frequency, persistence needs, and whether the data is server-owned.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Library APIs and maintenance status can change; verify current details in official documentation before choosing a tool.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Design a store shape for a shopping cart without implementing the whole app.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">11</span><span class="tag">STATE MGMT</span></div><label class="learn"><input type="checkbox" class="learned" data-id="11"> Learned</label></div>
+ <h2>Actions</h2><p class="source-note">Describe state changes/events.</p>
+ <h3>What is it?</h3><p>An action describes something that happened or a requested state change; in Redux it is commonly an object with a type and optional payload.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>A clearly labeled request form: &#x27;item added&#x27; or &#x27;cart cleared&#x27;.</p></div>
+ <h3>When / why use it?</h3><p>Use to make state transitions explicit and easier to inspect or test.</p>
+ <h3>Practical example</h3><pre><code>dispatch({
+  type: &quot;cart/itemAdded&quot;,
+  payload: { id: &quot;p-1&quot;, quantity: 1 }
+});</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>Why name actions after events or intentions?</li><li>What information should be included in an action payload?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Trace the action from the UI event to the reducer and next state; distinguish event description from implementation details.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Library APIs and maintenance status can change; verify current details in official documentation before choosing a tool.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Define actions for adding, removing, and clearing cart items.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">12</span><span class="tag">STATE MGMT</span></div><label class="learn"><input type="checkbox" class="learned" data-id="12"> Learned</label></div>
+ <h2>Reducers</h2><p class="source-note">Calculate next state from current state and an action.</p>
+ <h3>What is it?</h3><p>A reducer is a function that decides the next state from the current state and an action.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>A rulebook determines how a register changes for each request type.</p></div>
+ <h3>When / why use it?</h3><p>Use for predictable, testable state transitions, especially with useReducer or Redux.</p>
+ <h3>Practical example</h3><pre><code>function counterReducer(state, action) {
+  if (action.type === &quot;increment&quot;) return state + 1;
+  if (action.type === &quot;reset&quot;) return 0;
+  return state;
+}</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>What makes a reducer pure?</li><li>Why should unknown actions usually leave state unchanged?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Check that the same state/action input yields the same result and no outside effects occur.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Library APIs and maintenance status can change; verify current details in official documentation before choosing a tool.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Write and test a reducer for a simple todo list.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">13</span><span class="tag">STATE MGMT</span></div><label class="learn"><input type="checkbox" class="learned" data-id="13"> Learned</label></div>
+ <h2>Dispatch</h2><p class="source-note">Send an action to the state system.</p>
+ <h3>What is it?</h3><p>Dispatch sends an action to a reducer/store so the state system can process the transition.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>Submitting a request to the office that maintains the shared register.</p></div>
+ <h3>When / why use it?</h3><p>Use when an event should trigger a state transition in a reducer-based system.</p>
+ <h3>Practical example</h3><pre><code>const [state, dispatch] = useReducer(reducer, initialState);
+&lt;button onClick={() =&gt; dispatch({ type: &quot;reset&quot; })}&gt;Reset&lt;/button&gt;</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>What does dispatch do, and what does it not do by itself?</li><li>How does dispatch differ from directly mutating a state object?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Follow dispatch through reducer execution and the resulting render; note that the API depends on the state library.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Library APIs and maintenance status can change; verify current details in official documentation before choosing a tool.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Wire buttons to dispatch increment, decrement, and reset actions.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">14</span><span class="tag">STATE MGMT</span></div><label class="learn"><input type="checkbox" class="learned" data-id="14"> Learned</label></div>
+ <h2>Selectors</h2><p class="source-note">Read specific pieces of state.</p>
+ <h3>What is it?</h3><p>Selectors are functions or subscription expressions that retrieve a particular value or derived view from a store.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>A report that extracts only the fields needed from a large register.</p></div>
+ <h3>When / why use it?</h3><p>Use to keep components focused on the state they need and to reuse derived calculations.</p>
+ <h3>Practical example</h3><pre><code>// Redux-style selector:
+const selectCartCount = state =&gt;
+  state.cart.items.reduce((sum, item) =&gt; sum + item.quantity, 0);</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>Why can selectors make components less coupled to the full store shape?</li><li>When might memoization help a selector, and when is it unnecessary?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Study direct selectors versus derived selectors, selector composition, and performance trade-offs.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Library APIs and maintenance status can change; verify current details in official documentation before choosing a tool.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Write selectors for cart item count and total price.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">15</span><span class="tag">STATE MGMT</span></div><label class="learn"><input type="checkbox" class="learned" data-id="15"> Learned</label></div>
+ <h2>Middleware</h2><p class="source-note">Intercept or extend state actions.</p>
+ <h3>What is it?</h3><p>Middleware sits in a state-management flow to add behavior such as logging, async orchestration, or analytics.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>A checkpoint that records or processes each request before it reaches the main desk.</p></div>
+ <h3>When / why use it?</h3><p>Use for cross-cutting behavior supported by the chosen store/library; avoid hiding core business logic in opaque middleware.</p>
+ <h3>Practical example</h3><pre><code>// Redux Toolkit config can include middleware;
+// configureStore supplies useful defaults.
+// Add custom middleware only for a clear cross-cutting need.</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>Where does middleware sit in the Redux dispatch flow?</li><li>What is a suitable middleware responsibility versus component or service logic?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Trace an action through middleware, reducer, and subscribers; inspect how errors and async work are handled.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Library APIs and maintenance status can change; verify current details in official documentation before choosing a tool.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Describe a logging middleware and the information it should avoid recording.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">16</span><span class="tag">STATE MGMT</span></div><label class="learn"><input type="checkbox" class="learned" data-id="16"> Learned</label></div>
+ <h2>createSlice</h2><p class="source-note">Define Redux Toolkit state, reducers, and actions together.</p>
+ <h3>What is it?</h3><p>createSlice groups a slice&#x27;s initial state and reducer case functions, and generates action creators.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>A labeled section of the register has its own rules and matching request forms.</p></div>
+ <h3>When / why use it?</h3><p>Use to organize Redux state by feature and reduce hand-written action/reducer boilerplate.</p>
+ <h3>Practical example</h3><pre><code>import { createSlice } from &quot;@reduxjs/toolkit&quot;;
+
+const cartSlice = createSlice({
+  name: &quot;cart&quot;,
+  initialState: { count: 0 },
+  reducers: {
+    itemAdded(state) { state.count += 1; }
+  }
+});
+export const { itemAdded } = cartSlice.actions;</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>What does createSlice generate from reducer definitions?</li><li>Why can reducer code look mutative while Redux Toolkit still produces immutable updates?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Research Immer&#x27;s role and how a slice reducer is registered with configureStore.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Library APIs and maintenance status can change; verify current details in official documentation before choosing a tool.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Create a todoSlice with add, toggle, and remove cases.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">17</span><span class="tag">STATE MGMT</span></div><label class="learn"><input type="checkbox" class="learned" data-id="17"> Learned</label></div>
+ <h2>createAsyncThunk</h2><p class="source-note">Handle common asynchronous Redux workflows.</p>
+ <h3>What is it?</h3><p>createAsyncThunk generates lifecycle actions for an async operation, including pending, fulfilled, and rejected states.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>A tracking slip records that a request started, succeeded, or failed.</p></div>
+ <h3>When / why use it?</h3><p>Use for async Redux workflows that fit its lifecycle-action pattern; compare with RTK Query for server data fetching.</p>
+ <h3>Practical example</h3><pre><code>import { createAsyncThunk } from &quot;@reduxjs/toolkit&quot;;
+
+export const fetchUsers = createAsyncThunk(
+  &quot;users/fetchUsers&quot;,
+  async () =&gt; {
+    const response = await fetch(&quot;/api/users&quot;);
+    if (!response.ok) throw new Error(&quot;Request failed&quot;);
+    return response.json();
+  }
+);</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>What lifecycle action types does createAsyncThunk provide?</li><li>When might RTK Query be a better fit than a hand-managed async thunk?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Research extraReducers, rejectWithValue, request status, and error serialization.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Library APIs and maintenance status can change; verify current details in official documentation before choosing a tool.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Add pending, fulfilled, and rejected handling for a user list.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">18</span><span class="tag">STATE MGMT</span></div><label class="learn"><input type="checkbox" class="learned" data-id="18"> Learned</label></div>
+ <h2>RTK Query</h2><p class="source-note">Manage API data and caching within Redux Toolkit.</p>
+ <h3>What is it?</h3><p>RTK Query is Redux Toolkit&#x27;s data-fetching and caching solution, with endpoints, query hooks, mutation hooks, and cache management.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>A service desk that both fetches records and remembers recent results with refresh rules.</p></div>
+ <h3>When / why use it?</h3><p>Use when an app already uses Redux Toolkit and wants integrated API request lifecycle and cache management.</p>
+ <h3>Practical example</h3><pre><code>// Illustrative endpoint definition:
+const api = createApi({
+  baseQuery: fetchBaseQuery({ baseUrl: &quot;/api&quot; }),
+  endpoints: builder =&gt; ({
+    getUsers: builder.query({ query: () =&gt; &quot;/users&quot; })
+  })
+});</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>How do queries and mutations differ in RTK Query?</li><li>How does cache invalidation help refresh data after a mutation?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Study createApi, baseQuery, generated hooks, tags, invalidation, and loading/error states.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Library APIs and maintenance status can change; verify current details in official documentation before choosing a tool.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Define a getProducts query and a createProduct mutation, then explain how the list refreshes.</p></div>
+</article></section>
+<div class="empty" id="empty">No matching concepts. Try a different search.</div><footer><div class="module-footer"><div>Step 10 complete.</div><div class="footer-actions"><a href="react-learning-step-09-api-data-fetching.html">← Step 9</a><a href="../index.html">All Modules</a></div><small>Your progress is saved in this browser.</small></div></footer></main>
+<script>
+const key='react-step10-progress';const checks=[...document.querySelectorAll('.learned')];const search=document.getElementById('search');
+function updateProgress(){const saved=JSON.parse(localStorage.getItem(key)||'{}');checks.forEach(c=>c.checked=!!saved[c.dataset.id]);const n=checks.filter(c=>c.checked).length;document.getElementById('progress').textContent=`${n} / ${checks.length} learned`;document.getElementById('bar').style.width=(n/checks.length*100)+'%';}
+checks.forEach(c=>c.addEventListener('change',()=>{const saved=JSON.parse(localStorage.getItem(key)||'{}');saved[c.dataset.id]=c.checked;localStorage.setItem(key,JSON.stringify(saved));updateProgress();}));
+search.addEventListener('input',()=>{const q=search.value.toLowerCase().trim();let visible=0;document.querySelectorAll('.card').forEach(card=>{const show=card.innerText.toLowerCase().includes(q);card.style.display=show?'':'none';if(show)visible++;});document.getElementById('empty').style.display=visible?'none':'block';});
+document.getElementById('reset').addEventListener('click',()=>{if(confirm('Clear all learned checkmarks for Step 10?')){localStorage.removeItem(key);updateProgress();}});
+document.querySelectorAll('.copy').forEach(btn=>btn.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(btn.previousElementSibling.innerText);btn.textContent='Copied!';setTimeout(()=>btn.textContent='Copy example',1200);}catch(e){btn.textContent='Select code to copy';}}));updateProgress();
+</script></body></html>

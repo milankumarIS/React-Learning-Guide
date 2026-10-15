@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>React Learning Canvas — Step 09: API & Data Fetching</title>
+<style>
+:root{color-scheme:dark;--bg:#08111f;--panel:#101d30;--text:#eaf1fb;--muted:#a9b8ce;--line:#263953;--accent:#70d6c5;--blue:#8bb8ff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 10% 0%,#132b49 0,transparent 36%),var(--bg);color:var(--text);font:16px/1.65 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+header{padding:42px max(22px,calc((100vw - 1100px)/2));background:linear-gradient(120deg,#122a47,#15213b 70%,#20304a);border-bottom:1px solid var(--line)}.eyebrow{color:var(--accent);font-size:.78rem;letter-spacing:.15em;font-weight:800}h1{font-size:clamp(2rem,5vw,3.5rem);line-height:1.12;margin:.5rem 0 1rem}header p{max-width:760px;color:#c8d5e7;margin:0}
+main{max-width:1100px;margin:auto;padding:24px 18px 70px}.toolbar{position:sticky;top:0;z-index:5;display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:14px 0;background:rgba(8,17,31,.94);backdrop-filter:blur(12px)}input[type=search]{flex:1;min-width:210px;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font:inherit}.progress{color:var(--muted);font-size:.92rem;white-space:nowrap}.bar{height:6px;background:#24364e;border-radius:10px;overflow:hidden;flex-basis:100%}.bar span{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
+button{cursor:pointer;border:1px solid #3a5473;background:#1a2d47;color:var(--text);border-radius:9px;padding:8px 12px;font:inherit}button:hover{border-color:var(--accent)}.intro{padding:18px 20px;background:var(--panel);border:1px solid var(--line);border-radius:14px;margin:10px 0 24px}.intro strong{color:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.card{background:linear-gradient(160deg,var(--panel),#0d192a);border:1px solid var(--line);border-radius:16px;padding:22px;min-width:0;box-shadow:0 10px 26px #0002}.card h2{font-size:1.4rem;line-height:1.25;margin:13px 0 4px}.card h3{font-size:.96rem;color:var(--blue);margin:22px 0 6px}.card p{margin:6px 0}.card-top{display:flex;align-items:center;justify-content:space-between;gap:10px}.num{font-size:.8rem;font-weight:800;color:var(--accent);border:1px solid #2e6d69;border-radius:7px;padding:4px 7px}.tag{margin-left:8px;font-size:.7rem;letter-spacing:.1em;color:var(--muted)}.learn{font-size:.85rem;color:var(--muted);display:flex;gap:7px;align-items:center}.learn input{accent-color:var(--accent)}.source-note{color:var(--muted);font-size:.92rem}.analogy,.task{border-left:3px solid var(--accent);background:#102a35;padding:12px 14px;border-radius:0 10px 10px 0;margin-top:14px}.analogy p,.task p{margin-bottom:0}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#07101d;border:1px solid #20334c;border-radius:10px;padding:14px;font:.82rem/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;color:#d6e7ff}code{font:inherit}.copy{font-size:.84rem}ol{padding-left:22px}li{margin:8px 0}details{border-top:1px solid var(--line);margin-top:18px;padding-top:13px}summary{cursor:pointer;color:var(--accent);font-weight:700}.hint{color:var(--muted);font-size:.9rem}.empty{display:none;padding:30px;text-align:center;color:var(--muted)}footer{text-align:center;color:var(--muted);font-size:.86rem;padding:35px 10px}
+@media(max-width:760px){.grid{grid-template-columns:1fr}header{padding-top:32px;padding-bottom:32px}.card{padding:18px}.toolbar{gap:9px}.progress{font-size:.82rem}}
+
+/* Shared warm editorial theme and module navigation */
+:root{color-scheme:light;--bg:#f5f1e8;--panel:#fffdf8;--panel2:#fffdf8;--text:#28312e;--muted:#65706a;--line:#dfd8ca;--accent:#355c53;--blue:#587b70}
+body{background:#f5f1e8!important;background-image:none!important;color:#28312e!important;font-family:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif!important}
+header,.hero{background:#e9ede6!important;color:#28312e!important;border-color:#cbd5ca!important}header h1,.hero h1,h1{font-family:Georgia,"Times New Roman",serif!important;color:#28312e!important;font-weight:600;letter-spacing:-.035em}header p,.hero p{color:#5e6962!important}.eyebrow{color:#486358!important}
+.module-nav{max-width:1100px;margin:0 auto 22px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding-bottom:14px;border-bottom:1px solid #cbd5ca}.module-nav .nav-group{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.module-nav a{display:inline-flex;align-items:center;gap:6px;padding:8px 13px;background:#f7f4ec;color:#355c53;text-decoration:none;border:1px solid #cbd5ca;border-radius:5px;font-size:13.5px;font-weight:700}.module-nav a:hover{background:#dfe9df;color:#294a42}.nav-meta{color:#486358;font-size:13px;font-weight:700}
+.toolbar{background:rgba(245,241,232,.97)!important;backdrop-filter:none!important}.toolbar input,input[type=search]{background:#fffdf8!important;color:#28312e!important;border-color:#d7d0c2!important;border-radius:5px!important}.progress,.hint,.source-note{color:#65706a!important}.bar{background:#dedbd1!important}.bar span{background:#587b59!important}button{background:#e9e4d8!important;color:#35433c!important;border-color:#d4ddd2!important;border-radius:4px!important}
+.intro,.card{background:#fffdf8!important;border-color:#dfd8ca!important;border-radius:8px!important;box-shadow:none!important}.intro{border-left:3px solid #8eaa9a!important}.intro strong{color:#355c53!important}.card h2{font-family:Georgia,"Times New Roman",serif!important;color:#28312e!important;letter-spacing:-.02em}.card h3{color:#4b5d54!important}.card p,p{color:#5e6962!important}.num{background:#e5eee4!important;border-color:#cbdac8!important;color:#355c53!important;border-radius:50%!important}.tag{color:#59675f!important}.analogy,.task{background:#eef3ed!important;border-left-color:#789384!important;border-radius:0 5px 5px 0!important}.analogy p,.task p{color:#526159!important}pre{background:#2d3632!important;border-color:#52605a!important;border-radius:6px!important;color:#edf1ec!important}details{border-color:#dfd8ca!important}summary{color:#355c53!important}
+footer{background:#eee9df!important;color:#65706a!important;padding:32px 18px!important}.module-footer{max-width:720px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:14px}.footer-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}.footer-actions a{display:inline-flex;align-items:center;padding:9px 14px;background:#e9e4d8;color:#355c53;text-decoration:none;border:1px solid #cbd5ca;border-radius:5px;font-size:14px;font-weight:700}.footer-actions a:hover{background:#dfe9df;color:#294a42}
+</style></head><body>
+<header><nav class="module-nav"><a href="../index.html">← All Modules</a><div class="nav-group"><a href="react-learning-step-08-routing.html">← Step 8</a><span class="nav-meta">Step 9 of 27</span><a href="react-learning-step-10-state-management.html">Step 10 →</a></div></nav><div class="eyebrow">INTERN LEARNING CANVAS • STEP 09 / 27</div><h1>API &amp; Data Fetching</h1><p>Learn how React applications communicate with APIs, represent network states, search and paginate results, and keep data fresh and reliable.</p></header>
+<main><div class="toolbar"><input id="search" type="search" placeholder="Search API & data concepts…" aria-label="Search concepts"><span class="progress" id="progress">0 / 22 learned</span><button id="reset" type="button">Reset progress</button><button type="button" onclick="window.scrollTo({top:0,behavior:'smooth'})">Top ↑</button><div class="bar"><span id="bar"></span></div></div>
+<div class="intro"><strong>How to use this canvas</strong><br>For each topic, research what it is, why it exists, how it works, when to use it, common mistakes/trade-offs, and a small practical example. Do not memorize definitions—build a tiny feature and explain it in your own words. Auth examples are illustrative only; follow your backend or identity provider's documented security flow.</div>
+<section class="grid" id="cards">
+<article class="card">
+ <div class="card-top"><div><span class="num">01</span><span class="tag">API & DATA</span></div><label class="learn"><input type="checkbox" class="learned" data-id="1"> Learned</label></div>
+ <h2>Fetch API</h2><p class="source-note">Use the browser&#x27;s native HTTP client.</p>
+ <h3>What is it?</h3><p>Fetch is built into browsers and sends HTTP requests, returning a Promise for a Response.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>Like calling a delivery service directly instead of hiring an intermediary.</p></div>
+ <h3>When / why use it?</h3><p>Use it for browser requests when native APIs meet your needs; remember HTTP error statuses do not automatically reject the promise.</p>
+ <h3>Practical example</h3><pre><code>async function loadUsers() {
+  const response = await fetch(&quot;/api/users&quot;);
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  return response.json();
+}</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>Why should code check response.ok before treating a response as successful?</li><li>What does response.json() return, and why is it asynchronous?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Trace the request, Response, status check, and body parsing. Research network errors versus HTTP error statuses.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Verify implementation details against the official documentation for your chosen API or library.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Fetch a list of users and display loading, success, and failure states.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">02</span><span class="tag">API & DATA</span></div><label class="learn"><input type="checkbox" class="learned" data-id="2"> Learned</label></div>
+ <h2>Axios</h2><p class="source-note">Research an HTTP client library and its conveniences.</p>
+ <h3>What is it?</h3><p>Axios is a third-party HTTP client that provides a consistent request API and response/error handling conventions.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>Like choosing a courier company that offers extra tracking and convenience features.</p></div>
+ <h3>When / why use it?</h3><p>Use when shared defaults, interceptors, or a team&#x27;s established HTTP patterns are valuable.</p>
+ <h3>Practical example</h3><pre><code>import axios from &quot;axios&quot;;
+
+const api = axios.create({ baseURL: &quot;/api&quot; });
+const response = await api.get(&quot;/users&quot;);
+console.log(response.data);</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>What conveniences does Axios provide compared with Fetch?</li><li>How do interceptors and shared defaults help a larger application?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Compare equivalent GET requests in Fetch and Axios, including response parsing and errors.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Verify implementation details against the official documentation for your chosen API or library.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Create a shared Axios instance with a base URL.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">03</span><span class="tag">API & DATA</span></div><label class="learn"><input type="checkbox" class="learned" data-id="3"> Learned</label></div>
+ <h2>GET requests</h2><p class="source-note">Retrieve data from APIs.</p>
+ <h3>What is it?</h3><p>GET requests ask a server to return a resource without intending to change it.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>Like asking a librarian to show you a book record.</p></div>
+ <h3>When / why use it?</h3><p>Use to load lists, details, search results, or other read-only data.</p>
+ <h3>Practical example</h3><pre><code>const response = await fetch(&quot;/api/products&quot;);
+if (!response.ok) throw new Error(&quot;Could not load products&quot;);
+const products = await response.json();</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>Why should GET generally not be used to create or modify a resource?</li><li>How would query parameters be used for filtering a GET request?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Study HTTP semantics and identify the URL, query parameters, status, and response body.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Verify implementation details against the official documentation for your chosen API or library.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Load products and render them as a list.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">04</span><span class="tag">API & DATA</span></div><label class="learn"><input type="checkbox" class="learned" data-id="4"> Learned</label></div>
+ <h2>POST requests</h2><p class="source-note">Create or submit data.</p>
+ <h3>What is it?</h3><p>POST sends data to a server for processing, commonly to create a resource or submit a form.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>Like handing a completed application form to an office.</p></div>
+ <h3>When / why use it?</h3><p>Use for sign-up, order creation, form submissions, and other server-side actions.</p>
+ <h3>Practical example</h3><pre><code>const response = await fetch(&quot;/api/products&quot;, {
+  method: &quot;POST&quot;,
+  headers: { &quot;Content-Type&quot;: &quot;application/json&quot; },
+  body: JSON.stringify({ name: &quot;Keyboard&quot; })
+});
+if (!response.ok) throw new Error(&quot;Create failed&quot;);</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>Why is JSON.stringify used for a JSON request body?</li><li>How should the UI behave while a POST is pending or fails?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Research request method, headers, serialization, validation, and duplicate-submit prevention.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Verify implementation details against the official documentation for your chosen API or library.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Build a form that posts a new product and reports success or failure.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">05</span><span class="tag">API & DATA</span></div><label class="learn"><input type="checkbox" class="learned" data-id="5"> Learned</label></div>
+ <h2>PUT/PATCH</h2><p class="source-note">Update existing resources.</p>
+ <h3>What is it?</h3><p>PUT commonly represents replacing a resource; PATCH represents applying a partial modification. Exact API behavior depends on its contract.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>PUT is replacing the whole form; PATCH is changing only a few fields.</p></div>
+ <h3>When / why use it?</h3><p>Use the method that matches the API&#x27;s documented update semantics.</p>
+ <h3>Practical example</h3><pre><code>await fetch(&quot;/api/users/42&quot;, {
+  method: &quot;PATCH&quot;,
+  headers: { &quot;Content-Type&quot;: &quot;application/json&quot; },
+  body: JSON.stringify({ displayName: &quot;Asha&quot; })
+});</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>What is the commonly described difference between PUT and PATCH?</li><li>Why must frontend code follow the backend API&#x27;s contract rather than assume semantics?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Compare full replacement and partial update payloads, and verify expected status codes and response shapes.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Verify implementation details against the official documentation for your chosen API or library.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Create an edit form that updates one field on an existing record.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">06</span><span class="tag">API & DATA</span></div><label class="learn"><input type="checkbox" class="learned" data-id="6"> Learned</label></div>
+ <h2>DELETE</h2><p class="source-note">Remove resources through APIs.</p>
+ <h3>What is it?</h3><p>DELETE asks the server to remove a resource identified by the request URL.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>Like submitting a request to remove an entry from a register.</p></div>
+ <h3>When / why use it?</h3><p>Use for deletion flows with clear confirmation and error feedback when appropriate.</p>
+ <h3>Practical example</h3><pre><code>const response = await fetch(&quot;/api/products/42&quot;, { method: &quot;DELETE&quot; });
+if (!response.ok) throw new Error(&quot;Delete failed&quot;);</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>Why might a delete action require confirmation?</li><li>How should the UI recover if the server refuses or fails the deletion?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Consider success, failure, retries, and whether the endpoint returns a body.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Verify implementation details against the official documentation for your chosen API or library.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Add a delete button to a product list with pending and error feedback.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">07</span><span class="tag">API & DATA</span></div><label class="learn"><input type="checkbox" class="learned" data-id="7"> Learned</label></div>
+ <h2>Loading states</h2><p class="source-note">Represent pending requests clearly.</p>
+ <h3>What is it?</h3><p>A loading state tells users that data is being requested or an action is in progress.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>Like a receipt that says your request is being processed.</p></div>
+ <h3>When / why use it?</h3><p>Use whenever a user must wait for a network operation or asynchronous action.</p>
+ <h3>Practical example</h3><pre><code>const [status, setStatus] = useState(&quot;idle&quot;);
+// setStatus(&quot;loading&quot;) before request
+// setStatus(&quot;success&quot;) after success
+// setStatus(&quot;error&quot;) after failure</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>Why is an explicit loading state better than leaving the page apparently frozen?</li><li>How can duplicate submissions be prevented while a request is pending?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Map the request lifecycle to UI states and decide which controls should be disabled.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Verify implementation details against the official documentation for your chosen API or library.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Add a loading indicator to a data-fetching page.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">08</span><span class="tag">API & DATA</span></div><label class="learn"><input type="checkbox" class="learned" data-id="8"> Learned</label></div>
+ <h2>Error states</h2><p class="source-note">Handle failed requests gracefully.</p>
+ <h3>What is it?</h3><p>An error state explains that an operation did not complete and gives users a useful next step when possible.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>A delivery app explains a failed delivery instead of showing a blank screen.</p></div>
+ <h3>When / why use it?</h3><p>Use for network errors, server failures, permission problems, and invalid responses.</p>
+ <h3>Practical example</h3><pre><code>try {
+  const response = await fetch(&quot;/api/profile&quot;);
+  if (!response.ok) throw new Error(&quot;Profile request failed&quot;);
+  const data = await response.json();
+  setProfile(data);
+} catch (error) {
+  setError(&quot;Could not load your profile. Try again.&quot;);
+}</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>How are a network failure and an HTTP 500 response different?</li><li>What information is helpful to the user without exposing sensitive internals?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Design user-safe messages, logging for developers, and a retry path where useful.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Verify implementation details against the official documentation for your chosen API or library.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Simulate a failed request and build a retry button.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">09</span><span class="tag">API & DATA</span></div><label class="learn"><input type="checkbox" class="learned" data-id="9"> Learned</label></div>
+ <h2>Empty states</h2><p class="source-note">Handle successful requests with no data.</p>
+ <h3>What is it?</h3><p>An empty state represents a successful result that contains no items, distinct from loading or failure.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>The shop is open, but no items are on the shelf yet.</p></div>
+ <h3>When / why use it?</h3><p>Use for new accounts, empty searches, no transactions, and filters with no matches.</p>
+ <h3>Practical example</h3><pre><code>if (status === &quot;loading&quot;) return &lt;p&gt;Loading…&lt;/p&gt;;
+if (status === &quot;error&quot;) return &lt;p&gt;Could not load items.&lt;/p&gt;;
+if (items.length === 0) return &lt;p&gt;No items yet. Add your first item.&lt;/p&gt;;
+return &lt;ItemList items={items} /&gt;;</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>Why should an empty result not be presented as an error?</li><li>What helpful action could an empty state offer in a product or dashboard UI?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Separate loading, error, empty, and populated states; consider the user&#x27;s likely next action.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Verify implementation details against the official documentation for your chosen API or library.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Design an empty state for a transaction history.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">10</span><span class="tag">API & DATA</span></div><label class="learn"><input type="checkbox" class="learned" data-id="10"> Learned</label></div>
+ <h2>API response handling</h2><p class="source-note">Transform and validate API results.</p>
+ <h3>What is it?</h3><p>Response handling parses returned data, checks its shape, and adapts it to what the UI expects.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>Like checking a delivered package and organizing its contents before using them.</p></div>
+ <h3>When / why use it?</h3><p>Use at the API boundary so malformed or unexpected data does not silently break components.</p>
+ <h3>Practical example</h3><pre><code>const response = await fetch(&quot;/api/users&quot;);
+if (!response.ok) throw new Error(&quot;Request failed&quot;);
+const payload = await response.json();
+// Check that payload has the expected shape before rendering.</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>Why should an app not blindly trust a response shape?</li><li>Where might normalization or validation belong in a frontend architecture?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Inspect actual payload examples, expected types, optional fields, and malformed-data behavior.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Verify implementation details against the official documentation for your chosen API or library.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Handle a response where one optional field is missing.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">11</span><span class="tag">API & DATA</span></div><label class="learn"><input type="checkbox" class="learned" data-id="11"> Learned</label></div>
+ <h2>Authentication headers</h2><p class="source-note">Attach tokens or credentials to requests.</p>
+ <h3>What is it?</h3><p>Authentication headers can carry credentials, such as a bearer access token, when the API expects them.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>Like showing an access pass at a controlled entrance.</p></div>
+ <h3>When / why use it?</h3><p>Use only according to the backend&#x27;s authentication scheme; protect credentials and avoid logging them.</p>
+ <h3>Practical example</h3><pre><code>const response = await fetch(&quot;/api/me&quot;, {
+  headers: { Authorization: `Bearer ${accessToken}` }
+});</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>What does the Bearer scheme communicate to an API?</li><li>What precautions should frontend code take with tokens and logs?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Research bearer tokens, expiry, HTTPS, storage trade-offs, and server-side verification.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Verify implementation details against the official documentation for your chosen API or library.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Call a protected profile endpoint using a test token from a safe development setup.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">12</span><span class="tag">API & DATA</span></div><label class="learn"><input type="checkbox" class="learned" data-id="12"> Learned</label></div>
+ <h2>JWT</h2><p class="source-note">Understand JSON Web Tokens and common authentication flows.</p>
+ <h3>What is it?</h3><p>A JWT is a compact token format that can carry claims; its signature can be verified by the receiving system.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>Like a signed pass containing claims that the gatekeeper must validate.</p></div>
+ <h3>When / why use it?</h3><p>Use it only as part of a deliberate auth design; a decoded JWT is not automatically trustworthy or encrypted.</p>
+ <h3>Practical example</h3><pre><code>// Illustrative only: send a token supplied by your auth flow.
+fetch(&quot;/api/me&quot;, {
+  headers: { Authorization: `Bearer ${token}` }
+});</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>What is the difference between encoding, signing, and encryption?</li><li>Why must the server validate a JWT rather than trust claims decoded in the browser?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Research token structure, claims, signature validation, expiration, and what sensitive data should not be placed in a token.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Verify implementation details against the official documentation for your chosen API or library.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Draw the path from login to token validation on a protected API request.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">13</span><span class="tag">API & DATA</span></div><label class="learn"><input type="checkbox" class="learned" data-id="13"> Learned</label></div>
+ <h2>Cookies</h2><p class="source-note">Understand cookie-based sessions and security considerations.</p>
+ <h3>What is it?</h3><p>Cookies are browser-managed name/value data sent according to domain, path, and security rules; session cookies can support authentication.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>Like a claim ticket the browser presents when visiting the same service again.</p></div>
+ <h3>When / why use it?</h3><p>Use when the backend uses cookie-based sessions. Understand HttpOnly, Secure, SameSite, and CSRF considerations.</p>
+ <h3>Practical example</h3><pre><code>// For a cross-origin cookie session, server CORS and cookie
+// settings must permit credentials:
+fetch(&quot;https://api.example.test/me&quot;, {
+  credentials: &quot;include&quot;
+});</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>What does HttpOnly protect against, and what does it not solve?</li><li>How do SameSite and CSRF defenses relate to cookie-based authentication?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Research cookie flags, same-origin rules, CORS credentials, and CSRF protection. Do not copy production secrets into examples.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Verify implementation details against the official documentation for your chosen API or library.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Document the cookie settings required for a hypothetical login flow.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">14</span><span class="tag">API & DATA</span></div><label class="learn"><input type="checkbox" class="learned" data-id="14"> Learned</label></div>
+ <h2>Refresh tokens</h2><p class="source-note">Understand renewing short-lived access tokens.</p>
+ <h3>What is it?</h3><p>Refresh tokens are credentials used by an authentication system to obtain new access tokens without requiring a full login each time.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>Like a secure renewal pass used to receive a fresh short-term entry ticket.</p></div>
+ <h3>When / why use it?</h3><p>Use only according to the identity provider&#x27;s supported flow; refresh-token storage and rotation require careful security design.</p>
+ <h3>Practical example</h3><pre><code>// Pseudocode: follow your identity provider&#x27;s documented flow.
+const newTokens = await authClient.refreshSession();</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>Why might access tokens be short-lived while refresh credentials have a different lifetime?</li><li>What risks do rotation, revocation, and refresh-token storage address?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Study the provider&#x27;s official flow and how expired, revoked, or reused refresh tokens are handled.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Verify implementation details against the official documentation for your chosen API or library.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Write a sequence diagram for expired access token → renewal → retry.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">15</span><span class="tag">API & DATA</span></div><label class="learn"><input type="checkbox" class="learned" data-id="15"> Learned</label></div>
+ <h2>Pagination</h2><p class="source-note">Load data in pages.</p>
+ <h3>What is it?</h3><p>Pagination divides a large collection into smaller result sets using page numbers, offsets, or cursors.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>A long book is split into manageable chapters.</p></div>
+ <h3>When / why use it?</h3><p>Use for tables, search results, transaction histories, and large collections.</p>
+ <h3>Practical example</h3><pre><code>const response = await fetch(`/api/orders?page=${page}&amp;limit=20`);
+const result = await response.json();
+// Render result.items and controls from result metadata.</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>What are the trade-offs between offset and cursor pagination?</li><li>What metadata does a UI need to display useful pagination controls?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Research page/limit, total counts, cursor tokens, stable sorting, and boundary cases.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Verify implementation details against the official documentation for your chosen API or library.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Add Previous and Next controls to a list view.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">16</span><span class="tag">API & DATA</span></div><label class="learn"><input type="checkbox" class="learned" data-id="16"> Learned</label></div>
+ <h2>Infinite scrolling</h2><p class="source-note">Load additional data as users scroll.</p>
+ <h3>What is it?</h3><p>Infinite scrolling fetches more items when the user approaches the end of the currently loaded list.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>A conveyor belt that brings more items as you reach the end.</p></div>
+ <h3>When / why use it?</h3><p>Use for discovery feeds or long browsing experiences, with clear loading, retry, and accessibility behavior.</p>
+ <h3>Practical example</h3><pre><code>// Conceptual pattern: when the sentinel becomes visible,
+// request the next page only if one is available and not loading.</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>How do you prevent multiple requests for the same next page?</li><li>When might a Load More button be better than automatic infinite scrolling?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Research IntersectionObserver, hasNextPage, request guards, scroll restoration, and keyboard access.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Verify implementation details against the official documentation for your chosen API or library.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Build a list that loads another page when a bottom sentinel enters view.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">17</span><span class="tag">API & DATA</span></div><label class="learn"><input type="checkbox" class="learned" data-id="17"> Learned</label></div>
+ <h2>Search</h2><p class="source-note">Implement server/client search flows.</p>
+ <h3>What is it?</h3><p>Search filters or queries data based on a user-entered term; it may run locally or request matching results from a server.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>A librarian uses your keywords to find relevant records.</p></div>
+ <h3>When / why use it?</h3><p>Use for product catalogs, job listings, users, and large datasets where users need to find specific items.</p>
+ <h3>Practical example</h3><pre><code>const response = await fetch(`/api/jobs?q=${encodeURIComponent(query)}`);
+const results = await response.json();</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>When is client-side search suitable, and when should search happen on the server?</li><li>Why should user-entered query strings be encoded before inclusion in a URL?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Compare dataset size, freshness, privacy, latency, and API search capabilities.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Verify implementation details against the official documentation for your chosen API or library.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Build a job search input that queries an API.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">18</span><span class="tag">API & DATA</span></div><label class="learn"><input type="checkbox" class="learned" data-id="18"> Learned</label></div>
+ <h2>Debouncing</h2><p class="source-note">Delay rapid input-triggered operations.</p>
+ <h3>What is it?</h3><p>Debouncing waits until events stop occurring for a chosen interval before running an operation.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>Like waiting for someone to finish speaking before answering.</p></div>
+ <h3>When / why use it?</h3><p>Use for search-as-you-type and expensive operations where intermediate keystrokes need not trigger work.</p>
+ <h3>Practical example</h3><pre><code>useEffect(() =&gt; {
+  const id = setTimeout(() =&gt; setDebouncedQuery(query), 300);
+  return () =&gt; clearTimeout(id);
+}, [query]);</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>How does debouncing differ from throttling?</li><li>What should happen to a pending debounce timer when the input changes or component unmounts?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Trace quick keystrokes on a timeline and identify which callback should run.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Verify implementation details against the official documentation for your chosen API or library.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Debounce a search field and show how many API requests are made.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">19</span><span class="tag">API & DATA</span></div><label class="learn"><input type="checkbox" class="learned" data-id="19"> Learned</label></div>
+ <h2>Throttling</h2><p class="source-note">Limit operation frequency.</p>
+ <h3>What is it?</h3><p>Throttling limits how often a function can run during a stream of repeated events.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>Like allowing one customer through a gate every set interval.</p></div>
+ <h3>When / why use it?</h3><p>Use for scroll/resize handlers, telemetry, or repeated events where periodic updates matter.</p>
+ <h3>Practical example</h3><pre><code>// Conceptual pseudocode: run at most once per interval.
+const throttledHandler = throttle(handleScroll, 200);</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>How does throttling differ from debouncing for a scroll handler?</li><li>What edge cases should be considered for the final event and cleanup?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Compare event timelines and research leading/trailing execution options in a chosen utility.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Verify implementation details against the official documentation for your chosen API or library.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Throttle a scroll-position update and test rapid scrolling.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">20</span><span class="tag">API & DATA</span></div><label class="learn"><input type="checkbox" class="learned" data-id="20"> Learned</label></div>
+ <h2>Optimistic updates</h2><p class="source-note">Update UI before server confirmation when safe.</p>
+ <h3>What is it?</h3><p>An optimistic update shows the expected result immediately, then reconciles with the server response or rolls back on failure.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>Like marking a task complete immediately while the system confirms the change.</p></div>
+ <h3>When / why use it?</h3><p>Use when the action is likely to succeed and a clear rollback or reconciliation path exists.</p>
+ <h3>Practical example</h3><pre><code>// Pseudocode:
+setItems(current =&gt; markDone(current, id));
+try { await api.markDone(id); }
+catch { setItems(previousItems); setError(&quot;Update failed&quot;); }</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>What should happen if the server rejects an optimistic change?</li><li>Which operations are risky or confusing to make optimistic?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Study snapshotting previous state, rollback, race conditions, and server-confirmed reconciliation.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Verify implementation details against the official documentation for your chosen API or library.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Make a task completion toggle optimistic and simulate failure.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">21</span><span class="tag">API & DATA</span></div><label class="learn"><input type="checkbox" class="learned" data-id="21"> Learned</label></div>
+ <h2>Caching</h2><p class="source-note">Reuse fetched data to reduce unnecessary requests.</p>
+ <h3>What is it?</h3><p>Caching stores a result for reuse under defined freshness and invalidation rules.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>Like keeping a useful copy of a frequently requested document nearby.</p></div>
+ <h3>When / why use it?</h3><p>Use to improve responsiveness and reduce duplicate requests, while deciding when cached data becomes stale.</p>
+ <h3>Practical example</h3><pre><code>// Example using a data-fetching library:
+const { data, isLoading } = useQuery({
+  queryKey: [&quot;products&quot;],
+  queryFn: fetchProducts
+});</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>What makes cached data stale, and how should an app refresh it?</li><li>What is the difference between browser HTTP caching and application-level query caching?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Compare cache keys, freshness, invalidation, refetching, and libraries such as TanStack Query or SWR.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Verify implementation details against the official documentation for your chosen API or library.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Cache a products query and invalidate it after creating a product.</p></div>
+</article>
+
+<article class="card">
+ <div class="card-top"><div><span class="num">22</span><span class="tag">API & DATA</span></div><label class="learn"><input type="checkbox" class="learned" data-id="22"> Learned</label></div>
+ <h2>Request cancellation</h2><p class="source-note">Cancel obsolete network requests.</p>
+ <h3>What is it?</h3><p>Cancellation stops or ignores work that is no longer relevant, such as an old search request after the query changes.</p>
+ <div class="analogy"><strong>🧠 Layman analogy</strong><p>Like cancelling an outdated delivery order after the destination changes.</p></div>
+ <h3>When / why use it?</h3><p>Use for component cleanup, fast-changing searches, and preventing stale requests from wasting work.</p>
+ <h3>Practical example</h3><pre><code>useEffect(() =&gt; {
+  const controller = new AbortController();
+  fetch(`/api/search?q=${encodeURIComponent(query)}`, {
+    signal: controller.signal
+  }).then(r =&gt; r.json()).then(setResults)
+   .catch(error =&gt; {
+     if (error.name !== &quot;AbortError&quot;) setError(&quot;Search failed&quot;);
+   });
+  return () =&gt; controller.abort();
+}, [query]);</code></pre><button class="copy" type="button">Copy example</button>
+ <h3>Research questions</h3><ol><li>How does AbortController communicate cancellation to fetch?</li><li>Why should an expected abort not always be shown as a user-facing error?</li></ol>
+ <details><summary>How to approach / expected answer direction</summary><p>Trace a query changing from &#x27;re&#x27; to &#x27;react&#x27; and explain how the earlier request is prevented from winning.</p><p class="hint">Explain the reasoning and trade-offs in your own words. Verify implementation details against the official documentation for your chosen API or library.</p></details>
+ <div class="task"><strong>Mini task</strong><p>Cancel the previous search request when a new query starts.</p></div>
+</article></section>
+<div class="empty" id="empty">No matching concepts. Try a different search.</div><footer><div class="module-footer"><div>Step 9 complete.</div><div class="footer-actions"><a href="react-learning-step-08-routing.html">← Step 8</a><a href="../index.html">All Modules</a><a href="react-learning-step-10-state-management.html">Next: Step 10 →</a></div><small>Your progress is saved in this browser.</small></div></footer></main>
+<script>
+const key='react-step09-progress';const checks=[...document.querySelectorAll('.learned')];const search=document.getElementById('search');
+function updateProgress(){const saved=JSON.parse(localStorage.getItem(key)||'{}');checks.forEach(c=>c.checked=!!saved[c.dataset.id]);const n=checks.filter(c=>c.checked).length;document.getElementById('progress').textContent=`${n} / ${checks.length} learned`;document.getElementById('bar').style.width=(n/checks.length*100)+'%';}
+checks.forEach(c=>c.addEventListener('change',()=>{const saved=JSON.parse(localStorage.getItem(key)||'{}');saved[c.dataset.id]=c.checked;localStorage.setItem(key,JSON.stringify(saved));updateProgress();}));
+search.addEventListener('input',()=>{const q=search.value.toLowerCase().trim();let visible=0;document.querySelectorAll('.card').forEach(card=>{const show=card.innerText.toLowerCase().includes(q);card.style.display=show?'':'none';if(show)visible++;});document.getElementById('empty').style.display=visible?'none':'block';});
+document.getElementById('reset').addEventListener('click',()=>{if(confirm('Clear all learned checkmarks for Step 09?')){localStorage.removeItem(key);updateProgress();}});
+document.querySelectorAll('.copy').forEach(btn=>btn.addEventListener('click',async()=>{try{await navigator.clipboard.writeText(btn.previousElementSibling.innerText);btn.textContent='Copied!';setTimeout(()=>btn.textContent='Copy example',1200);}catch(e){btn.textContent='Select code to copy';}}));updateProgress();
+</script></body></html>

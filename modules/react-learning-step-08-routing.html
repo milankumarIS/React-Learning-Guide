@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>React Learning Canvas — Step 08: Routing</title>
+<style>
+:root{color-scheme:dark;--bg:#08111f;--panel:#101d30;--panel2:#14243a;--text:#eaf1fb;--muted:#a9b8ce;--line:#263953;--accent:#70d6c5;--blue:#8bb8ff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 10% 0%,#132b49 0,transparent 36%),var(--bg);color:var(--text);font:16px/1.65 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+header{padding:42px max(22px,calc((100vw - 1100px)/2));background:linear-gradient(120deg,#122a47,#15213b 70%,#20304a);border-bottom:1px solid var(--line)}
+.eyebrow{color:var(--accent);font-size:.78rem;letter-spacing:.15em;font-weight:800}h1{font-size:clamp(2rem,5vw,3.5rem);line-height:1.12;margin:.5rem 0 1rem}header p{max-width:760px;color:#c8d5e7;margin:0}
+main{max-width:1100px;margin:auto;padding:24px 18px 70px}.toolbar{position:sticky;top:0;z-index:5;display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:14px 0;background:rgba(8,17,31,.94);backdrop-filter:blur(12px)}
+input[type=search]{flex:1;min-width:210px;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:12px 14px;font:inherit}.progress{color:var(--muted);font-size:.92rem;white-space:nowrap}.bar{height:6px;background:#24364e;border-radius:10px;overflow:hidden;flex-basis:100%}.bar span{display:block;height:100%;width:0;background:var(--accent);transition:width .2s}
+button{cursor:pointer;border:1px solid #3a5473;background:#1a2d47;color:var(--text);border-radius:9px;padding:8px 12px;font:inherit}button:hover{border-color:var(--accent)}
+.intro{padding:18px 20px;background:var(--panel);border:1px solid var(--line);border-radius:14px;margin:10px 0 24px}.intro strong{color:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.card{background:linear-gradient(160deg,var(--panel),#0d192a);border:1px solid var(--line);border-radius:16px;padding:22px;min-width:0;box-shadow:0 10px 26px #0002}.card h2{font-size:1.45rem;line-height:1.25;margin:13px 0 4px}.card h3{font-size:.96rem;color:var(--blue);margin:22px 0 6px}.card p{margin:6px 0}.card-top{display:flex;align-items:center;justify-content:space-between;gap:10px}.num{font-size:.8rem;font-weight:800;color:var(--accent);border:1px solid #2e6d69;border-radius:7px;padding:4px 7px}.tag{margin-left:8px;font-size:.7rem;letter-spacing:.1em;color:var(--muted)}.learn{font-size:.85rem;color:var(--muted);display:flex;gap:7px;align-items:center}.learn input{accent-color:var(--accent)}.source-note{color:var(--muted);font-size:.92rem}.analogy,.task{border-left:3px solid var(--accent);background:#102a35;padding:12px 14px;border-radius:0 10px 10px 0;margin-top:14px}.analogy p,.task p{margin-bottom:0}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#07101d;border:1px solid #20334c;border-radius:10px;padding:14px;font:.84rem/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;color:#d6e7ff}code{font:inherit}.copy{font-size:.84rem}ol{padding-left:22px}li{margin:8px 0}details{border-top:1px solid var(--line);margin-top:18px;padding-top:13px}summary{cursor:pointer;color:var(--accent);font-weight:700}.hint{color:var(--muted);font-size:.9rem}.empty{display:none;padding:30px;text-align:center;color:var(--muted)}footer{text-align:center;color:var(--muted);font-size:.86rem;padding:35px 10px}
+@media(max-width:760px){.grid{grid-template-columns:1fr}header{padding-top:32px;padding-bottom:32px}.card{padding:18px}.toolbar{gap:9px}.progress{font-size:.82rem}}
+
+/* Shared warm editorial theme and module navigation */
+:root{color-scheme:light;--bg:#f5f1e8;--panel:#fffdf8;--panel2:#fffdf8;--text:#28312e;--muted:#65706a;--line:#dfd8ca;--accent:#355c53;--blue:#587b70}
+body{background:#f5f1e8!important;background-image:none!important;color:#28312e!important;font-family:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif!important}
+header,.hero{background:#e9ede6!important;color:#28312e!important;border-color:#cbd5ca!important}header h1,.hero h1,h1{font-family:Georgia,"Times New Roman",serif!important;color:#28312e!important;font-weight:600;letter-spacing:-.035em}header p,.hero p{color:#5e6962!important}.eyebrow{color:#486358!important}
+.module-nav{max-width:1100px;margin:0 auto 22px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding-bottom:14px;border-bottom:1px solid #cbd5ca}.module-nav .nav-group{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.module-nav a{display:inline-flex;align-items:center;gap:6px;padding:8px 13px;background:#f7f4ec;color:#355c53;text-decoration:none;border:1px solid #cbd5ca;border-radius:5px;font-size:13.5px;font-weight:700}.module-nav a:hover{background:#dfe9df;color:#294a42}.nav-meta{color:#486358;font-size:13px;font-weight:700}
+.toolbar{background:rgba(245,241,232,.97)!important;backdrop-filter:none!important}.toolbar input,input[type=search]{background:#fffdf8!important;color:#28312e!important;border-color:#d7d0c2!important;border-radius:5px!important}.progress,.hint,.source-note{color:#65706a!important}.bar{background:#dedbd1!important}.bar span{background:#587b59!important}button{background:#e9e4d8!important;color:#35433c!important;border-color:#d4ddd2!important;border-radius:4px!important}
+.intro,.card{background:#fffdf8!important;border-color:#dfd8ca!important;border-radius:8px!important;box-shadow:none!important}.intro{border-left:3px solid #8eaa9a!important}.intro strong{color:#355c53!important}.card h2{font-family:Georgia,"Times New Roman",serif!important;color:#28312e!important;letter-spacing:-.02em}.card h3{color:#4b5d54!important}.card p,p{color:#5e6962!important}.num{background:#e5eee4!important;border-color:#cbdac8!important;color:#355c53!important;border-radius:50%!important}.tag{color:#59675f!important}.analogy,.task{background:#eef3ed!important;border-left-color:#789384!important;border-radius:0 5px 5px 0!important}.analogy p,.task p{color:#526159!important}pre{background:#2d3632!important;border-color:#52605a!important;border-radius:6px!important;color:#edf1ec!important}details{border-color:#dfd8ca!important}summary{color:#355c53!important}
+footer{background:#eee9df!important;color:#65706a!important;padding:32px 18px!important}.module-footer{max-width:720px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:14px}.footer-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}.footer-actions a{display:inline-flex;align-items:center;padding:9px 14px;background:#e9e4d8;color:#355c53;text-decoration:none;border:1px solid #cbd5ca;border-radius:5px;font-size:14px;font-weight:700}.footer-actions a:hover{background:#dfe9df;color:#294a42}
+</style></head>
+<body>
+<header><nav class="module-nav"><a href="../index.html">← All Modules</a><div class="nav-group"><a href="react-learning-step-07-react-context.html">← Step 7</a><span class="nav-meta">Step 8 of 27</span><a href="react-learning-step-09-api-data-fetching.html">Step 09 →</a></div></nav><div class="eyebrow">INTERN LEARNING CANVAS • STEP 08 / 27</div><h1>Routing</h1><p>Learn how React apps connect URLs to pages, create nested layouts, navigate between views, and handle access and unknown routes.</p></header>
+<main>
+<div class="toolbar"><input id="search" type="search" placeholder="Search routing concepts…" aria-label="Search concepts"><span class="progress" id="progress">0 / 19 learned</span><button id="reset" type="button">Reset progress</button><button type="button" onclick="window.scrollTo({top:0,behavior:'smooth'})">Top ↑</button><div class="bar"><span id="bar"></span></div></div>
+<div class="intro"><strong>How to use this canvas</strong><br>For each concept, explain what it is, why it exists, how it works, when to use it, common mistakes or trade-offs, and a small practical example. Research independently and write answers in your own words. Code snippets use React Router-style APIs; confirm version-specific details in the official docs.</div>
+<section class="grid" id="cards">
+    <article class="card" data-title="client-side routing">
+      <div class="card-top"><div><span class="num">01</span><span class="tag">ROUTING</span></div>
+        <label class="learn"><input type="checkbox" class="learned" data-id="1"> Learned</label></div>
+      <h2>Client-side routing</h2>
+      <p class="source-note">Understand navigation without full page reloads.</p>
+      <h3>What is it?</h3><p>Client-side routing changes the visible page based on the URL while the app shell stays loaded.</p>
+      <div class="analogy"><strong>🧠 Layman analogy</strong><p>Think of a shopping mall with rooms: you move from one shop to another without rebuilding the whole mall.</p></div>
+      <h3>When / why use it?</h3><p>Use it for multi-page-feeling React apps such as dashboards, stores, and job portals.</p>
+      <h3>Practical example</h3><pre><code>// The URL can represent the current view, e.g. /products/42
+// A router matches that URL and renders the corresponding React page.</code></pre>
+      <button class="copy" type="button">Copy example</button>
+      <h3>Research questions</h3>
+      <ol><li>How does client-side navigation differ from a traditional full-page request?</li><li>What must a deployed SPA server do when a user refreshes a nested URL?</li></ol>
+      <details><summary>How to approach / expected answer direction</summary><p>Compare navigation in a traditional website and an SPA. Trace what happens when a user opens a deep link directly.</p><p class="hint">Your answer should explain the reasoning and trade-offs in your own words. Verify details against the official React Router documentation.</p></details>
+      <div class="task"><strong>Mini task</strong><p>Build a tiny app with Home and About views and switch between them without a full reload.</p></div>
+    </article>
+
+    <article class="card" data-title="react router">
+      <div class="card-top"><div><span class="num">02</span><span class="tag">ROUTING</span></div>
+        <label class="learn"><input type="checkbox" class="learned" data-id="2"> Learned</label></div>
+      <h2>React Router</h2>
+      <p class="source-note">Learn the standard routing ecosystem for React.</p>
+      <h3>What is it?</h3><p>React Router maps URL paths to components and provides navigation tools and route data hooks.</p>
+      <div class="analogy"><strong>🧠 Layman analogy</strong><p>It is the building directory that tells visitors which room matches each sign.</p></div>
+      <h3>When / why use it?</h3><p>Use it when different URLs should display different pages or layouts.</p>
+      <h3>Practical example</h3><pre><code>import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+function App() {
+  return (
+    &lt;BrowserRouter&gt;
+      &lt;Routes&gt;
+        &lt;Route path="/" element={&lt;Home /&gt;} /&gt;
+        &lt;Route path="/about" element={&lt;About /&gt;} /&gt;
+      &lt;/Routes&gt;
+    &lt;/BrowserRouter&gt;
+  );
+}</code></pre>
+      <button class="copy" type="button">Copy example</button>
+      <h3>Research questions</h3>
+      <ol><li>What responsibilities does a router handle in a React app?</li><li>Which parts of an application can React Router help coordinate besides page matching?</li></ol>
+      <details><summary>How to approach / expected answer direction</summary><p>Read the official React Router overview and identify the roles of router, route definitions, links, and hooks.</p><p class="hint">Your answer should explain the reasoning and trade-offs in your own words. Verify details against the official React Router documentation.</p></details>
+      <div class="task"><strong>Mini task</strong><p>Add routes for Home, About, and Contact.</p></div>
+    </article>
+
+    <article class="card" data-title="browserrouter">
+      <div class="card-top"><div><span class="num">03</span><span class="tag">ROUTING</span></div>
+        <label class="learn"><input type="checkbox" class="learned" data-id="3"> Learned</label></div>
+      <h2>BrowserRouter</h2>
+      <p class="source-note">Provide browser-history based routing.</p>
+      <h3>What is it?</h3><p>BrowserRouter uses the browser History API so routes can use normal-looking paths.</p>
+      <div class="analogy"><strong>🧠 Layman analogy</strong><p>It updates the sign on the door while keeping you inside the same building.</p></div>
+      <h3>When / why use it?</h3><p>Use it for browser-based apps where URLs should be shareable and bookmarkable.</p>
+      <h3>Practical example</h3><pre><code>import { BrowserRouter } from "react-router-dom";
+
+root.render(
+  &lt;BrowserRouter&gt;
+    &lt;App /&gt;
+  &lt;/BrowserRouter&gt;
+);</code></pre>
+      <button class="copy" type="button">Copy example</button>
+      <h3>Research questions</h3>
+      <ol><li>What browser API supports BrowserRouter navigation?</li><li>Why can refreshing a nested route fail if the server is not configured for an SPA?</li></ol>
+      <details><summary>How to approach / expected answer direction</summary><p>Research the History API and deployment fallback behavior. Distinguish client routing from server routing.</p><p class="hint">Your answer should explain the reasoning and trade-offs in your own words. Verify details against the official React Router documentation.</p></details>
+      <div class="task"><strong>Mini task</strong><p>Open /about directly in the address bar and make sure it still loads after deployment.</p></div>
+    </article>
+
+    <article class="card" data-title="routes">
+      <div class="card-top"><div><span class="num">04</span><span class="tag">ROUTING</span></div>
+        <label class="learn"><input type="checkbox" class="learned" data-id="4"> Learned</label></div>
+      <h2>Routes</h2>
+      <p class="source-note">Define route-to-component mappings.</p>
+      <h3>What is it?</h3><p>Routes groups route definitions and renders the best matching route for the current location.</p>
+      <div class="analogy"><strong>🧠 Layman analogy</strong><p>A receptionist checks the visitor's destination and sends them to the matching room.</p></div>
+      <h3>When / why use it?</h3><p>Use Routes around related Route definitions.</p>
+      <h3>Practical example</h3><pre><code>&lt;Routes&gt;
+  &lt;Route path="/" element={&lt;Home /&gt;} /&gt;
+  &lt;Route path="/help" element={&lt;Help /&gt;} /&gt;
+&lt;/Routes&gt;</code></pre>
+      <button class="copy" type="button">Copy example</button>
+      <h3>Research questions</h3>
+      <ol><li>How does a Route connect a path to UI?</li><li>What happens when no route matches the current URL?</li></ol>
+      <details><summary>How to approach / expected answer direction</summary><p>Explain the relationship between Routes, Route, path, and element props.</p><p class="hint">Your answer should explain the reasoning and trade-offs in your own words. Verify details against the official React Router documentation.</p></details>
+      <div class="task"><strong>Mini task</strong><p>Create three route definitions and verify each URL.</p></div>
+    </article>
+
+    <article class="card" data-title="route parameters">
+      <div class="card-top"><div><span class="num">05</span><span class="tag">ROUTING</span></div>
+        <label class="learn"><input type="checkbox" class="learned" data-id="5"> Learned</label></div>
+      <h2>Route parameters</h2>
+      <p class="source-note">Read dynamic URL segments.</p>
+      <h3>What is it?</h3><p>A route parameter captures a variable part of a path, such as a product or user identifier.</p>
+      <div class="analogy"><strong>🧠 Layman analogy</strong><p>A form letter with a blank for each customer's name.</p></div>
+      <h3>When / why use it?</h3><p>Use it when one page template displays different records.</p>
+      <h3>Practical example</h3><pre><code>&lt;Route path="/products/:productId" element={&lt;ProductDetails /&gt;} /&gt;
+
+// Inside ProductDetails:
+const { productId } = useParams();</code></pre>
+      <button class="copy" type="button">Copy example</button>
+      <h3>Research questions</h3>
+      <ol><li>Why is /products/:productId different from /products/42?</li><li>How should a page handle an invalid or missing record for a valid-looking ID?</li></ol>
+      <details><summary>How to approach / expected answer direction</summary><p>Study colon-prefixed path segments and trace how the captured value reaches a component.</p><p class="hint">Your answer should explain the reasoning and trade-offs in your own words. Verify details against the official React Router documentation.</p></details>
+      <div class="task"><strong>Mini task</strong><p>Create /users/:userId and display the ID in the page.</p></div>
+    </article>
+
+    <article class="card" data-title="nested routes">
+      <div class="card-top"><div><span class="num">06</span><span class="tag">ROUTING</span></div>
+        <label class="learn"><input type="checkbox" class="learned" data-id="6"> Learned</label></div>
+      <h2>Nested routes</h2>
+      <p class="source-note">Create routes inside layouts/routes.</p>
+      <h3>What is it?</h3><p>Nested routes let child pages render inside a shared parent layout, commonly through an outlet.</p>
+      <div class="analogy"><strong>🧠 Layman analogy</strong><p>A building has a shared lobby and separate rooms inside one department.</p></div>
+      <h3>When / why use it?</h3><p>Use it for dashboards with shared navigation, settings sections, or account pages.</p>
+      <h3>Practical example</h3><pre><code>import { Outlet } from "react-router-dom";
+
+function DashboardLayout() {
+  return &lt;&gt;&lt;Sidebar /&gt;&lt;main&gt;&lt;Outlet /&gt;&lt;/main&gt;&lt;/&gt;;
+}
+
+&lt;Routes&gt;
+  &lt;Route path="/dashboard" element={&lt;DashboardLayout /&gt;}&gt;
+    &lt;Route index element={&lt;DashboardHome /&gt;} /&gt;
+    &lt;Route path="settings" element={&lt;Settings /&gt;} /&gt;
+  &lt;/Route&gt;
+&lt;/Routes&gt;</code></pre>
+      <button class="copy" type="button">Copy example</button>
+      <h3>Research questions</h3>
+      <ol><li>What does Outlet render?</li><li>When is nesting preferable to repeating the same layout in each page?</li></ol>
+      <details><summary>How to approach / expected answer direction</summary><p>Sketch a route tree and identify which components persist while child routes change.</p><p class="hint">Your answer should explain the reasoning and trade-offs in your own words. Verify details against the official React Router documentation.</p></details>
+      <div class="task"><strong>Mini task</strong><p>Build a dashboard layout with Overview and Settings child pages.</p></div>
+    </article>
+
+    <article class="card" data-title="dynamic routes">
+      <div class="card-top"><div><span class="num">07</span><span class="tag">ROUTING</span></div>
+        <label class="learn"><input type="checkbox" class="learned" data-id="7"> Learned</label></div>
+      <h2>Dynamic routes</h2>
+      <p class="source-note">Build routes from variable path segments.</p>
+      <h3>What is it?</h3><p>Dynamic routes match a family of URLs using parameters rather than defining every possible URL separately.</p>
+      <div class="analogy"><strong>🧠 Layman analogy</strong><p>One hotel room template can show room 101, 102, or 103 from the room number.</p></div>
+      <h3>When / why use it?</h3><p>Use for detail pages, profiles, category pages, and records with IDs or slugs.</p>
+      <h3>Practical example</h3><pre><code>&lt;Route path="/jobs/:jobId" element={&lt;JobDetails /&gt;} /&gt;
+// /jobs/abc-123 matches the same route as /jobs/xyz-456</code></pre>
+      <button class="copy" type="button">Copy example</button>
+      <h3>Research questions</h3>
+      <ol><li>How do dynamic route segments reduce duplicate page code?</li><li>What is the difference between a dynamic path segment and a query parameter?</li></ol>
+      <details><summary>How to approach / expected answer direction</summary><p>Create examples of fixed, dynamic, and nested paths and explain which URLs each matches.</p><p class="hint">Your answer should explain the reasoning and trade-offs in your own words. Verify details against the official React Router documentation.</p></details>
+      <div class="task"><strong>Mini task</strong><p>Add a job details route that reads a job ID from the URL.</p></div>
+    </article>
+
+    <article class="card" data-title="query parameters">
+      <div class="card-top"><div><span class="num">08</span><span class="tag">ROUTING</span></div>
+        <label class="learn"><input type="checkbox" class="learned" data-id="8"> Learned</label></div>
+      <h2>Query parameters</h2>
+      <p class="source-note">Read and update URL search parameters.</p>
+      <h3>What is it?</h3><p>Query parameters are key/value pairs after ? in a URL, often used for filters, sorting, or pagination.</p>
+      <div class="analogy"><strong>🧠 Layman analogy</strong><p>A parcel label includes optional instructions in addition to the destination.</p></div>
+      <h3>When / why use it?</h3><p>Use them when view state should be shareable, such as ?search=react&amp;page=2.</p>
+      <h3>Practical example</h3><pre><code>// Example URL: /jobs?search=react&amp;page=2
+const [params] = useSearchParams();
+const search = params.get("search");
+const page = params.get("page");</code></pre>
+      <button class="copy" type="button">Copy example</button>
+      <h3>Research questions</h3>
+      <ol><li>When should a value be stored in the path versus the query string?</li><li>Why are query parameters useful for shareable filtered results?</li></ol>
+      <details><summary>How to approach / expected answer direction</summary><p>Inspect a few URLs and decide which values identify a resource versus configure the view.</p><p class="hint">Your answer should explain the reasoning and trade-offs in your own words. Verify details against the official React Router documentation.</p></details>
+      <div class="task"><strong>Mini task</strong><p>Read a search query from the URL and show it in a search field.</p></div>
+    </article>
+
+    <article class="card" data-title="navigation">
+      <div class="card-top"><div><span class="num">09</span><span class="tag">ROUTING</span></div>
+        <label class="learn"><input type="checkbox" class="learned" data-id="9"> Learned</label></div>
+      <h2>Navigation</h2>
+      <p class="source-note">Move users between application views.</p>
+      <h3>What is it?</h3><p>Navigation changes the current route, either through a link the user clicks or programmatically after an action.</p>
+      <div class="analogy"><strong>🧠 Layman analogy</strong><p>A signpost directs you to the next destination.</p></div>
+      <h3>When / why use it?</h3><p>Use links for ordinary navigation and programmatic navigation after actions like saving or signing in.</p>
+      <h3>Practical example</h3><pre><code>import { Link, useNavigate } from "react-router-dom";
+
+&lt;Link to="/jobs"&gt;Browse jobs&lt;/Link&gt;;
+
+const navigate = useNavigate();
+// after successful save:
+navigate("/jobs");</code></pre>
+      <button class="copy" type="button">Copy example</button>
+      <h3>Research questions</h3>
+      <ol><li>When should you use a Link rather than a button with navigate()?</li><li>How can navigation after form submission improve the user flow?</li></ol>
+      <details><summary>How to approach / expected answer direction</summary><p>Compare declarative navigation with navigation triggered by an event or completed operation.</p><p class="hint">Your answer should explain the reasoning and trade-offs in your own words. Verify details against the official React Router documentation.</p></details>
+      <div class="task"><strong>Mini task</strong><p>Add a link to the jobs list and navigate to a confirmation page after saving.</p></div>
+    </article>
+
+    <article class="card" data-title="link">
+      <div class="card-top"><div><span class="num">10</span><span class="tag">ROUTING</span></div>
+        <label class="learn"><input type="checkbox" class="learned" data-id="10"> Learned</label></div>
+      <h2>Link</h2>
+      <p class="source-note">Create declarative navigation.</p>
+      <h3>What is it?</h3><p>Link renders an anchor-like navigation control managed by the router.</p>
+      <div class="analogy"><strong>🧠 Layman analogy</strong><p>A hallway sign that visitors can follow whenever they choose.</p></div>
+      <h3>When / why use it?</h3><p>Use for menus, breadcrumbs, cards, and inline links to internal pages.</p>
+      <h3>Practical example</h3><pre><code>import { Link } from "react-router-dom";
+
+&lt;Link to="/pricing"&gt;View pricing&lt;/Link&gt;</code></pre>
+      <button class="copy" type="button">Copy example</button>
+      <h3>Research questions</h3>
+      <ol><li>Why is Link generally better than a plain anchor for internal SPA navigation?</li><li>How can you make link text meaningful for keyboard and screen-reader users?</li></ol>
+      <details><summary>How to approach / expected answer direction</summary><p>Compare browser behavior for internal links implemented with Link and a standard anchor.</p><p class="hint">Your answer should explain the reasoning and trade-offs in your own words. Verify details against the official React Router documentation.</p></details>
+      <div class="task"><strong>Mini task</strong><p>Add a navigation bar using Link components.</p></div>
+    </article>
+
+    <article class="card" data-title="navlink">
+      <div class="card-top"><div><span class="num">11</span><span class="tag">ROUTING</span></div>
+        <label class="learn"><input type="checkbox" class="learned" data-id="11"> Learned</label></div>
+      <h2>NavLink</h2>
+      <p class="source-note">Create navigation links with active-state support.</p>
+      <h3>What is it?</h3><p>NavLink can tell when its target route is active, making it useful for menus and tabs.</p>
+      <div class="analogy"><strong>🧠 Layman analogy</strong><p>A map highlights the stop you are currently visiting.</p></div>
+      <h3>When / why use it?</h3><p>Use it for sidebars, top navigation, and route-based tab styling.</p>
+      <h3>Practical example</h3><pre><code>import { NavLink } from "react-router-dom";
+
+&lt;NavLink
+  to="/dashboard"
+  className={({ isActive }) =&gt; isActive ? "nav active" : "nav"}
+&gt;
+  Dashboard
+&lt;/NavLink&gt;</code></pre>
+      <button class="copy" type="button">Copy example</button>
+      <h3>Research questions</h3>
+      <ol><li>How does NavLink expose active state?</li><li>Why should active navigation be indicated by more than color alone?</li></ol>
+      <details><summary>How to approach / expected answer direction</summary><p>Research active matching and accessibility attributes. Try styling the current section.</p><p class="hint">Your answer should explain the reasoning and trade-offs in your own words. Verify details against the official React Router documentation.</p></details>
+      <div class="task"><strong>Mini task</strong><p>Highlight the active sidebar item for each route.</p></div>
+    </article>
+
+    <article class="card" data-title="usenavigate">
+      <div class="card-top"><div><span class="num">12</span><span class="tag">ROUTING</span></div>
+        <label class="learn"><input type="checkbox" class="learned" data-id="12"> Learned</label></div>
+      <h2>useNavigate</h2>
+      <p class="source-note">Navigate programmatically.</p>
+      <h3>What is it?</h3><p>useNavigate returns a function for changing routes in response to application logic.</p>
+      <div class="analogy"><strong>🧠 Layman analogy</strong><p>A staff member redirects you after your paperwork is approved.</p></div>
+      <h3>When / why use it?</h3><p>Use after successful login, form submission, or a workflow decision; avoid replacing normal links unnecessarily.</p>
+      <h3>Practical example</h3><pre><code>import { useNavigate } from "react-router-dom";
+
+function SaveButton() {
+  const navigate = useNavigate();
+  async function save() {
+    await saveRecord();
+    navigate("/records");
+  }
+  return &lt;button onClick={save}&gt;Save&lt;/button&gt;;
+}</code></pre>
+      <button class="copy" type="button">Copy example</button>
+      <h3>Research questions</h3>
+      <ol><li>What is a suitable use case for useNavigate?</li><li>Why should a route change usually wait until an asynchronous save succeeds?</li></ol>
+      <details><summary>How to approach / expected answer direction</summary><p>Trace the event, async operation, success/error branch, and navigation call.</p><p class="hint">Your answer should explain the reasoning and trade-offs in your own words. Verify details against the official React Router documentation.</p></details>
+      <div class="task"><strong>Mini task</strong><p>After a mock form succeeds, navigate to a success route.</p></div>
+    </article>
+
+    <article class="card" data-title="useparams">
+      <div class="card-top"><div><span class="num">13</span><span class="tag">ROUTING</span></div>
+        <label class="learn"><input type="checkbox" class="learned" data-id="13"> Learned</label></div>
+      <h2>useParams</h2>
+      <p class="source-note">Read route parameters.</p>
+      <h3>What is it?</h3><p>useParams returns the dynamic parameters matched by the current route.</p>
+      <div class="analogy"><strong>🧠 Layman analogy</strong><p>It reads the number printed on the room door.</p></div>
+      <h3>When / why use it?</h3><p>Use in detail components to fetch or display the record identified by the URL.</p>
+      <h3>Practical example</h3><pre><code>import { useParams } from "react-router-dom";
+
+function ProductDetails() {
+  const { productId } = useParams();
+  return &lt;h1&gt;Product: {productId}&lt;/h1&gt;;
+}</code></pre>
+      <button class="copy" type="button">Copy example</button>
+      <h3>Research questions</h3>
+      <ol><li>Where does the productId value come from?</li><li>Why should the component not assume every parameter corresponds to an existing database record?</li></ol>
+      <details><summary>How to approach / expected answer direction</summary><p>Trace the path /products/42 through the route definition and into useParams.</p><p class="hint">Your answer should explain the reasoning and trade-offs in your own words. Verify details against the official React Router documentation.</p></details>
+      <div class="task"><strong>Mini task</strong><p>Render the current product ID and add a not-found state for an unknown ID.</p></div>
+    </article>
+
+    <article class="card" data-title="usesearchparams">
+      <div class="card-top"><div><span class="num">14</span><span class="tag">ROUTING</span></div>
+        <label class="learn"><input type="checkbox" class="learned" data-id="14"> Learned</label></div>
+      <h2>useSearchParams</h2>
+      <p class="source-note">Read and modify URL search parameters.</p>
+      <h3>What is it?</h3><p>useSearchParams returns the current query parameters and a setter for updating them.</p>
+      <div class="analogy"><strong>🧠 Layman analogy</strong><p>It lets you read and edit the options written on a delivery slip.</p></div>
+      <h3>When / why use it?</h3><p>Use for filters, search terms, sort order, and pagination that should survive refreshes and be shareable.</p>
+      <h3>Practical example</h3><pre><code>const [searchParams, setSearchParams] = useSearchParams();
+const sort = searchParams.get("sort") ?? "newest";
+
+function chooseSort(value) {
+  setSearchParams(prev =&gt; {
+    prev.set("sort", value);
+    return prev;
+  });
+}</code></pre>
+      <button class="copy" type="button">Copy example</button>
+      <h3>Research questions</h3>
+      <ol><li>What is the difference between useParams and useSearchParams?</li><li>How can changing query parameters keep filters shareable?</li></ol>
+      <details><summary>How to approach / expected answer direction</summary><p>Build a small example that reads a parameter, provides a default, and updates the URL when a control changes.</p><p class="hint">Your answer should explain the reasoning and trade-offs in your own words. Verify details against the official React Router documentation.</p></details>
+      <div class="task"><strong>Mini task</strong><p>Add a sort dropdown that syncs its value with the URL.</p></div>
+    </article>
+
+    <article class="card" data-title="protected routes">
+      <div class="card-top"><div><span class="num">15</span><span class="tag">ROUTING</span></div>
+        <label class="learn"><input type="checkbox" class="learned" data-id="15"> Learned</label></div>
+      <h2>Protected routes</h2>
+      <p class="source-note">Restrict routes based on authentication or permissions.</p>
+      <h3>What is it?</h3><p>A protected route checks whether the current user may access a page and redirects or displays an alternative when access is denied.</p>
+      <div class="analogy"><strong>🧠 Layman analogy</strong><p>A keycard-controlled door checks permission before opening.</p></div>
+      <h3>When / why use it?</h3><p>Use for account pages, dashboards, and restricted tools, while remembering frontend checks are not a substitute for backend authorization.</p>
+      <h3>Practical example</h3><pre><code>function RequireAuth({ children }) {
+  const { user, loading } = useAuth();
+
+  if (loading) return &lt;p&gt;Checking session…&lt;/p&gt;;
+  if (!user) return &lt;Navigate to="/login" replace /&gt;;
+  return children;
+}</code></pre>
+      <button class="copy" type="button">Copy example</button>
+      <h3>Research questions</h3>
+      <ol><li>Why should an app show a loading state while checking authentication?</li><li>Why must the API independently enforce authorization even if the route is protected?</li></ol>
+      <details><summary>How to approach / expected answer direction</summary><p>Study the redirect path, loading case, authenticated case, and authorization boundary.</p><p class="hint">Your answer should explain the reasoning and trade-offs in your own words. Verify details against the official React Router documentation.</p></details>
+      <div class="task"><strong>Mini task</strong><p>Wrap a Profile route so signed-out users are redirected to Login.</p></div>
+    </article>
+
+    <article class="card" data-title="authentication-based routing">
+      <div class="card-top"><div><span class="num">16</span><span class="tag">ROUTING</span></div>
+        <label class="learn"><input type="checkbox" class="learned" data-id="16"> Learned</label></div>
+      <h2>Authentication-based routing</h2>
+      <p class="source-note">Combine auth state with route access.</p>
+      <h3>What is it?</h3><p>Authentication-based routing coordinates login state, public pages, and private pages in the route structure.</p>
+      <div class="analogy"><strong>🧠 Layman analogy</strong><p>A venue has public areas, a check-in desk, and rooms available only to registered guests.</p></div>
+      <h3>When / why use it?</h3><p>Use to define consistent behavior for login, signup, private areas, and already-authenticated users.</p>
+      <h3>Practical example</h3><pre><code>&lt;Routes&gt;
+  &lt;Route path="/login" element={&lt;Login /&gt;} /&gt;
+  &lt;Route path="/app/*" element={
+    &lt;RequireAuth&gt;&lt;AppLayout /&gt;&lt;/RequireAuth&gt;
+  } /&gt;
+&lt;/Routes&gt;</code></pre>
+      <button class="copy" type="button">Copy example</button>
+      <h3>Research questions</h3>
+      <ol><li>How might an authenticated user visiting /login be handled?</li><li>What should happen while the app is still restoring a saved session?</li></ol>
+      <details><summary>How to approach / expected answer direction</summary><p>Map the signed-out, signed-in, and session-loading states to routes and expected UI.</p><p class="hint">Your answer should explain the reasoning and trade-offs in your own words. Verify details against the official React Router documentation.</p></details>
+      <div class="task"><strong>Mini task</strong><p>Write a route map for public pages and private dashboard pages.</p></div>
+    </article>
+
+    <article class="card" data-title="404 routes">
+      <div class="card-top"><div><span class="num">17</span><span class="tag">ROUTING</span></div>
+        <label class="learn"><input type="checkbox" class="learned" data-id="17"> Learned</label></div>
+      <h2>404 routes</h2>
+      <p class="source-note">Handle unknown URLs.</p>
+      <h3>What is it?</h3><p>A 404 route renders a not-found page when no defined route matches the requested URL.</p>
+      <div class="analogy"><strong>🧠 Layman analogy</strong><p>A directory desk helps when someone asks for a room that does not exist.</p></div>
+      <h3>When / why use it?</h3><p>Use as a fallback so users get a helpful message and a way back to valid pages.</p>
+      <h3>Practical example</h3><pre><code>&lt;Routes&gt;
+  &lt;Route path="/" element={&lt;Home /&gt;} /&gt;
+  &lt;Route path="/about" element={&lt;About /&gt;} /&gt;
+  &lt;Route path="*" element={&lt;NotFound /&gt;} /&gt;
+&lt;/Routes&gt;</code></pre>
+      <button class="copy" type="button">Copy example</button>
+      <h3>Research questions</h3>
+      <ol><li>Why should the wildcard route usually come after specific routes?</li><li>What links or actions make a not-found page useful?</li></ol>
+      <details><summary>How to approach / expected answer direction</summary><p>Test known and unknown URLs and verify the fallback is friendly and navigable.</p><p class="hint">Your answer should explain the reasoning and trade-offs in your own words. Verify details against the official React Router documentation.</p></details>
+      <div class="task"><strong>Mini task</strong><p>Create a NotFound page with a Home link.</p></div>
+    </article>
+
+    <article class="card" data-title="layout routes">
+      <div class="card-top"><div><span class="num">18</span><span class="tag">ROUTING</span></div>
+        <label class="learn"><input type="checkbox" class="learned" data-id="18"> Learned</label></div>
+      <h2>Layout routes</h2>
+      <p class="source-note">Share layouts across related pages.</p>
+      <h3>What is it?</h3><p>A layout route wraps multiple child routes in common UI such as a header, sidebar, or footer.</p>
+      <div class="analogy"><strong>🧠 Layman analogy</strong><p>Several rooms share the same corridor, lighting, and entrance.</p></div>
+      <h3>When / why use it?</h3><p>Use to avoid repeating layout markup and to keep navigation consistent.</p>
+      <h3>Practical example</h3><pre><code>function SiteLayout() {
+  return &lt;&gt;&lt;Header /&gt;&lt;Outlet /&gt;&lt;Footer /&gt;&lt;/&gt;;
+}
+
+&lt;Routes&gt;
+  &lt;Route element={&lt;SiteLayout /&gt;}&gt;
+    &lt;Route path="/" element={&lt;Home /&gt;} /&gt;
+    &lt;Route path="/contact" element={&lt;Contact /&gt;} /&gt;
+  &lt;/Route&gt;
+&lt;/Routes&gt;</code></pre>
+      <button class="copy" type="button">Copy example</button>
+      <h3>Research questions</h3>
+      <ol><li>How does a layout route differ from duplicating Header and Footer in each page?</li><li>Where does the selected child page appear?</li></ol>
+      <details><summary>How to approach / expected answer direction</summary><p>Identify shared and route-specific UI in an example site and sketch a layout tree.</p><p class="hint">Your answer should explain the reasoning and trade-offs in your own words. Verify details against the official React Router documentation.</p></details>
+      <div class="task"><strong>Mini task</strong><p>Create a shared header/footer layout for two pages.</p></div>
+    </article>
+
+    <article class="card" data-title="lazy-loaded routes">
+      <div class="card-top"><div><span class="num">19</span><span class="tag">ROUTING</span></div>
+        <label class="learn"><input type="checkbox" class="learned" data-id="19"> Learned</label></div>
+      <h2>Lazy-loaded routes</h2>
+      <p class="source-note">Load route code only when needed.</p>
+      <h3>What is it?</h3><p>Lazy-loaded routes defer downloading a page component until the app needs it, which can reduce initial JavaScript cost.</p>
+      <div class="analogy"><strong>🧠 Layman analogy</strong><p>A library brings a book from storage only when a visitor requests it.</p></div>
+      <h3>When / why use it?</h3><p>Use for larger pages or sections that are not needed on the initial screen; pair with a loading fallback.</p>
+      <h3>Practical example</h3><pre><code>import { lazy, Suspense } from "react";
+
+const Reports = lazy(() =&gt; import("./Reports"));
+
+&lt;Suspense fallback={&lt;p&gt;Loading reports…&lt;/p&gt;}&gt;
+  &lt;Routes&gt;
+    &lt;Route path="/reports" element={&lt;Reports /&gt;} /&gt;
+  &lt;/Routes&gt;
+&lt;/Suspense&gt;</code></pre>
+      <button class="copy" type="button">Copy example</button>
+      <h3>Research questions</h3>
+      <ol><li>What is the trade-off between initial bundle size and loading a route later?</li><li>What does Suspense display while a lazy component is loading?</li></ol>
+      <details><summary>How to approach / expected answer direction</summary><p>Research dynamic import, React.lazy, and Suspense. Consider network and error experiences.</p><p class="hint">Your answer should explain the reasoning and trade-offs in your own words. Verify details against the official React Router documentation.</p></details>
+      <div class="task"><strong>Mini task</strong><p>Lazy-load a Reports page and display a clear loading fallback.</p></div>
+    </article></section>
+<div class="empty" id="empty">No matching concepts. Try a different search.</div>
+<footer><div class="module-footer"><div>Step 8 complete.</div><div class="footer-actions"><a href="react-learning-step-07-react-context.html">← Step 7</a><a href="../index.html">All Modules</a><a href="react-learning-step-09-api-data-fetching.html">Next: Step 09 →</a></div><small>Your progress is saved in this browser.</small></div></footer>
+</main>
+<script>
+const key='react-step08-progress';
+const checks=[...document.querySelectorAll('.learned')];
+const search=document.getElementById('search');
+function updateProgress(){const saved=JSON.parse(localStorage.getItem(key)||'{}');checks.forEach(c=>c.checked=!!saved[c.dataset.id]);const n=checks.filter(c=>c.checked).length;document.getElementById('progress').textContent=`${n} / ${checks.length} learned`;document.getElementById('bar').style.width=(n/checks.length*100)+'%';}
+checks.forEach(c=>c.addEventListener('change',()=>{const saved=JSON.parse(localStorage.getItem(key)||'{}');saved[c.dataset.id]=c.checked;localStorage.setItem(key,JSON.stringify(saved));updateProgress();}));
+search.addEventListener('input',()=>{const q=search.value.toLowerCase().trim();let visible=0;document.querySelectorAll('.card').forEach(card=>{const show=card.innerText.toLowerCase().includes(q);card.style.display=show?'':'none';if(show)visible++;});document.getElementById('empty').style.display=visible?'none':'block';});
+document.getElementById('reset').addEventListener('click',()=>{if(confirm('Clear all learned checkmarks for Step 08?')){localStorage.removeItem(key);updateProgress();}});
+document.querySelectorAll('.copy').forEach(btn=>btn.addEventListener('click',async()=>{const code=btn.previousElementSibling.innerText;try{await navigator.clipboard.writeText(code);btn.textContent='Copied!';setTimeout(()=>btn.textContent='Copy example',1200);}catch(e){btn.textContent='Select code to copy';}}));
+updateProgress();
+</script></body></html>
